@@ -4,7 +4,6 @@ const express = require('express')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const path = require('path')
-require('dotenv').config()
 
 const authRouter=require('./routes/auth')
 
