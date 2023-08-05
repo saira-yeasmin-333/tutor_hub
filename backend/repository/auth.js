@@ -16,7 +16,7 @@ class AccountRepository extends Repository {
     }
 
     create=async user=>{
-        const account = Account.create({
+        const account = await Account.create({
             name:user.name,
             role:user.role,
             phone:user.phone,

@@ -52,12 +52,13 @@ const Account = sq.define("account", {
 
   const syncAllTables=async ()=>{
     try{
-        await Account.sync({force:true})
+        await Account.sync()
         console.log("Account table creation successful")
-        await Post.sync({force:true})
+        await Post.sync()
         console.log("Post table creation successful")
     }catch(err){
         console.log('Error creating Tables')
+        console.log(err)
     }
   }
 
