@@ -95,7 +95,7 @@ const Account = sq.define("account", {
 //   Account.hasMany(Post, { as: "posts" });
   Post.belongsTo(Account,{foreignKey:"student_id"})
 
-  Efficiency.belongsTo(Account, {foreignKey:"tutor_account_id"})
+  Efficiency.belongsTo(Teacher, {foreignKey:"teacher_account_id"})
   Efficiency.belongsTo(Subject, {foreignKey:"subject_id"})
 
   Teacher.belongsTo(Account, {foreignKey: "account_id"})
@@ -106,6 +106,10 @@ const Account = sq.define("account", {
     try{
         await Account.sync()
         console.log("Account table creation successful")
+        await Teacher.sync()
+        console.log("Teacher table creation successful")
+        await Student.sync()
+        console.log("Student table creation successful")
         await Post.sync()
         console.log("Post table creation successful")
         await Subject.sync()
@@ -121,7 +125,7 @@ const Account = sq.define("account", {
 
   syncAllTables()
 
-  module.exports={Post,Account,Subject,Efficiency}
+  module.exports={Post,Account,Teacher,Student,Subject,Efficiency}
 
 
 

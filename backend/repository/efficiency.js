@@ -1,4 +1,4 @@
-const { Efficiency, Subject } = require('../models/models');
+const { Efficiency } = require('../models/models');
 const Repository = require('./database').Repository
 
 class EfficiencyRepository extends Repository {
@@ -16,4 +16,4 @@ class EfficiencyRepository extends Repository {
 
 }
 
-module.exports = { AccountRepository }
+module.exports = { EfficiencyRepository }
