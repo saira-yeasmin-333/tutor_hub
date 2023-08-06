@@ -6,13 +6,16 @@ import {useState} from 'react'
 
 import CreatePost from './pages/CreatePost'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom' 
-import PrimarySearchAppBar from "./components/Appbar/appbar";
+
 import ProfilePage from "./pages/ProfilePage";
+
 
 var showToast
 var setLoading
 
 function App() {
+  
+  const typeNo = 2; 
 
   const [loading,setL]=useState(false)
   setLoading=setL
@@ -49,7 +52,7 @@ function App() {
             draggable
             pauseOnHover
         />
-        <PrimarySearchAppBar/>
+        
         <div className="content">
           <Routes>
             <Route path ='/create-post/:id' Component={CreatePost} >

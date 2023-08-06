@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Avatar } from '@mui/material';
+import PrimarySearchAppBar from '../components/Appbar/appbar'
 
 
 const ProfilePage = () => {
@@ -26,10 +27,11 @@ const ProfilePage = () => {
 
   return (
     <div>
+      <PrimarySearchAppBar type = {user.type} />
       <h1>User Profile</h1>
       <Avatar
         alt="Homer Sharp"
-        src="/pp.jpg"
+        src="/PICT0018.jpg"
         sx={{ width: 156, height: 156 }}
       />
       <p>Name: {user.name}</p>
