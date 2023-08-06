@@ -6,10 +6,10 @@ class EfficiencyRepository extends Repository {
         super();
     }
 
-    getEfficiency = async account_id => {
-        const subject = Efficiency.findAll({
+    getEfficiency = async teacher_id => {
+        const subjects = Efficiency.findAll({
             where: {
-                
+                teacher_account_id: teacher_id,
             }
         });
     }
