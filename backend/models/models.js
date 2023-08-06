@@ -125,10 +125,4 @@ const Account = sq.define("account", {
 
   syncAllTables()
 
-  module.exports={Post,Account,Teacher,Student,Subject,Efficiency}
-
-
-
-  
-
-  
+  module.exports={Post,Account,Teacher,Student,Subject,Efficiency} 
