@@ -19,6 +19,15 @@ class EfficiencyController extends Controller {
         })
     }
 
+    insertEfficiency = async (req, res) => {
+        console.log(req.body)
+        var result = await efficiencyService.insertEfficiency(req.body)
+        return res.json({
+            success: true,
+            data: result
+        })
+    }
+
 }
 
 module.exports = { EfficiencyController }

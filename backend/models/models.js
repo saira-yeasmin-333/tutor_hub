@@ -1,3 +1,4 @@
+
 const { sq } = require("../repository/database");
 const { DataTypes } = require("sequelize");
 
@@ -48,7 +49,7 @@ const Post = sq.define("post", {
 });
 
 const Teacher = sq.define("teacher", {
-  id: {
+  teacher_id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true
@@ -61,11 +62,14 @@ const Teacher = sq.define("teacher", {
   },
   budget: {
     type: DataTypes.INTEGER
+  },
+  account_id: {
+    type: DataTypes.INTEGER,
   }
 })
 
 const Student = sq.define("student", {
-  id: {
+  student_id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true
@@ -88,6 +92,12 @@ const Efficiency = sq.define("efficiency", {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true
+  },
+  teacher_account_id: {
+    type: DataTypes.INTEGER,
+  },
+  subject_id: {
+    type: DataTypes.INTEGER,
   }
 })
 
