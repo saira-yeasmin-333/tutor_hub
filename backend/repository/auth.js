@@ -1,5 +1,5 @@
 const {Account} = require('../models/models');
-const Repository=require('./database').Repository
+const Repository = require('./database').Repository
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -16,15 +16,20 @@ class AccountRepository extends Repository {
     }
 
     create=async user=>{
-        const account = await Account.create({
-            name:user.name,
-            role:user.role,
-            phone:user.phone,
-            email:user.email,
-            image:user.image,
-            password:bcrypt.hashSync(user.password, 10)
-        })
-        return account
+        try{
+            const account = await Account.create({
+                name:user.name,
+                role:user.role,
+                phone:user.phone,
+                email:user.email,
+                image:user.image,
+                password:bcrypt.hashSync(user.password, 10)
+            })
+            return account
+        }
+        catch(e){
+            console.log(e)
+        }
     }
 
     signin=async data=>{
@@ -37,9 +42,7 @@ class AccountRepository extends Repository {
         if(account){
             
         }
-    }
-
-    
+    }  
 
 }
 
