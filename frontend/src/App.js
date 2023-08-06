@@ -2,26 +2,33 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import { useState } from 'react';
 import { Rings } from 'react-loader-spinner';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import TeacherProfile from "./pages/TeacherProfile";
+
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import CreatePost from './pages/CreatePost';
+
+import ProfilePage from "./pages/ProfilePage";
+
 
 var showToast
 var setLoading
 
 function App() {
-  const [loading,setL]=useState(false)
-  setLoading=setL
 
-  showToast=message=>{
+  const typeNo = 2;
+
+  const [loading, setL] = useState(false)
+  setLoading = setL
+
+  showToast = message => {
     toast.dark(message, {
-        position: "top-right",
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
     });
   }
 
@@ -45,9 +52,13 @@ function App() {
           draggable
           pauseOnHover
         />
+
         <div className="content">
           <Routes>
-            <Route path='/teacher-profile/:id' Component={TeacherProfile}></Route>
+            <Route path='/create-post/:id' Component={CreatePost} >
+            </Route>
+            <Route path='/get-profile/:id' Component={ProfilePage} >
+            </Route>
           </Routes>
         </div>
       </div>
