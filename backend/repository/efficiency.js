@@ -14,6 +14,20 @@ class EfficiencyRepository extends Repository {
         });
     }
 
+    insertEfficiency = async (data) => {
+        try {
+            const efficiency = await Efficiency.create({
+                teacher_account_id: data.teacher_account_id,
+                subject_id: data.subject_id
+            })
+            return efficiency
+        } catch (e) {
+            console.log('here2')
+            console.log(e)
+        }
+
+    }
+
 }
 
 module.exports = { EfficiencyRepository }

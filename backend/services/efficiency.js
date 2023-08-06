@@ -12,6 +12,12 @@ class EfficiencyService extends Service {
         var result = await efficiencyRepository.getEfficiency(teacher_id)
         return result
     }
+
+    insertEfficiency = async (efficiency) => {
+        var result = await efficiencyRepository.insertEfficiency(efficiency)
+        console.log(result)
+        return result
+    }
 }
 
 module.exports = { EfficiencyService }
