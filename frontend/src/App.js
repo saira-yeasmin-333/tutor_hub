@@ -3,7 +3,11 @@ import { Rings } from 'react-loader-spinner';
 import DialogContent from "@mui/material/DialogContent";
 import { ToastContainer, toast } from 'react-toastify';
 import {useState} from 'react'
-import Home from './Home';
+
+import CreatePost from './pages/CreatePost'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom' 
+import PrimarySearchAppBar from "./components/Appbar/appbar";
+import ProfilePage from "./pages/ProfilePage";
 
 var showToast
 var setLoading
@@ -26,26 +30,36 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Dialog open={loading}>
-        <DialogContent>
-          <Rings color="#00BFFF" height={80} width={80} />       
-        </DialogContent>
-      </Dialog>
+    <Router>
+      <div className="App">
+        <Dialog open={loading}>
+          <DialogContent>
+            <Rings color="#00BFFF" height={80} width={80} />       
+          </DialogContent>
+        </Dialog>
 
-      <ToastContainer
-          position="bottom-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-      />
-      <Home/>
-    </div>
+        <ToastContainer
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+        />
+        <PrimarySearchAppBar/>
+        <div className="content">
+          <Routes>
+            <Route path ='/create-post/:id' Component={CreatePost} >
+            </Route>
+            <Route path ='/get-profile/:id' Component={ProfilePage} >
+            </Route>
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 

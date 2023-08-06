@@ -17,6 +17,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+//access
+const cors = require("cors");
+app.use(cors({
+    origin: 'http://localhost:3000', // Replace with your frontend domain
+    credentials: true, // Allow cookies to be sent with the request
+}));
+app.options('*',cors());
+
 
 const apiBase="/api"
 app.use(apiBase,authRouter)
