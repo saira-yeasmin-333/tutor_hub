@@ -27,6 +27,31 @@ const Account = sq.define("account", {
     },
   });
 
+  const Teacher = sq.define("teacher", {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    onlineMedia: {
+        type: DataTypes.BOOLEAN
+    },
+    physicalMedia: {
+        type: DataTypes.BOOLEAN
+    },
+    budget: {
+        type: DataTypes.INTEGER
+    }
+  })
+
+  const Student = sq.define("student", {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    }
+  })
+
   const Post = sq.define("post", {
     id: {
         type: DataTypes.INTEGER,
@@ -47,8 +72,35 @@ const Account = sq.define("account", {
      }
   });
 
+  const Subject = sq.define("subject", {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    sub_name : {
+        type: DataTypes.STRING
+    }
+  })
+
+  const Efficiency = sq.define("efficiency", {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    }
+  })
+
+
 //   Account.hasMany(Post, { as: "posts" });
   Post.belongsTo(Account,{foreignKey:"student_id"})
+
+  Efficiency.belongsTo(Account, {foreignKey:"tutor_account_id"})
+  Efficiency.belongsTo(Subject, {foreignKey:"subject_id"})
+
+  Teacher.belongsTo(Account, {foreignKey: "account_id"})
+  Student.belongsTo(Account, {foreignKey: "account_id"})
+
 
   const syncAllTables=async ()=>{
     try{
@@ -56,6 +108,11 @@ const Account = sq.define("account", {
         console.log("Account table creation successful")
         await Post.sync()
         console.log("Post table creation successful")
+        await Subject.sync()
+        console.log("Subject table creation successful")
+        await Efficiency.sync()
+        console.log("Efficiency table creation successful")
+
     }catch(err){
         console.log('Error creating Tables')
         console.log(err)
@@ -64,10 +121,7 @@ const Account = sq.define("account", {
 
   syncAllTables()
 
-  module.exports={Post,Account}
-
-
-  
+  module.exports={Post,Account,Subject,Efficiency}
 
 
 

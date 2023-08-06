@@ -1,5 +1,5 @@
 const {Account} = require('../models/models');
-const Repository=require('./database').Repository
+const Repository = require('./database').Repository
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -42,9 +42,7 @@ class AccountRepository extends Repository {
         if(account){
             
         }
-    }
-
-    
+    }  
 
 }
 

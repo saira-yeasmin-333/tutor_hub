@@ -1,15 +1,15 @@
 import Dialog from "@mui/material/Dialog";
-import { Rings } from 'react-loader-spinner';
 import DialogContent from "@mui/material/DialogContent";
+import { useState } from 'react';
+import { Rings } from 'react-loader-spinner';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import {useState} from 'react'
-import Home from './Home';
+import TeacherProfile from "./pages/TeacherProfile";
 
 var showToast
 var setLoading
 
 function App() {
-
   const [loading,setL]=useState(false)
   setLoading=setL
 
@@ -26,14 +26,15 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Dialog open={loading}>
-        <DialogContent>
-          <Rings color="#00BFFF" height={80} width={80} />       
-        </DialogContent>
-      </Dialog>
+    <Router>
+      <div className="App">
+        <Dialog open={loading}>
+          <DialogContent>
+            <Rings color="#00BFFF" height={80} width={80} />
+          </DialogContent>
+        </Dialog>
 
-      <ToastContainer
+        <ToastContainer
           position="bottom-right"
           autoClose={3000}
           hideProgressBar={false}
@@ -43,11 +44,16 @@ function App() {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-      />
-      <Home/>
-    </div>
+        />
+        <div className="content">
+          <Routes>
+            <Route path='/teacher-profile/:id' Component={TeacherProfile}></Route>
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 
 export default App;
-export {showToast,setLoading}
+export { setLoading, showToast };
