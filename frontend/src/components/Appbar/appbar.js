@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -15,6 +16,9 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import Button from '@mui/material/Button';
+
+const pages = ['Products', 'Pricing', 'Blog'];
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -56,7 +60,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar(data) {
+  const type = data.type
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -120,6 +126,9 @@ export default function PrimarySearchAppBar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
+        
+      </MenuItem>
+      <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
             <MailIcon />
@@ -154,36 +163,49 @@ export default function PrimarySearchAppBar() {
     </Menu>
   );
 
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
+          
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+            sx={{ display: { xs: 'none', sm: 'block', padding: '10px' } }}
           >
             MUI
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
+          
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {pages.map((page) => (
+              <Button
+                key={page}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                {page}
+              </Button>
+            ))}
+          </Box>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
@@ -212,7 +234,7 @@ export default function PrimarySearchAppBar() {
               <AccountCircle />
             </IconButton>
           </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ display: { xs: 'flex', md: 'none', borderRight: '20p' } }}>
             <IconButton
               size="large"
               aria-label="show more"
@@ -224,6 +246,17 @@ export default function PrimarySearchAppBar() {
               <MoreIcon />
             </IconButton>
           </Box>
+
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
