@@ -16,7 +16,6 @@ var setLoading
 
 function App() {
 
-
   const typeNo = 2;
 
   const [loading, setL] = useState(false)
@@ -62,6 +61,7 @@ function App() {
             <Route path='/get-profile/:id' Component={ProfilePage} >
             </Route>
             <Route path='/create-review' Component={ReviewPage}>
+
             </Route>
           </Routes>
         </div>

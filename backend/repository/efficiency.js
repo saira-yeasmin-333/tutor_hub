@@ -1,5 +1,7 @@
 const { Efficiency } = require('../models/models');
+var db = require('../models/models')
 const Repository = require('./database').Repository
+
 
 class EfficiencyRepository extends Repository {
     constructor() {

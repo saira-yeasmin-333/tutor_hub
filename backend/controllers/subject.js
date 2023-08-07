@@ -24,6 +24,16 @@ class SubjectController extends Controller {
             data: result
         })
     }
+
+    getEfficiencyByAccount = async (req, res) => {
+        const accId = req.params.account_id;
+        console.log('in controller id: ',accId)
+        var result = await subjectService.getEfficiencyByAccount(accId)
+        return res.status(200).json({
+            success: true,
+            data: result
+        })
+    }
 }
 
 module.exports = { SubjectController }
