@@ -1,5 +1,4 @@
 require('dotenv').config()
-
 const express = require('express')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
@@ -9,7 +8,13 @@ const authRouter=require('./routes/auth')
 
 const app = express();
 
-
+//access
+const cors = require("cors");
+app.use(cors({
+    origin: 'http://localhost:3000', // Replace with your frontend domain
+    credentials: true, // Allow cookies to be sent with the request
+}));
+app.options('*',cors());
 app.set('view engine', 'handlebars');
 
 // Body Parser

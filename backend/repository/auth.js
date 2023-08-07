@@ -1,9 +1,5 @@
 const {Account} = require('../models/models');
 const Repository=require('./database').Repository
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-
-const tokenExpiryDuration=86400
 
 class AccountRepository extends Repository {
     constructor() {
@@ -16,29 +12,41 @@ class AccountRepository extends Repository {
     }
 
     create=async user=>{
-        const account = await Account.create({
-            name:user.name,
-            role:user.role,
-            phone:user.phone,
-            email:user.email,
-            image:user.image,
-            password:bcrypt.hashSync(user.password, 10)
+        try{
+            const account = await Account.create(user)
+            return account
+        }catch(e){
+            console.log('error creating account: ',e)
+        }
+
+        
+    }
+
+    findUser=async email=>{
+        console.log('email: ',email)
+        var result=await Account.findAll({
+            where:{
+                email:email
+            }
         })
-        return account
+        return result
     }
 
     signin=async data=>{
-        const account=Account.findAll({
-            where: {
-              email: data.email
+        var result=await Account.findAll({
+            where:{
+                email:data.email,
+                password:data.password
             }
-        });
-
-        if(account){
-            
-        }
+        })
+        return result
     }
 
+    findById=async data=>{
+        console.log('in repo ',typeof data)
+        var result=await Account.findByPk(data)
+        return result
+    }
     
 
 }

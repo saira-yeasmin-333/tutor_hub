@@ -1,5 +1,5 @@
 const Service = require('./base').Service;
-const jwt_decode = require('jwt-decode');
+const bcrypt=require('bcryptjs')
 const JWT = require('jsonwebtoken');
 const AccountRepository=require('../repository/auth').AccountRepository
 
@@ -11,43 +11,52 @@ class AuthService extends Service {
     }
 
     signup=async user=>{
-        var result=await accountRepository.create(user)
-        console.log(result)
-        return result
+        var lookup=await accountRepository.findUser(user.email)
+        console.log('lookup in service ,',lookup)
+        if(lookup.length>0){
+            return {
+                success:false,
+                error:'user already exists'
+            }
+        }
+        const salt = await bcrypt.genSalt(10)
+        const hashPassword = await bcrypt.hash(user.password,salt)
+        var result=await accountRepository.create({...user,password:hashPassword})
+        return {
+            success:true,
+            data:result
+        }
     }
 
-    googleLogin=async ({credential})=>{
-        return {success:true}
-        // try{
-        //     var userData= jwt_decode(credential)
-        //     var findQuery= `SELECT * FROM auth WHERE gmail=$1 and type=$2`
-        //     var findParams=[userData.email,constants.userTypeMapping.USER_TYPE_REGULAR]
-        //     var findResult=await this.query(findQuery,findParams)
-        //     var tokenObject
-        //     if(findResult.data.length===0){
-        //         var timestamp=parseInt(Date.now()/1000)
-        //         var insertQuery= `
-        //             INSERT INTO auth (gmail,name,image,type,joined_at,last_login) 
-        //             VALUES ($1,$2,$3,$4,$5,$6)
-        //             RETURNING id`
-        //         var insertParams=[userData.email,userData.name,userData.picture,constants.userTypeMapping.USER_TYPE_REGULAR,timestamp,timestamp]
-        //         var insertResult=await this.query(insertQuery,insertParams)
-        //         tokenObject={
-        //             id:insertResult.data[0].id,
-        //             name:userData.name,
-        //             gmail:userData.email,
-        //             image:userData.picture,
-        //             type:constants.userTypeMapping.USER_TYPE_REGULAR,
-        //             joined_at:timestamp,
-        //             last_login:timestamp
-        //         }
-        //     }
-        //     else tokenObject=findResult.data[0]
-        //     const token=JWT.sign(tokenObject, process.env.JWT_SECRET);
-        //     return {success:true,token}
-        // }catch(err){
-        //     return {success:false}
-        // }
+    signin=async user=>{
+        const checkuser=await accountRepository.findUser(user.email)
+        if(checkuser.length===0){
+            return {
+                success:false,
+                error:'user does not exist'
+            }
+        }
+        const isValid=await bcrypt.compare(user.password,checkuser[0].password)
+        if(!isValid)
+            return{
+                success:false,
+                error:'wrong password'
+            }
+        // generate token
+        const token = JWT.sign(checkuser[0].get({ plain: true }), "tutor hub");        
+        
+        return{
+            success:true,
+            token
+        }
+    }
+
+    findById=async (id)=>{
+        const result=await accountRepository.findById(id)
+        return{
+            success:true,
+            data:result
+        }
     }
 }
 

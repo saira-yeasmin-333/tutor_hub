@@ -10,7 +10,6 @@ class PostService extends Service {
 
     create=async post=>{
         var result=await postRepository.create(post)
-        console.log(result)
         return result
     }
 

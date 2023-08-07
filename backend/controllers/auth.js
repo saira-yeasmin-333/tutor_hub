@@ -9,21 +9,19 @@ class AuthController extends Controller{
     }
 
     signup=async(req,res)=>{
-        console.log('hi')
+        console.log('controller arived')
         var result=await authService.signup(req.body)
-        console.log(result)
-        return res.json({
-            success:true,
-            data:result
-        })
+        return res.status(200).json(result)
     }
 
-    googleLogin=async (req,res)=>{
-        var result=await authService.googleLogin(req.body)
-        return res.status(200).json({
-            success:result.success,
-            token:result.success?result.token:null
-        })
+    signin=async (req,res)=>{
+        var result=await authService.signin(req.body)
+        return res.status(200).json(result)
+    }
+
+    findById=async (req,res)=>{
+        var result=await authService.findById(req.params.id)
+        return res.status(200).json(result)
     }
 }
 

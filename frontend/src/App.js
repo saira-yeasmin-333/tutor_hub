@@ -1,11 +1,18 @@
 import Dialog from "@mui/material/Dialog";
 import { Rings } from 'react-loader-spinner';
 import DialogContent from "@mui/material/DialogContent";
-import { ToastContainer, toast } from 'react-toastify';
 import {useState} from 'react'
-import Home from './Home';
+import Location from './components/Location/location';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SignIn from "./signin";
+import Signup from "./signup";
+import toast, { Toaster } from 'react-hot-toast';
+import Filter from "./components/Location/filter";
+
 
 var showToast
+var showError
+var showSuccess
 var setLoading
 
 function App() {
@@ -14,15 +21,15 @@ function App() {
   setLoading=setL
 
   showToast=message=>{
-    toast.dark(message, {
-        position: "top-right",
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-    });
+    toast(message)
+  }
+
+  showError=message=>{
+    toast.error(message)
+  }
+
+  showSuccess=message=>{
+    toast.success(message)
   }
 
   return (
@@ -33,21 +40,37 @@ function App() {
         </DialogContent>
       </Dialog>
 
-      <ToastContainer
-          position="bottom-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
+      <Toaster
+         position="top-right"
+         reverseOrder={false}
       />
-      <Home/>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/signin"
+            exact
+            element={<SignIn />}
+          />
+          <Route
+            path="/location"
+            exact
+            element={<Location />}
+          />
+          <Route
+            path="/signup"
+            exact
+            element={<Signup />}
+          />
+          <Route
+            path="/filter"
+            exact
+            element={<Filter />}
+          />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
 
 export default App;
-export {showToast,setLoading}
+export {showToast,setLoading,showSuccess,showError}

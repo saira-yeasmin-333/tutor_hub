@@ -17,7 +17,9 @@ const Account = sq.define("account", {
         type: DataTypes.STRING
     },
     email: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
     },
     image: {
         type: DataTypes.STRING
@@ -36,19 +38,43 @@ const Account = sq.define("account", {
     timestamp: {
         type: DataTypes.INTEGER
     },
-    location: {
-        type: DataTypes.STRING
+    latitude: {
+        type: DataTypes.DOUBLE
+    },
+    longitude: {
+        type: DataTypes.DOUBLE
     },
     budget: {
         type: DataTypes.DOUBLE
     },
     class: {
         type: DataTypes.INTEGER
-     }
+     },
+    
+  });
+
+  const PreferredLocation = sq.define("preferred_location", {
+    latitude: {
+        type: DataTypes.DOUBLE,
+    },
+    longitude: {
+        type: DataTypes.DOUBLE,
+    },
+    address: {
+        type: DataTypes.STRING,
+    },
+    radius: {
+        type: DataTypes.INTEGER
+    },
+    tutor_id: {
+        type: DataTypes.INTEGER
+    },
+    
   });
 
 //   Account.hasMany(Post, { as: "posts" });
   Post.belongsTo(Account,{foreignKey:"student_id"})
+  PreferredLocation.belongsTo(Account,{foreignKey:"tutor_id"})
 
   const syncAllTables=async ()=>{
     try{
@@ -56,6 +82,8 @@ const Account = sq.define("account", {
         console.log("Account table creation successful")
         await Post.sync()
         console.log("Post table creation successful")
+        await PreferredLocation.sync()
+        console.log("location table creation successful")
     }catch(err){
         console.log('Error creating Tables')
         console.log(err)
@@ -64,7 +92,7 @@ const Account = sq.define("account", {
 
   syncAllTables()
 
-  module.exports={Post,Account}
+  module.exports={Post,Account,PreferredLocation}
 
 
   
