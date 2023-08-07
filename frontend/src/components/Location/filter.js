@@ -139,14 +139,14 @@ const MyComponent = () => {
                 {filteredPosts && filteredPosts.length > 0 &&(
                     filteredPosts.map((post) => (
                       <div>
-                         <PostDetail key={post.id} post={post} />
+                         <PostDetail key={post.id} post={post} filtered={true}/>
                          
                         </div>
                   ))
                 )}
                 {filteredPosts && filteredPosts.length === 0 &&(
                     posts.map((post) => (
-                      <PostDetail key={post.id} post={post} />
+                      <PostDetail key={post.id} post={post} filtered={false}/>
                   ))
                 )}
 
