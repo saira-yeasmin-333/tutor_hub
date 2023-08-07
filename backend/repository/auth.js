@@ -1,4 +1,4 @@
-const {Account} = require('../models/models');
+const {Account,Teacher} = require('../models/models');
 const Repository = require('./database').Repository
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -32,17 +32,7 @@ class AccountRepository extends Repository {
         }
     }
 
-    signin=async data=>{
-        const account=Account.findAll({
-            where: {
-              email: data.email
-            }
-        });
-
-        if(account){
-            
-        }
-    }  
+    
 
 }
 

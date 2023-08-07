@@ -36,7 +36,7 @@ class SubjectRepository extends Repository {
                   replacements: { id: data },
                 }
               );
-              console.log('printing query ',res)
+              return res
         }catch(e){
             console.log(e)
         }

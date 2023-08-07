@@ -65,7 +65,7 @@ const ReviewPage = () => {
     useEffect(() => {
         // Make the HTTP GET request to the backend API
         axios
-            .get(`http://localhost:5000/api/get-teachers`)
+            .get(`http://localhost:5000/api/fetch-tutor`)
             .then((response) => {
                 setTeachers(response.data.data); // Set the fetched data to the state
             })

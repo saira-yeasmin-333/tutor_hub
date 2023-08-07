@@ -18,6 +18,12 @@ class TeacherService extends Service {
         var result = await teacherRepository.getAll()
         return result
     }
+
+    fetchTutor=async data=>{
+        var result=await teacherRepository.fetchTutor(data)
+        console.log(result)
+        return result
+    }
 }
 
 module.exports = { TeacherService }
