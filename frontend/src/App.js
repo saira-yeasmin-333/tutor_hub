@@ -1,5 +1,11 @@
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
+import Location from './components/Location/location';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SignIn from "./signin";
+import Signup from "./signup";
+import toast, { Toaster } from 'react-hot-toast';
+import Filter from "./components/Location/filter";
 import { useState } from 'react';
 import { Rings } from 'react-loader-spinner';
 import { ToastContainer, toast } from 'react-toastify';
@@ -11,64 +17,77 @@ import ProfilePage from "./pages/ProfilePage";
 import ReviewPage from "./pages/ReviewPage";
 
 
+
 var showToast
+var showError
+var showSuccess
 var setLoading
 
 function App() {
-
-  const typeNo = 2;
-
+  
   const [loading, setL] = useState(false)
   setLoading = setL
 
-  showToast = message => {
-    toast.dark(message, {
-      position: "top-right",
-      autoClose: 4000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+  const typeNo = 2;
+
+
+  showToast=message=>{
+    toast(message)
+  }
+
+  showError=message=>{
+    toast.error(message)
+  }
+
+  showSuccess=message=>{
+    toast.success(message)
   }
 
   return (
-    <Router>
-      <div className="App">
-        <Dialog open={loading}>
-          <DialogContent>
-            <Rings color="#00BFFF" height={80} width={80} />
-          </DialogContent>
-        </Dialog>
+    <div className="App">
+      <Dialog open={loading}>
+        <DialogContent>
+          <Rings color="#00BFFF" height={80} width={80} />       
+        </DialogContent>
+      </Dialog>
 
-        <ToastContainer
-          position="bottom-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-
-        <div className="content">
-          <Routes>
-            <Route path='/create-post/:id' Component={CreatePost} >
+      <Toaster
+         position="top-right"
+         reverseOrder={false}
+      />
+      <BrowserRouter>
+        <Routes>
+           
+           <Route path='/create-post/:id' Component={CreatePost} >
             </Route>
             <Route path='/get-profile/:id' Component={ProfilePage} >
             </Route>
             <Route path='/create-review' Component={ReviewPage}>
-
-            </Route>
-          </Routes>
-        </div>
-      </div>
-    </Router>
-  );
+          <Route
+            path="/signin"
+            exact
+            element={<SignIn />}
+          />
+          <Route
+            path="/location"
+            exact
+            element={<Location />}
+          />
+          <Route
+            path="/signup"
+            exact
+            element={<Signup />}
+          />
+          <Route
+            path="/filter"
+            exact
+            element={<Filter />}
+          />
+        </Routes>
+      </BrowserRouter>
+    </div>
 }
 
 export default App;
-export { setLoading, showToast };
+export {showToast,setLoading,showSuccess,showError}
+

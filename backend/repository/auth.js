@@ -1,3 +1,4 @@
+
 const {Account,Teacher} = require('../models/models');
 const Repository = require('./database').Repository
 const bcrypt = require('bcryptjs');
@@ -17,21 +18,41 @@ class AccountRepository extends Repository {
 
     create=async user=>{
         try{
-            const account = await Account.create({
-                name:user.name,
-                role:user.role,
-                phone:user.phone,
-                email:user.email,
-                image:user.image,
-                password:bcrypt.hashSync(user.password, 10)
-            })
+            const account = await Account.create(user)
             return account
+        }catch(e){
+            console.log('error creating account: ',e)
         }
-        catch(e){
-            console.log(e)
-        }
+
+        
     }
 
+    findUser=async email=>{
+        console.log('email: ',email)
+        var result=await Account.findAll({
+            where:{
+                email:email
+            }
+        })
+        return result
+    }
+
+    signin=async data=>{
+        var result=await Account.findAll({
+            where:{
+                email:data.email,
+                password:data.password
+            }
+        })
+        return result
+
+    }
+
+    findById=async data=>{
+        console.log('in repo ',typeof data)
+        var result=await Account.findByPk(data)
+        return result
+    }
     
 
 }

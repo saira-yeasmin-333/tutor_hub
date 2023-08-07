@@ -17,7 +17,8 @@ class PostRepository extends Repository {
             const post = await Post.create({
                 timestamp:user.timestamp,
                 student_id:user.student_id,
-                location:user.location,
+                latitude:user.latitude,
+                longitude:user.longitude,
                 budget:user.budget,
                 class:user.class,
             })
