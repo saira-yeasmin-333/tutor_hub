@@ -25,6 +25,8 @@ class AuthController extends Controller{
             token:result.success?result.token:null
         })
     }
+
+    
 }
 
 module.exports = {AuthController}

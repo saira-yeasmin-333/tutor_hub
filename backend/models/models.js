@@ -76,6 +76,29 @@ const Student = sq.define("student", {
   }
 })
 
+const Review = sq.define("review", {
+  review_id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  student_id: {
+    type: DataTypes.INTEGER,
+  },
+  teacher_id: {
+    type: DataTypes.INTEGER,
+  },
+  rating: {
+    type: DataTypes.DOUBLE,
+  },
+  review_text: {
+    type: DataTypes.STRING,
+  },
+  timestamp: {
+    type: DataTypes.INTEGER,
+  },
+})
+
 const Subject = sq.define("subject", {
   id: {
     type: DataTypes.INTEGER,
@@ -104,6 +127,10 @@ const Efficiency = sq.define("efficiency", {
 //   Account.hasMany(Post, { as: "posts" });
 Post.belongsTo(Account, { foreignKey: "student_id" })
 
+Review.belongsTo(Teacher, { foreignKey: "teacher_id" })
+
+Post.belongsTo(Student, { foreignKey: "student_id" })
+
 Efficiency.belongsTo(Teacher, { foreignKey: "teacher_account_id" })
 Efficiency.belongsTo(Subject, { foreignKey: "subject_id" })
 
@@ -123,6 +150,8 @@ const syncAllTables = async () => {
     console.log("Subject table creation successful")
     await Efficiency.sync()
     console.log("Efficiency table creation successful")
+    await Review.sync()
+    console.log("Review table creation successful")
   } catch (err) {
     console.log('Error creating Tables')
     console.log(err)
@@ -131,4 +160,4 @@ const syncAllTables = async () => {
 
 syncAllTables()
 
-module.exports = { Post, Account, Teacher, Student, Subject, Efficiency }
+module.exports = { Post, Account, Teacher, Student, Subject, Efficiency ,Review}

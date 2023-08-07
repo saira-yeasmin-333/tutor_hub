@@ -28,6 +28,19 @@ class TeacherRepository extends Repository {
 
     }
 
+    fetchTutor=async data =>{
+        try{
+            const res=await Teacher.findOne({
+                where: { account_id:
+                data},
+              });
+            return res
+        }catch(e){
+            console.log(e)
+        }
+    } 
+    
+
 }
 
 module.exports = { TeacherRepository }
