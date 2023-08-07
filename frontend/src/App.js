@@ -8,14 +8,14 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import CreatePost from './pages/CreatePost';
 
 import ProfilePage from "./pages/ProfilePage";
+import ReviewPage from "./pages/ReviewPage";
 
 
 var showToast
 var setLoading
 
 function App() {
-  
-  
+
   const typeNo = 2;
 
   const [loading, setL] = useState(false)
@@ -59,6 +59,9 @@ function App() {
             <Route path='/create-post/:id' Component={CreatePost} >
             </Route>
             <Route path='/get-profile/:id' Component={ProfilePage} >
+            </Route>
+            <Route path='/create-review' Component={ReviewPage}>
+
             </Route>
           </Routes>
         </div>
