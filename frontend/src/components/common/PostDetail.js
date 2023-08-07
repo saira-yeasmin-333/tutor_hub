@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
 import { setLoading, showError, showToast } from "../../App";
 import axios from 'axios';
-const PostDetail = ({ post }) => {
+const PostDetail = ({ post , filtered}) => {
   
   const [stu,setStu]=useState([])
   const [timestamp, setTimestamp] = useState(post.timestamp);
@@ -52,6 +52,19 @@ const PostDetail = ({ post }) => {
           <Typography variant="body1">Name :{stu.name}</Typography>
           <Typography variant="body1">Budget {post.budget}</Typography>
           <Typography variant="body1">Date :{convertTimestampToDateTime()}</Typography>
+          {filtered === true ? (
+          <div>
+            <Typography variant="body1">Distance :{post.distance}</Typography>
+            <Typography variant="body1">With respect to my preferred location of:</Typography>
+            <Typography variant="body1">Latitude: {post.favLocationLatitude}</Typography>
+            <Typography variant="body1">Longitude: {post.favLocationLongitude}</Typography>
+            <Typography variant="body1">Radius: {post.favLocationRadius}</Typography>
+          </div>
+        ) : (
+          <div>
+            
+          </div>
+        )}
         </Paper>
       </Grid>
     </Grid>

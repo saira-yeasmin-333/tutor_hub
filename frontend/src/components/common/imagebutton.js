@@ -55,7 +55,14 @@ const ImageButton = ({ favLocations, posts, setFilteredPosts, filteredPosts }) =
           //   'distance':distance,
           //   'radius':favLocation.radius
           // }
-          filteredPosts2.push({...post,distance});
+          const combinedPost = {
+            ...post,
+            distance: distance,
+            "favLocationLatitude": favLocation.latitude,
+            "favLocationLongitude": favLocation.longitude,
+            "favLocationRadius": favLocation.radius
+          };
+          filteredPosts2.push(combinedPost);
           
         }
       });

@@ -65,8 +65,9 @@ const ReviewPage = () => {
     useEffect(() => {
         // Make the HTTP GET request to the backend API
         axios
-            .get(`http://localhost:5000/api/fetch-tutor`)
+            .get(`http://localhost:5000/api/teachers`)
             .then((response) => {
+                console.log('review response; ',response)
                 setTeachers(response.data.data); // Set the fetched data to the state
             })
             .catch((error) => {
@@ -114,12 +115,11 @@ const ReviewPage = () => {
                 onClose={handleClose}
             >
                 {teachers.map((teacher) => (<MenuItem
-                    key={teacher.id}
-                    value={teacher.name}
+                    key={teacher.teacher_id}
                     onClick={() => handleTeacherSelect(teacher)}
                     disableRipple
                 >
-                    <ListItemText>{teacher.name}</ListItemText>
+                    <ListItemText>{teacher.teacher_id}</ListItemText>
                 </MenuItem>))}
                 {/* <MenuItem onClick={handleClose} disableRipple>
                     <EditIcon />
