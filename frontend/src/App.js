@@ -1,13 +1,21 @@
 import Dialog from "@mui/material/Dialog";
-import { Rings } from 'react-loader-spinner';
 import DialogContent from "@mui/material/DialogContent";
-import {useState} from 'react'
 import Location from './components/Location/location';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignIn from "./signin";
 import Signup from "./signup";
 import toast, { Toaster } from 'react-hot-toast';
 import Filter from "./components/Location/filter";
+import { useState } from 'react';
+import { Rings } from 'react-loader-spinner';
+import { ToastContainer, toast } from 'react-toastify';
+
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import CreatePost from './pages/CreatePost';
+
+import ProfilePage from "./pages/ProfilePage";
+import ReviewPage from "./pages/ReviewPage";
+
 
 
 var showToast
@@ -16,9 +24,12 @@ var showSuccess
 var setLoading
 
 function App() {
+  
+  const [loading, setL] = useState(false)
+  setLoading = setL
 
-  const [loading,setL]=useState(false)
-  setLoading=setL
+  const typeNo = 2;
+
 
   showToast=message=>{
     toast(message)
@@ -46,6 +57,12 @@ function App() {
       />
       <BrowserRouter>
         <Routes>
+           
+           <Route path='/create-post/:id' Component={CreatePost} >
+            </Route>
+            <Route path='/get-profile/:id' Component={ProfilePage} >
+            </Route>
+            <Route path='/create-review' Component={ReviewPage}>
           <Route
             path="/signin"
             exact
@@ -69,8 +86,8 @@ function App() {
         </Routes>
       </BrowserRouter>
     </div>
-  );
 }
 
 export default App;
 export {showToast,setLoading,showSuccess,showError}
+

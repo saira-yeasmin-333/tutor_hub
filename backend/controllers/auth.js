@@ -23,6 +23,8 @@ class AuthController extends Controller{
         var result=await authService.findById(req.params.id)
         return res.status(200).json(result)
     }
+
+    
 }
 
 module.exports = {AuthController}

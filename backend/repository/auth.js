@@ -1,5 +1,10 @@
-const {Account} = require('../models/models');
-const Repository=require('./database').Repository
+
+const {Account,Teacher} = require('../models/models');
+const Repository = require('./database').Repository
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const tokenExpiryDuration=86400
 
 class AccountRepository extends Repository {
     constructor() {
@@ -40,6 +45,7 @@ class AccountRepository extends Repository {
             }
         })
         return result
+
     }
 
     findById=async data=>{

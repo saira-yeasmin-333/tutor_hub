@@ -27,7 +27,6 @@ class AuthService extends Service {
             data:result
         }
     }
-
     signin=async user=>{
         const checkuser=await accountRepository.findUser(user.email)
         if(checkuser.length===0){
