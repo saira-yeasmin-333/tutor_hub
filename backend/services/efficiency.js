@@ -13,6 +13,8 @@ class EfficiencyService extends Service {
         return result
     }
 
+    
+
     insertEfficiency = async (efficiency) => {
         var result = await efficiencyRepository.insertEfficiency(efficiency)
         console.log(result)

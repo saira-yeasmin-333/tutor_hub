@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Avatar } from '@mui/material';
 import PrimarySearchAppBar from '../components/Appbar/appbar'
+import Efficiencies from './Efficiencies';
 
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
+    
     const { id } = useParams();
 
     useEffect(() => {
@@ -38,6 +40,7 @@ const ProfilePage = () => {
             <p>Email: {user.email}</p>
             <p>Phone: {user.phone}</p>
             <p>Account Type: {user.role}</p>
+            <Efficiencies id ={user.account_id} role={user.role} />
         </div>
     );
 };

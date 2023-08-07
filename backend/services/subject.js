@@ -18,6 +18,11 @@ class SubjectService extends Service {
         var result = await subjectRepository.getAll()
         return result
     }
+
+    getEfficiencyByAccount = async(data) => {
+        var result = await subjectRepository.getEfficiencyByAccount(data)
+        return result
+    }
 }
 
 module.exports = { SubjectService }
