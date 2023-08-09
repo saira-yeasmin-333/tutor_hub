@@ -14,7 +14,7 @@ const ProfilePage = () => {
     useEffect(() => {
         // Make the HTTP GET request to the backend API
         axios
-            .get(`http://localhost:5000/api/teachers`)
+            .get(`http://localhost:5000/api/get-profile/${id}`)
       .then((response) => {
                 setUser(response.data.data); // Set the fetched data to the state
             })
