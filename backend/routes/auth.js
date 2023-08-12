@@ -1,5 +1,6 @@
 const router = require("express-promise-router")();
 
+const { NotificationController } = require("../controllers/notification");
 const { ReviewController } = require("../controllers/review");
 const AuthController=require('../controllers/auth').AuthController
 const PostController=require('../controllers/post').PostController
@@ -9,6 +10,7 @@ const EfficiencyController = require('../controllers/efficiency').EfficiencyCont
 const SubjectController = require('../controllers/subject').SubjectController
 const TeacherController = require('../controllers/teacher').TeacherController
 const SMSController = require('../controllers/sms').SMSController
+const { authenticateUser } = require("../services/authMiddleware");
 
 const authController=new AuthController()
 const postController=new PostController()
@@ -19,6 +21,7 @@ const teacherController = new TeacherController()
 const reviewController = new ReviewController()
 const locationController=new LocationController()
 const smsController=new SMSController()
+const notificationController=new NotificationController()
 
 router.route("/signup").post(authController.signup);
 router.route("/signin").post(authController.signin);
@@ -45,5 +48,9 @@ router.route("/review").get(reviewController.getReviews);
 router.route("/get-efficiency-by-account/:account_id").get(subjectController.getEfficiencyByAccount)
 
 router.route("/sms").get(smsController.sendSMS)
+
+router.route("/notification/:id").get(notificationController.getNotifications)
+router.route("/notification").post(notificationController.send)
+router.route("/notification/read/:id").post(notificationController.readAllData)
 
 module.exports=router

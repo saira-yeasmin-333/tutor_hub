@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -17,6 +16,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Button from '@mui/material/Button';
+import axios from 'axios';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 
@@ -63,11 +63,39 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar(data) {
   const type = data.type
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [notifications, setNotifications] = useState([]);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchornotificationEl, setAnchorNotificationEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
+  const isNotificationMenuOpen = Boolean(anchornotificationEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/notification/2');
+      console.log("response: ", response.data.notification.length)
+      setNotifications(response.data.notification);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch notifications initially
+    fetchNotifications();
+
+    // Set up interval to fetch notifications periodically
+    const intervalId = setInterval(fetchNotifications, 5 * 5000); // Fetch every 5 seconds
+
+    return () => {
+      clearInterval(intervalId); // Clean up interval on unmount
+    };
+  }, []);
+
+
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -82,8 +110,37 @@ export default function PrimarySearchAppBar(data) {
     handleMobileMenuClose();
   };
 
+  const handleNotificationMenuClose = () => {
+    setAnchorNotificationEl(null);
+
+  }
+
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null); // Close the menu
+  };
+
+
+  const readAlldata=async ()=>{
+   
+    try{
+      console.log('here come')
+      var response=await axios.post('http://localhost:5000/api/notification/read/2');
+      console.log(response.success)
+    }catch(e){
+      console.log('error'.e.message)
+    }
+    
+  }
+  const handleNotificationClick = (event) => {
+    console.log('icon is clicked')
+    setAnchorNotificationEl(event.currentTarget);
+    if (anchornotificationEl === null) {
+      readAlldata();
+    }
   };
 
   const menuId = 'primary-search-account-menu';
@@ -106,6 +163,28 @@ export default function PrimarySearchAppBar(data) {
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
     </Menu>
+  )
+  const notificationId = 'primary-search-notification-menu';
+  const renderNotificationMenu = (
+    <Menu
+      anchorEl={anchornotificationEl}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      id={notificationId}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={isNotificationMenuOpen}
+      onClose={handleNotificationMenuClose}
+    >
+      {notifications.map((notification, index) => (
+        <MenuItem key={index}>{notification.message}</MenuItem>
+      ))}
+    </Menu>
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -126,7 +205,7 @@ export default function PrimarySearchAppBar(data) {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        
+
       </MenuItem>
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
@@ -136,17 +215,18 @@ export default function PrimarySearchAppBar(data) {
         </IconButton>
         <p>Messages</p>
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={handleNotificationClick}>
         <IconButton
           size="large"
           aria-label="show 17 new notifications"
           color="inherit"
         >
-          <Badge badgeContent={17} color="error">
+          <Badge badgeContent={notifications.length} color="error">
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        <p>Notifications</p>
+        <p >Notifications</p>
+
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -185,7 +265,7 @@ export default function PrimarySearchAppBar(data) {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          
+
           <Typography
             variant="h6"
             noWrap
@@ -194,7 +274,7 @@ export default function PrimarySearchAppBar(data) {
           >
             MUI
           </Typography>
-          
+
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
@@ -214,11 +294,12 @@ export default function PrimarySearchAppBar(data) {
               </Badge>
             </IconButton>
             <IconButton
+              onClick={handleNotificationClick}
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
             >
-              <Badge badgeContent={17} color="error">
+              <Badge badgeContent={notifications.length} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -261,6 +342,7 @@ export default function PrimarySearchAppBar(data) {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      {renderNotificationMenu}
     </Box>
   );
 }
