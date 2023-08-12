@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -17,7 +17,9 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Button from '@mui/material/Button';
 import axios from 'axios';
+import Cookies from 'universal-cookie';
 
+const cookies = new Cookies();
 const pages = ['Products', 'Pricing', 'Blog'];
 
 const Search = styled('div')(({ theme }) => ({
@@ -63,6 +65,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar(data) {
   const type = data.type
 
+  const notificationRef=useRef()
+
   const [notifications, setNotifications] = useState([]);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -73,13 +77,17 @@ export default function PrimarySearchAppBar(data) {
   const isNotificationMenuOpen = Boolean(anchornotificationEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+
+
   const fetchNotifications = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/notification/2');
-      console.log("response: ", response.data.notification.length)
-      setNotifications(response.data.notification);
-    } catch (error) {
-      console.error('Error fetching notifications:', error);
+    if(!notificationRef.current){
+      try {
+        const response = await axios.get('http://localhost:5000/api/notification',{headers:{authorization:'Bearer '+cookies.get('token')}});
+        console.log("response: ", response.data.notification.length)
+        if(!notificationRef.current)setNotifications(response.data.notification);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
     }
   };
 
@@ -88,8 +96,8 @@ export default function PrimarySearchAppBar(data) {
     fetchNotifications();
 
     // Set up interval to fetch notifications periodically
-    const intervalId = setInterval(fetchNotifications, 5 * 5000); // Fetch every 5 seconds
-
+    const intervalId = setInterval(fetchNotifications, 500); // Fetch every 5 seconds
+    notificationRef.current=false
     return () => {
       clearInterval(intervalId); // Clean up interval on unmount
     };
@@ -112,7 +120,7 @@ export default function PrimarySearchAppBar(data) {
 
   const handleNotificationMenuClose = () => {
     setAnchorNotificationEl(null);
-
+    notificationRef.current=false
   }
 
   const handleMobileMenuOpen = (event) => {
@@ -128,18 +136,27 @@ export default function PrimarySearchAppBar(data) {
    
     try{
       console.log('here come')
-      var response=await axios.post('http://localhost:5000/api/notification/read/2');
-      console.log(response.success)
+      console.log({headers:{authorization:'Bearer '+cookies.get('token')}})
+      notificationRef.current=true
+      var response=await axios.post('http://localhost:5000/api/notification/read',{},{headers:{authorization:'Bearer '+cookies.get('token')}});
+      // console.log(response.success)
     }catch(e){
-      console.log('error'.e.message)
+      console.log('hi')
+      console.log(e)
     }
     
   }
   const handleNotificationClick = (event) => {
     console.log('icon is clicked')
-    setAnchorNotificationEl(event.currentTarget);
+    if(notifications.length>0){
+      setAnchorNotificationEl(event.currentTarget);
     if (anchornotificationEl === null) {
+      
       readAlldata();
+      
+    }else{
+      notificationRef.current=false
+    }
     }
   };
 

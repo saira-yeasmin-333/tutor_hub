@@ -17,7 +17,7 @@ class NotificationController extends Controller{
     }
 
     getNotifications=async (req,res)=>{
-        var result=await notificationService.getNotifications(req.params.id)
+        var result=await notificationService.getNotifications(req.body.account_id)
         return res.status(200).json({
             success:true,
             notification:result
@@ -25,7 +25,7 @@ class NotificationController extends Controller{
     }
 
     readAllData=async(req,res)=>{
-        var result=await notificationService.readAlldata(req.params.id)
+        var result=await notificationService.readAlldata(req.body.account_id)
         return res.json({
             success:true,
         })

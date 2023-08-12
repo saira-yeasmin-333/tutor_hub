@@ -58,7 +58,7 @@ function App() {
            
            <Route path='/create-post/:id' Component={CreatePost} >
             </Route>
-            <Route path='/get-profile/:id' Component={ProfilePage} >
+            <Route path='/get-profile/' Component={ProfilePage} >
             </Route>
             <Route path='/create-review' Component={ReviewPage}>
             </Route>
@@ -84,7 +84,7 @@ function App() {
           />
 
           <Route
-            path="/notification/:id"
+            path="/notification"
             exact
             element={<Notification />}
           />
