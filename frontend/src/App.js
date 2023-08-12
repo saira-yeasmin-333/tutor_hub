@@ -12,6 +12,7 @@ import CreatePost from './pages/CreatePost';
 
 import ProfilePage from "./pages/ProfilePage";
 import ReviewPage from "./pages/ReviewPage";
+import Notification from "./pages/notification";
 
 
 
@@ -81,6 +82,13 @@ function App() {
             exact
             element={<Filter />}
           />
+
+          <Route
+            path="/notification/:id"
+            exact
+            element={<Notification />}
+          />
+
         </Routes>
       </BrowserRouter>
     </div>

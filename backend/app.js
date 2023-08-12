@@ -17,6 +17,39 @@ app.use(cors({
 app.options('*',cors());
 app.set('view engine', 'handlebars');
 
+//notification testing 
+let notifications = [];
+
+app.post('/send-notification', (req, res) => {
+  const { message } = req.body;
+  console.log('Sending notification:', message);
+
+  notifications.push(message);
+
+  res.sendStatus(200);
+});
+
+app.get('/get-notifications', async (req, res) => {
+  try {
+    // Use long polling approach: respond when there are new notifications
+    const waitForNotifications = () => {
+      if (notifications.length > 0) {
+        const newNotifications = notifications.slice();
+        notifications = []; // Clear the notifications array
+        res.json({ notifications: newNotifications });
+      } else {
+        setTimeout(waitForNotifications, 1000); // Check again after 1 second
+      }
+    };
+
+    waitForNotifications();
+  } catch (error) {
+    console.error('Error getting notifications:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
 // Body Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

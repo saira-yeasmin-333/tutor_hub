@@ -136,6 +136,29 @@ const Subject = sq.define("subject", {
   }
 })
 
+const Notification = sq.define("notification", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  from: {
+    type: DataTypes.INTEGER
+  },
+  to: {
+    type: DataTypes.INTEGER
+  },
+  message:{
+    type:DataTypes.STRING
+  },
+  is_read:{
+    type:DataTypes.BOOLEAN
+  },
+  timestamp:{
+    type:DataTypes.INTEGER
+  }
+})
+
 const Efficiency = sq.define("efficiency", {
   id: {
     type: DataTypes.INTEGER,
@@ -164,6 +187,10 @@ Efficiency.belongsTo(Subject, { foreignKey: "subject_id" })
 
 Teacher.belongsTo(Account, { foreignKey: "account_id" })
 Student.belongsTo(Account, { foreignKey: "account_id" })
+
+Notification.belongsTo(Account,{foreignKey:"from"})
+Notification.belongsTo(Account,{foreignKey:"to"})
+
 const syncAllTables = async () => {
   try {
     await Account.sync()
@@ -182,6 +209,8 @@ const syncAllTables = async () => {
     console.log("Review table creation successful")
     await PreferredLocation.sync()
     console.log("location table creation successful")
+    await Notification.sync()
+    console.log("notification table creation successful")
   } catch (err) {
     console.log('Error creating Tables')
     console.log(err)
@@ -190,4 +219,4 @@ const syncAllTables = async () => {
 
 syncAllTables()
 
-module.exports = { Post, Account, Teacher, Student, Subject, Efficiency ,Review,PreferredLocation}
+module.exports = { Post, Account, Teacher, Student, Subject, Efficiency ,Review,PreferredLocation,Notification}
