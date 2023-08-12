@@ -1,12 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+
 
 const Notification=()=>{
     const [notifications, setNotifications] = useState([]);
 
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/notification/2');
+        const response = await axios.get('http://localhost:5000/api/notification',{headers:{authorization:'Bearer '+cookies.get('token')}});
         console.log("response: ",response.data)
         setNotifications(response.data.notification);
       } catch (error) {

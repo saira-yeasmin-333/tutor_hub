@@ -32,7 +32,7 @@ router.route("/location").post(locationController.create);
 router.route("/location").get(locationController.getLocations);
 router.route("/account/:id").get(authController.findById);
 
-router.route("/get-profile/:id").get(profileController.getProfile);
+router.route("/get-profile").get(authenticateUser,profileController.getProfile);
 router.route("/get-efficiency/:teacher_id").get(efficiencyController.getEfficiency);
 
 router.route("/insert-efficiency").post(efficiencyController.insertEfficiency);
@@ -49,8 +49,8 @@ router.route("/get-efficiency-by-account/:account_id").get(subjectController.get
 
 router.route("/sms").get(smsController.sendSMS)
 
-router.route("/notification/:id").get(notificationController.getNotifications)
+router.route("/notification").get(authenticateUser,notificationController.getNotifications)
 router.route("/notification").post(notificationController.send)
-router.route("/notification/read/:id").post(notificationController.readAllData)
+router.route("/notification/read").post(authenticateUser,notificationController.readAllData)
 
 module.exports=router

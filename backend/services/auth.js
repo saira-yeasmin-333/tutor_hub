@@ -42,7 +42,7 @@ class AuthService extends Service {
                 error:'wrong password'
             }
         // generate token
-        const token = JWT.sign(checkuser[0].get({ plain: true }), "tutor hub");        
+        const token = JWT.sign(checkuser[0].get({ plain: true }), process.env.JWT_SECRET_KEY);        
         
         return{
             success:true,

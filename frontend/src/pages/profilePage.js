@@ -4,7 +4,9 @@ import axios from 'axios';
 import { Avatar } from '@mui/material';
 import PrimarySearchAppBar from '../components/Appbar/appbar'
 import Efficiencies from './Efficiencies';
+import Cookies from 'universal-cookie';
 
+const cookies = new Cookies();
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
@@ -14,7 +16,7 @@ const ProfilePage = () => {
     useEffect(() => {
         // Make the HTTP GET request to the backend API
         axios
-            .get(`http://localhost:5000/api/get-profile/${id}`)
+            .get(`http://localhost:5000/api/get-profile`,{headers:{authorization:'Bearer '+cookies.get('token')}})
       .then((response) => {
                 setUser(response.data.data); // Set the fetched data to the state
             })
