@@ -1,65 +1,34 @@
 import FormControl from '@mui/base/FormControl';
 import Button from '@mui/material/Button';
-import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
-import MenuList from '@mui/material/MenuList';
 import axios from 'axios';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import EditIcon from '@mui/icons-material/Edit';
-import Divider from '@mui/material/Divider';
-import ArchiveIcon from '@mui/icons-material/Archive';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { styled, alpha } from '@mui/material/styles';
-import Menu from '@mui/material/Menu';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
-const StyledMenu = styled((props) => (
-    <Menu
-        elevation={0}
-        anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-        }}
-        transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-        }}
-        {...props}
-    />
-))(({ theme }) => ({
-    '& .MuiPaper-root': {
-        borderRadius: 6,
-        marginTop: theme.spacing(1),
-        minWidth: 180,
-        color:
-            theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
-        boxShadow:
-            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-        '& .MuiMenu-list': {
-            padding: '4px 0',
-        },
-        '& .MuiMenuItem-root': {
-            '& .MuiSvgIcon-root': {
-                fontSize: 18,
-                color: theme.palette.text.secondary,
-                marginRight: theme.spacing(1.5),
-            },
-            '&:active': {
-                backgroundColor: alpha(
-                    theme.palette.primary.main,
-                    theme.palette.action.selectedOpacity,
-                ),
-            },
-        },
-    },
-}));
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { Rating } from "@mui/material";
 
 const ReviewPage = () => {
-    const [anchorEl, setAnchorEl] = useState(null);
     const [teachers, setTeachers] = useState([]);
-    const [selectedTeacher, setSelectedTeacher] = useState(null)
+    const [subjects, setSubjects] = useState([]);
+
+    const [subject, setSubject] = React.useState("");
+    const [teacher, setTeacher] = React.useState("");
+
+    const changeSubject = (event) => {
+        setSubject(event.target.value);
+    };
+
+    const changeTeacher = (event) => {
+        setTeacher(event.target.value);
+    };
     
 
     useEffect(() => {
@@ -76,73 +45,135 @@ const ReviewPage = () => {
         console.log(teachers)
     }, []); // Add "id" as a dependency
 
-    
-    
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    const handleTeacherSelect = (data) => {
-        setAnchorEl(null);
-        setSelectedTeacher(data)
-        console.log(selectedTeacher)
-    }
+
 
     return (
         <div>
-            <Button
-                id="demo-customized-button"
-                aria-controls={open ? 'demo-customized-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                variant="contained"
-                disableElevation
-                onClick={handleClick}
-                endIcon={<KeyboardArrowDownIcon />}
-            >
-                Options
-            </Button>
-            <StyledMenu
-                id="demo-customized-menu"
-                MenuListProps={{
-                    'aria-labelledby': 'demo-customized-button',
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-            >
-                {teachers.map((teacher) => (<MenuItem
-                    key={teacher.teacher_id}
-                    onClick={() => handleTeacherSelect(teacher)}
-                    disableRipple
-                >
-                    <ListItemText>{teacher.teacher_id}</ListItemText>
-                </MenuItem>))}
-                {/* <MenuItem onClick={handleClose} disableRipple>
-                    <EditIcon />
-                    Edit
-                </MenuItem>
-                <MenuItem onClick={handleClose} disableRipple>
-                    <FileCopyIcon />
-                    Duplicate
-                </MenuItem>
-                <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={handleClose} disableRipple>
-                    <ArchiveIcon />
-                    Archive
-                </MenuItem>
-                <MenuItem onClick={handleClose} disableRipple>
-                    <MoreHorizIcon />
-                    More
-                </MenuItem> */}
-            </StyledMenu>
+            <Paper elevation={3} sx={{ marginRight: "15%", marginLeft: "15%" }}>
+                <Box sx={{ padding: 5 }}>
+                    <Typography variant="h6" gutterBottom sx={{ color: "#0067AB", paddingBottom: 5 }}>
+                        Create a Review
+                    </Typography>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} sm={6}>
+                            <InputLabel
+                                sx={{
+                                    display: "flex",
+                                    fontWeight: 700
+                                }}
+                            >
+                                Choose Teacher
+                            </InputLabel>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel id="demo-simple-select-label">Teacher Name</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={teacher}
+                                    label="Teacher"
+                                    onChange={changeTeacher}
+                                >
+                                    {teachers.map((item) => (
+                                        <MenuItem value={item}>{item}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+
+                        <Grid item xs={12} sm={12}>
+                            <InputLabel
+                                sx={{
+                                    display: "flex",
+                                    fontWeight: 700
+                                }}
+                            >
+                                Grade Submit
+                            </InputLabel>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel id="demo-simple-select-label">Choose Subject</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={subject}
+                                    label="Subject"
+                                    onChange={changeSubject}
+                                >
+                                    {subjects.map((item) => (
+                                        <MenuItem value={item}>{item}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                required
+                                id="grade_expected"
+                                name="grade_expected"
+                                label="Grade Expected"
+                                fullWidth
+                                size="small"
+                                autoComplete="off"
+                                variant="outlined"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                required
+                                id="grade_received"
+                                name="grade_received"
+                                label="Grade Received"
+                                fullWidth
+                                size="small"
+                                autoComplete="off"
+                                variant="outlined"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <InputLabel
+                                sx={{
+                                    display: "flex",
+                                    fontWeight: 700
+                                }}
+                            >
+                                Comment here...
+                            </InputLabel>
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <TextField
+                                id="outlined-multiline-static"
+                                label="Comment"
+                                multiline
+                                fullWidth
+                                rows={3}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={5} />
+                        <Grid item xs={12} sm={12}>
+                            <div style={{ width: "50%" }}>
+                                <Typography>Give A Rating</Typography>
+                                <Rating name="half" defaultValue={2}
+                                    precision={0.25} size="large" />
+                            </div>
+                        </Grid>
+                        <Grid item xs={12} sm={5} />
+                        <Grid item xs={12} sm={5} />
+                        <Grid item xs={12} sm={12}>
+                            <Button variant="contained" sx={{ justifyContent: "center" }}>
+                                Submit
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={5} />
+                    </Grid>
+                </Box>
+            </Paper>
         </div>
     );
 };
 
 export default ReviewPage
-
-
