@@ -27,6 +27,14 @@ class AccountRepository extends Repository {
         
     }
 
+    updateProfileImage=async(data)=>{
+        const res=Account.update(
+            { image: data.url},
+            { where: { account_id: data.account_id } }
+        )
+        return res
+    }
+
     findUser=async email=>{
         console.log('email: ',email)
         var result=await Account.findAll({
@@ -49,7 +57,6 @@ class AccountRepository extends Repository {
     }
 
     findById=async data=>{
-        console.log('in repo ',typeof data)
         var result=await Account.findByPk(data)
         return result
     }

@@ -13,6 +13,7 @@ import CreatePost from './pages/CreatePost';
 import ProfilePage from "./pages/ProfilePage";
 import ReviewPage from "./pages/ReviewPage";
 import Notification from "./pages/notification";
+import ImageTest from "./pages/imageTest";
 
 
 
@@ -89,6 +90,11 @@ function App() {
             element={<Notification />}
           />
 
+          <Route
+            path="/image"
+            exact
+            element={<ImageTest />}
+          />
         </Routes>
       </BrowserRouter>
     </div>

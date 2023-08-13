@@ -50,6 +50,11 @@ class AuthService extends Service {
         }
     }
 
+    updateProfileImage=async data=>{
+        const res=await accountRepository.updateProfileImage(data)
+        return res
+    }
+
     findById=async (id)=>{
         const result=await accountRepository.findById(id)
         return{

@@ -15,7 +15,7 @@ class PostRepository extends Repository {
     create=async user=>{
         try{
             const post = await Post.create({
-                timestamp:user.timestamp,
+                timestamp:parseInt(Date.now()/1000),
                 student_id:user.student_id,
                 latitude:user.latitude,
                 longitude:user.longitude,
