@@ -25,7 +25,7 @@ const notificationController=new NotificationController()
 
 router.route("/signup").post(authController.signup);
 router.route("/signin").post(authController.signin);
-router.route("/post").post(postController.create);
+router.route("/post").post(authenticateUser,postController.create);
 router.route("/post").get(postController.getPosts);
 router.route("/profile").post(authenticateUser,authController.updateProfileImage);
 
