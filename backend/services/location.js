@@ -9,6 +9,7 @@ class LocationService extends Service {
     }
 
     create=async location=>{
+        location['tutor_id']=location.account_id
         var result=await locationRepository.create(location)
         return result
     }

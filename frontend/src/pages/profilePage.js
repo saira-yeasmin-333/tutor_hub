@@ -54,7 +54,7 @@ const ProfilePage = () => {
         // Make the HTTP GET request to the backend API
         axios
             .get(`http://localhost:5000/api/get-profile`,{headers:{authorization:'Bearer '+cookies.get('token')}})
-      .then((response) => {
+            .then((response) => {
                 setUser(response.data.data); // Set the fetched data to the state
 
                 console.log('we get response : ',response.data.data)

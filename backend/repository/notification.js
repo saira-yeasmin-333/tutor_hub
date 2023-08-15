@@ -9,6 +9,7 @@ class NotificationRepository extends Repository {
 
     sendNotification=async (data)=>{
         data['timestamp']=parseInt(Date.now()/1000)
+        data['from']=data.account_id
         const notification = await Notification.create(data)
         return notification
     }

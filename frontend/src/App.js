@@ -9,13 +9,9 @@ import { useState } from 'react';
 import { Rings } from 'react-loader-spinner';
 import { Route, BrowserRouter , Routes } from 'react-router-dom';
 import CreatePost from './pages/CreatePost';
-
 import ProfilePage from "./pages/ProfilePage";
 import ReviewPage from "./pages/ReviewPage";
 import Notification from "./pages/notification";
-import ImageTest from "./pages/imageTest";
-
-
 
 var showToast
 var showError
@@ -57,7 +53,7 @@ function App() {
       <BrowserRouter>
         <Routes>
            
-           <Route path='/create-post/:id' Component={CreatePost} >
+           <Route path='/create-post' Component={CreatePost} >
             </Route>
             <Route path='/get-profile/' Component={ProfilePage} >
             </Route>
@@ -88,12 +84,6 @@ function App() {
             path="/notification"
             exact
             element={<Notification />}
-          />
-
-          <Route
-            path="/image"
-            exact
-            element={<ImageTest />}
           />
         </Routes>
       </BrowserRouter>

@@ -96,7 +96,7 @@ export default function PrimarySearchAppBar(data) {
     fetchNotifications();
 
     // Set up interval to fetch notifications periodically
-    const intervalId = setInterval(fetchNotifications, 5000*12); // Fetch every 5 seconds
+    const intervalId = setInterval(fetchNotifications, 5000*2); // Fetch every 5 seconds
     notificationRef.current=false
     return () => {
       clearInterval(intervalId); // Clean up interval on unmount
