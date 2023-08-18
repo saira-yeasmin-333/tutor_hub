@@ -8,7 +8,7 @@ import Filter from "./components/Location/filter";
 import { useState } from 'react';
 import { Rings } from 'react-loader-spinner';
 import { Route, BrowserRouter , Routes } from 'react-router-dom';
-import CreatePost from './pages/CreatePost';
+import CreatePost from './pages/post/CreatePost';
 import ProfilePage from "./pages/ProfilePage";
 import ReviewPage from "./pages/ReviewPage";
 import Notification from "./pages/notification";

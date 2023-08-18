@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import useFetch from '../../useFetch';
-import PostDetail from '../common/PostDetail';
-import { Drawer, List, ListItem, ListItemText, CssBaseline , styled, Button} from '@mui/material';
-import ImageButton from '../common/imagebutton'
+import React, { useState, useEffect, useRef } from 'react';
+import { Drawer, CssBaseline , styled, Button, Grid} from '@mui/material';
 import CheckboxMenu from '../common/checkbox'
 import { setLoading, showError } from '../../App';
 import axios from 'axios';
+import CardComponent from '../common/card/CardComponent';
+import { getAllPosts } from '../../actions/post'
+import { calculateDistance } from '../common/distance';
 
 
 
@@ -19,6 +19,13 @@ const Content = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
+const StyledImageButton = styled(Button)({
+  width: '100px', // Set the desired button width
+  height: '100px', // Set the desired button height
+  padding: 0, // Remove default button padding
+  background: 'url("https://media.wired.com/photos/59269cd37034dc5f91bec0f1/master/w_2560%2Cc_limit/GoogleMapTA.jpg") center/cover', // Set image as background
+});
+
 const MyComponent = () => {
     const options = ['Location', 'budget'];
     const options2 = ['Physical', 'Online'];
@@ -27,10 +34,11 @@ const MyComponent = () => {
     const [selectedItems2, setSelectedItems2] = useState([]);
 
     const [Fav_location,setPreferredLocations]=useState([])
-    const [filteredPosts, setFilteredPosts] = useState([]);
 
-  
-    const { data: posts, isPending, error } = useFetch('http://localhost:5000/api/post');
+    const[posts,setPosts]=useState([])
+    const selectedRef=useRef(false)
+    const [all_posts,setAllPsts]=useState([])
+    
 
     const [open, setOpen] = useState(true);
 
@@ -51,26 +59,105 @@ const MyComponent = () => {
       }
       setLoading(false)
     }
+  
+  const fetchPosts=async()=>{
+    setLoading(true)
+    var res=await getAllPosts()
+    if(res.success){
+      console.log('here appeared')
+      setPosts(res.data)
+      setAllPsts(res.data)
+    }
+  }
 
   useEffect( () =>{
+    fetchPosts()
+    console.log('posts: ',posts)
+    
     fetchLocations()
   }, [])
 
-  if (isPending) {
-    return <div>Loading...</div>;
-  }
+  const handleClick = () => {
+    selectedRef.current=true
+    const filteredPosts2 = [];
+    var dist=[]
+    Fav_location.forEach(favLocation => {
+      posts.forEach(post => {
+        var distance = calculateDistance(
+          favLocation.latitude,
+          favLocation.longitude,
+          post.latitude,
+          post.longitude
+        );
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+        // Replace 2 with your desired distance limit
+        if (distance <= favLocation.radius) {
+          filteredPosts2.push(post);
+          const dist_obj={
+            ...post,
+            "my_address":favLocation.address,
+            "post_address":post.address,
+            "distance":distance
+          }
 
-  if (!Array.isArray(posts)) {
-    return <div>No posts found.</div>;
-  }
+          console.log('dist obj: ',dist_obj)
+
+          dist.push(dist_obj)
+        }
+      });
+    });
+    dist=dist.slice().sort((a, b) => a.distance - b.distance);
+    setPosts(dist)
+  };
+
 
   const applyFilter = () => {
-    console.log(selectedItems);
-    console.log(selectedItems2);
+    //setPosts(all_posts)
+
+    var temp=[]
+    // console.log('len: ',selectedItems2.length)
+    // console.log(selectedItems2)
+    // return
+    selectedItems2.forEach(item=>{
+      if(item==='Online'){
+        console.log('here appeared')
+        all_posts.forEach(p=>{
+          if(p.platform==='online'){
+            //console.log('sz: ',temp.length)
+            temp.push(p)
+          }
+        })
+      }
+
+      if(item==='Physical'){
+        all_posts.forEach(p=>{
+          console.log('here : ',p.platform)
+          if(p.platform==='physical'){
+            
+            temp.push(p)
+           // console.log('sz: ',temp.length)
+          }
+        })
+      }
+    })
+
+
+
+    if(selectedItems2.length===0){
+      console.log('hi')
+      temp=all_posts
+    }
+
+
+
+    selectedItems.forEach(item=>{
+      if(item==='budget'){
+        temp=temp.slice().sort((a, b) => b.budget- a.budget);
+      }
+    })
+
+    setPosts(temp)
+
   };
 
 
@@ -78,25 +165,25 @@ const MyComponent = () => {
   const resetFilter = () => {
     setSelectedItems([])
     setSelectedItems2([])
-    setFilteredPosts([])
+    selectedRef.current=false
+    setPosts(all_posts)
   };
 
   
   return (
 
     <div>
-    {isPending ? (
+    {!posts? (
       <div>Loading...</div>
-    ) : error ? (
-      <div>Error: {error}</div>
-    ) : posts === null || posts.length === 0 ? (
-      <div>No posts found.</div>
+     
     ) : (
       <div style={{ display: 'flex' }}>
       <CssBaseline />
       <MyDrawer variant="permanent" anchor="left">
         <div style={{ marginTop: 64 }} /> {/* Adjust margin based on your content */}
-        <ImageButton favLocations={Fav_location} posts={posts} setFilteredPosts={setFilteredPosts} filteredPosts={filteredPosts}/>
+        <StyledImageButton variant="contained" color="primary" onClick={handleClick} >
+          {/* No content inside the button */}
+        </StyledImageButton>
         <p>Filter</p>
         <CheckboxMenu options={options} selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
         <p>Platform</p>
@@ -107,24 +194,21 @@ const MyComponent = () => {
         </div>
       </MyDrawer>
       <Content>
-        
-        <div style={{ marginTop: 64 }}> {/* Adjust margin based on your content */}
+      
+       
+      <div style={{ marginTop: 64 }}> {/* Adjust margin based on your content */}
             
-                {filteredPosts && filteredPosts.length > 0 &&(
-                    filteredPosts.map((post) => (
-                      <div>
-                         <PostDetail key={post.id} post={post} filtered={true}/>
-                         
-                        </div>
-                  ))
-                )}
-                {filteredPosts && filteredPosts.length === 0 &&(
-                    posts.map((post) => (
-                      <PostDetail key={post.id} post={post} filtered={false}/>
-                  ))
-                )}
 
-        </div>
+        <Grid container spacing={1}>
+          {posts.map((post) => (
+            <Grid item xs={4}>
+                <CardComponent key={post.id} post={post} filtered={selectedRef.current}/>
+            </Grid>
+            ))}
+        </Grid>
+
+    </div>
+
       </Content>
     </div>
     )}
