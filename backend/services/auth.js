@@ -2,8 +2,10 @@ const Service = require('./base').Service;
 const bcrypt=require('bcryptjs')
 const JWT = require('jsonwebtoken');
 const AccountRepository=require('../repository/auth').AccountRepository
+const TeacherRepository=require('../repository/teacher').TeacherRepository
 
 const accountRepository=new AccountRepository()
+const teacherRepository=new TeacherRepository
 
 class AuthService extends Service {
     constructor() {
@@ -41,8 +43,14 @@ class AuthService extends Service {
                 success:false,
                 error:'wrong password'
             }
+        var teacherResult=null
+        var encode=checkuser[0].get({ plain: true })
+        if(checkuser[0].role==='teacher'){
+            teacherResult=await teacherRepository.fetchTutor(checkuser[0].account_id)
+            encode={...checkuser[0].get({ plain: true }),...teacherResult.get({plain:true})}
+        }
         // generate token
-        const token = JWT.sign(checkuser[0].get({ plain: true }), process.env.JWT_SECRET_KEY);        
+        const token = JWT.sign(encode, process.env.JWT_SECRET_KEY);        
         
         return{
             success:true,
@@ -57,9 +65,20 @@ class AuthService extends Service {
 
     findById=async (id)=>{
         const result=await accountRepository.findById(id)
+        var  teacherResult=null
+        var combined=result
+        if(result.get({plain:true})['role']==='teacher'){
+            teacherResult=await teacherRepository.fetchTutor(id)
+            combined={...teacherResult.get({ plain: true }),...result.get({ plain: true })}
+        }
+        
+        console.log('here teacher ',teacherResult)
+        console.log('here account ',result)
+        
+
         return{
             success:true,
-            data:result
+            data: combined
         }
     }
 }

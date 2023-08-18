@@ -20,7 +20,7 @@ class AuthController extends Controller{
     }
 
     findById=async (req,res)=>{
-        var result=await authService.findById(req.params.id)
+        var result=await authService.findById(req.body.account_id)
         return res.status(200).json(result)
     }
 
