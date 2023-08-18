@@ -11,6 +11,9 @@ var authenticateUser=(req, res, next)=>{
         console.log('decoded ',decoded)
         req.body['account_id']=decoded.account_id,
         req.body['name']=decoded.name
+        if(decoded.role==='teacher'){
+            req.body['teacher_id']=decoded.teacher_id
+        }
         next()
     }catch(err){
         console.log(err)

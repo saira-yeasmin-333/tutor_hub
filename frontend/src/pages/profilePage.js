@@ -50,6 +50,8 @@ const ProfilePage = () => {
         })
     }
 
+    
+
     useEffect(() => {
         // Make the HTTP GET request to the backend API
         axios
@@ -118,7 +120,10 @@ const ProfilePage = () => {
             <p>Email: {user.email}</p>
             <p>Phone: {user.phone}</p>
             <p>Account Type: {user.role}</p>
-            <Efficiencies id ={user.account_id} role={user.role} />
+            <p>Efficiency: </p>
+            {user.subjects.map((sub,i)=>{
+                return <span>{sub.sub_name}{i<user.subjects.length-1?',':''}</span>
+            })}
         </div>
     );
 };

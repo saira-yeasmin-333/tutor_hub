@@ -12,6 +12,7 @@ import CreatePost from './pages/post/CreatePost';
 import ProfilePage from "./pages/ProfilePage";
 import ReviewPage from "./pages/ReviewPage";
 import Notification from "./pages/notification";
+import Requests from "./pages/Requests";
 
 var showToast
 var showError
@@ -84,6 +85,12 @@ function App() {
             path="/notification"
             exact
             element={<Notification />}
+          />
+
+          <Route
+            path="/request"
+            exact
+            element={<Requests />}
           />
         </Routes>
       </BrowserRouter>

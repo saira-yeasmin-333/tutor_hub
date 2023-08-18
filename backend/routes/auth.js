@@ -33,7 +33,7 @@ router.route("/location").post(authenticateUser,locationController.create);
 router.route("/location").get(locationController.getLocations);
 router.route("/account/:id").get(authController.findById);
 
-router.route("/get-profile").get(authenticateUser,profileController.getProfile);
+router.route("/get-profile").get(authenticateUser,authController.findById);
 router.route("/get-efficiency/:teacher_id").get(efficiencyController.getEfficiency);
 
 router.route("/insert-efficiency").post(efficiencyController.insertEfficiency);
