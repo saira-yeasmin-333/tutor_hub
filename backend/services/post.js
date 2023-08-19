@@ -1,7 +1,9 @@
 const Service = require('./base').Service;
 const PostRepository=require('../repository/post').PostRepository
+const AccountRepository=require('../repository/auth').AccountRepository
 
 const postRepository=new PostRepository()
+const accountRepository=new AccountRepository()
 
 class PostService extends Service {
     constructor() {
@@ -14,9 +16,11 @@ class PostService extends Service {
     }
 
     getPosts=async () =>{
+
         var result=await postRepository.getAll()
         return result
     }
+
 }
 
 module.exports = {PostService}

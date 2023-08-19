@@ -11,7 +11,7 @@ class ProfileController extends Controller{
 
     
     getProfile=async (req,res)=>{
-        const userId = parseInt(req.params.id);
+        const userId = parseInt(req.body.account_id);
         var result=await profileService.getProfile(userId)
         return res.status(200).json({
             success:true,

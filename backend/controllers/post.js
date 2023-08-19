@@ -10,6 +10,7 @@ class PostController extends Controller{
 
     create=async(req,res)=>{
         var result=await postService.create(req.body)
+        console.log('after adding :',result)
         return res.json({
             success:true,
             data:result

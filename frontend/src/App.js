@@ -1,22 +1,19 @@
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Location from './components/Location/location';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignIn from "./signin";
 import Signup from "./signup";
 import toast, { Toaster } from 'react-hot-toast';
 import Filter from "./components/Location/filter";
 import { useState } from 'react';
 import { Rings } from 'react-loader-spinner';
-import { ToastContainer, toast } from 'react-toastify';
-
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import CreatePost from './pages/CreatePost';
-
+import { Route, BrowserRouter , Routes } from 'react-router-dom';
+import CreatePost from './pages/post/CreatePost';
 import ProfilePage from "./pages/ProfilePage";
 import ReviewPage from "./pages/ReviewPage";
-
-
+import Notification from "./pages/notification";
+import Requests from "./pages/StudentFilter";
+import StudentFilter from "./pages/StudentFilter";
 
 var showToast
 var showError
@@ -58,11 +55,12 @@ function App() {
       <BrowserRouter>
         <Routes>
            
-           <Route path='/create-post/:id' Component={CreatePost} >
+           <Route path='/create-post' Component={CreatePost} >
             </Route>
-            <Route path='/get-profile/:id' Component={ProfilePage} >
+            <Route path='/get-profile/' Component={ProfilePage} >
             </Route>
             <Route path='/create-review' Component={ReviewPage}>
+            </Route>
           <Route
             path="/signin"
             exact
@@ -83,9 +81,22 @@ function App() {
             exact
             element={<Filter />}
           />
+
+          <Route
+            path="/notification"
+            exact
+            element={<Notification />}
+          />
+
+          <Route
+            path="/student/filter"
+            exact
+            element={<StudentFilter />}
+          />
         </Routes>
       </BrowserRouter>
     </div>
+  )
 }
 
 export default App;

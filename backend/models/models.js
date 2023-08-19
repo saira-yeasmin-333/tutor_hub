@@ -51,7 +51,22 @@ const Account = sq.define("account", {
     class: {
         type: DataTypes.INTEGER
      },
+    address: {
+      type:DataTypes.STRING
+    },
+    platform:{
+      type:DataTypes.STRING
+    }
     
+  });
+
+
+  const PostSubject = sq.define("PostSubject", {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    }
   });
 
   const PreferredLocation = sq.define("preferred_location", {
@@ -136,34 +151,60 @@ const Subject = sq.define("subject", {
   }
 })
 
+const Notification = sq.define("notification", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  from: {
+    type: DataTypes.INTEGER
+  },
+  to: {
+    type: DataTypes.INTEGER
+  },
+  message:{
+    type:DataTypes.STRING
+  },
+  is_read:{
+    type:DataTypes.BOOLEAN
+  },
+  timestamp:{
+    type:DataTypes.INTEGER
+  }
+})
+
 const Efficiency = sq.define("efficiency", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true
   },
-  teacher_account_id: {
-    type: DataTypes.INTEGER,
-  },
-  subject_id: {
-    type: DataTypes.INTEGER,
-  }
 })
 
 //   Account.hasMany(Post, { as: "posts" });
 Post.belongsTo(Account, { foreignKey: "student_id" })
+Post.belongsToMany(Subject, { through: 'PostSubject' });
+Subject.belongsToMany(Post, { through: 'PostSubject' });
 
-PreferredLocation.belongsTo(Account,{foreignKey:"tutor_id"})
+Teacher.belongsTo(Account, { foreignKey: 'account_id' });
+Account.hasOne(Teacher, { foreignKey: 'account_id' });
+
+Teacher.belongsToMany(Subject,{through:"efficiency"})
+Subject.belongsToMany(Teacher, { through: 'efficiency' });
+
+PreferredLocation.belongsTo(Teacher,{foreignKey:"tutor_id"})
+Teacher.hasMany(PreferredLocation,{foreignKey:"tutor_id"})
 
 Review.belongsTo(Teacher, { foreignKey: "teacher_id" })
 
-Post.belongsTo(Student, { foreignKey: "student_id" })
-
-Efficiency.belongsTo(Teacher, { foreignKey: "teacher_account_id" })
-Efficiency.belongsTo(Subject, { foreignKey: "subject_id" })
 
 Teacher.belongsTo(Account, { foreignKey: "account_id" })
 Student.belongsTo(Account, { foreignKey: "account_id" })
+
+Notification.belongsTo(Account,{foreignKey:"from"})
+Notification.belongsTo(Account,{foreignKey:"to"})
+
 const syncAllTables = async () => {
   try {
     await Account.sync()
@@ -176,12 +217,16 @@ const syncAllTables = async () => {
     console.log("Post table creation successful")
     await Subject.sync()
     console.log("Subject table creation successful")
+    await PostSubject.sync()
+    console.log("post subject table creation successful")
     await Efficiency.sync()
     console.log("Efficiency table creation successful")
     await Review.sync()
     console.log("Review table creation successful")
     await PreferredLocation.sync()
     console.log("location table creation successful")
+    await Notification.sync()
+    console.log("notification table creation successful")
   } catch (err) {
     console.log('Error creating Tables')
     console.log(err)
@@ -190,4 +235,4 @@ const syncAllTables = async () => {
 
 syncAllTables()
 
-module.exports = { Post, Account, Teacher, Student, Subject, Efficiency ,Review,PreferredLocation}
+module.exports = { Post, Account, Teacher, Student, Subject, Efficiency ,Review,PreferredLocation,Notification}
