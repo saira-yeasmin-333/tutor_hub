@@ -2,13 +2,13 @@ import { Avatar } from '@mui/material';
 import '../card/Card.css'; // Create this CSS file for styling
 import { useState } from 'react';
 
-const CardComponent = ({ post , filtered}) => {
-  const [timestamp, setTimestamp] = useState(post.timestamp);
+const CardComponent = ({ data , filtered,isTutor}) => {
 
+  console.log('appeared data: ',data)
   const convertTimestampToDateTime = () => {
-    if (timestamp) {
+    if (data.timestamp) {
       // Convert timestamp to Date object
-      const date = new Date(timestamp * 1000); // Multiply by 1000 for milliseconds
+      const date = new Date(data.timestamp * 1000); // Multiply by 1000 for milliseconds
 
       // Format the date and time as strings
       const formattedDateTime = date.toLocaleString(); // Change this format as needed
@@ -24,7 +24,7 @@ const CardComponent = ({ post , filtered}) => {
       <div style={{display:'flex',justifyContent:'space-between'}}>
         <Avatar
           alt="Homer Sharp"
-          src={post.account.image}
+          src={data.account.image}
           sx={{ width: 80, height: 80 }}
           style={{margin:"5%"}}
         />
@@ -32,26 +32,58 @@ const CardComponent = ({ post , filtered}) => {
       </div>
       <div>
         <center style={{color:'#000000',marginBottom:'15%',marginTop:'-1%'}}>
-          <div>Name :{post.account.name}</div>
-          <div>class: {post.class}</div>
-          <div>address: {post.address}</div>
-          <div>
-            Sub :
-            {post.subjects.map((sub,i)=>{
-                return <span>{sub.sub_name}{i<post.subjects.length-1?',':''}</span>
-            })}
-          </div>
-          <div>Platform: {post.platform}</div>
-          <div>Date :{convertTimestampToDateTime()}</div>
-          <div>Budget: {post.budget}K</div>
+          {
+            isTutor?(
+
+              <div>
+                  
+                  <div>Name :{data.account.name}</div>
+                  <div>
+                    Preferref Locations :
+                    {data.preferred_locations.map((l,i)=>{
+                        return <span>{l.address}{i<data.preferred_locations.length-1?',':''}</span>
+                    })}
+                  </div>
+                  <div>
+                    Sub :
+                    {data.subjects.map((sub,i)=>{
+                        return <span>{sub.sub_name}{i<data.subjects.length-1?',':''}</span>
+                    })}
+                  </div>
+                  <div>Platform: {data.platform}</div>
+                  <div>Budget: {data.budget}K</div>
+              </div>
+            ):(
+              <div>
+                <div>Name :{data.account.name}</div>
+                <div>class: {data.class}</div>
+                <div>address: {data.address}</div>
+                <div>
+                  Sub :
+                  {data.subjects.map((sub,i)=>{
+                      return <span>{sub.sub_name}{i<data.subjects.length-1?',':''}</span>
+                  })}
+                </div>
+                <div>Platform: {data.platform}</div>
+                <div>Date :{convertTimestampToDateTime()}</div>
+                <div>Budget: {data.budget}K</div>
+              </div>
+            )
+          }
         </center>
         
       </div>
        
-        {filtered &&(
+        {filtered && !isTutor &&(
           <div style={{padding:'2%',margin:'10%'}}>
-            <p>Distance between {post.my_address} and {post.post_address} is {post.distance.toFixed(3)} km</p>
+            <p>Distance between {data.my_address} and {data.post_address} is {data.distance.toFixed(3)} km</p>
           </div>
+        )}
+
+        {filtered && isTutor &&(
+          <center >
+            <p>Min distance  is {data.distance.toFixed(3)} km</p>
+          </center>
         )}
        
     </div>

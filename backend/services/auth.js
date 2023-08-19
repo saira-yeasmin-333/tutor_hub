@@ -3,9 +3,11 @@ const bcrypt=require('bcryptjs')
 const JWT = require('jsonwebtoken');
 const AccountRepository=require('../repository/auth').AccountRepository
 const TeacherRepository=require('../repository/teacher').TeacherRepository
+const LocationRepository=require('../repository/location').LocationRepository
 
 const accountRepository=new AccountRepository()
-const teacherRepository=new TeacherRepository
+const teacherRepository=new TeacherRepository()
+const locationRepository=new LocationRepository()
 
 class AuthService extends Service {
     constructor() {

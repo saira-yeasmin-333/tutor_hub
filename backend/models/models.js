@@ -193,7 +193,8 @@ Account.hasOne(Teacher, { foreignKey: 'account_id' });
 Teacher.belongsToMany(Subject,{through:"efficiency"})
 Subject.belongsToMany(Teacher, { through: 'efficiency' });
 
-PreferredLocation.belongsTo(Account,{foreignKey:"tutor_id"})
+PreferredLocation.belongsTo(Teacher,{foreignKey:"tutor_id"})
+Teacher.hasMany(PreferredLocation,{foreignKey:"tutor_id"})
 
 Review.belongsTo(Teacher, { foreignKey: "teacher_id" })
 
@@ -218,7 +219,7 @@ const syncAllTables = async () => {
     console.log("Subject table creation successful")
     await PostSubject.sync()
     console.log("post subject table creation successful")
-    await Efficiency.sync({force:true})
+    await Efficiency.sync()
     console.log("Efficiency table creation successful")
     await Review.sync()
     console.log("Review table creation successful")

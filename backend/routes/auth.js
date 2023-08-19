@@ -31,7 +31,7 @@ router.route("/profile").post(authenticateUser,authController.updateProfileImage
 
 router.route("/location").post(authenticateUser,locationController.create);
 router.route("/location").get(locationController.getLocations);
-router.route("/account/:id").get(authController.findById);
+
 
 router.route("/get-profile").get(authenticateUser,authController.findById);
 router.route("/get-efficiency/:teacher_id").get(efficiencyController.getEfficiency);
