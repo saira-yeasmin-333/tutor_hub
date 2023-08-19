@@ -16,6 +16,7 @@ class TeacherService extends Service {
 
     getTeachers = async () => {
         var result = await teacherRepository.getAll()
+        
         return result
     }
 

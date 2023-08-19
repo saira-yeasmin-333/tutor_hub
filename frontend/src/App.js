@@ -12,7 +12,8 @@ import CreatePost from './pages/post/CreatePost';
 import ProfilePage from "./pages/ProfilePage";
 import ReviewPage from "./pages/ReviewPage";
 import Notification from "./pages/notification";
-import Requests from "./pages/Requests";
+import Requests from "./pages/StudentFilter";
+import StudentFilter from "./pages/StudentFilter";
 
 var showToast
 var showError
@@ -88,9 +89,9 @@ function App() {
           />
 
           <Route
-            path="/request"
+            path="/student/filter"
             exact
-            element={<Requests />}
+            element={<StudentFilter />}
           />
         </Routes>
       </BrowserRouter>

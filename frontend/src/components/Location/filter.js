@@ -112,18 +112,12 @@ const MyComponent = () => {
 
 
   const applyFilter = () => {
-    //setPosts(all_posts)
-
     var temp=[]
-    // console.log('len: ',selectedItems2.length)
-    // console.log(selectedItems2)
-    // return
     selectedItems2.forEach(item=>{
       if(item==='Online'){
         console.log('here appeared')
         all_posts.forEach(p=>{
           if(p.platform==='online'){
-            //console.log('sz: ',temp.length)
             temp.push(p)
           }
         })
@@ -135,21 +129,15 @@ const MyComponent = () => {
           if(p.platform==='physical'){
             
             temp.push(p)
-           // console.log('sz: ',temp.length)
           }
         })
       }
     })
 
-
-
     if(selectedItems2.length===0){
       console.log('hi')
       temp=all_posts
     }
-
-
-
     selectedItems.forEach(item=>{
       if(item==='budget'){
         temp=temp.slice().sort((a, b) => b.budget- a.budget);
@@ -202,7 +190,7 @@ const MyComponent = () => {
         <Grid container spacing={1}>
           {posts.map((post) => (
             <Grid item xs={4}>
-                <CardComponent key={post.id} post={post} filtered={selectedRef.current}/>
+                <CardComponent key={post.id} data={post} filtered={selectedRef.current} isTutor={false}/>
             </Grid>
             ))}
         </Grid>
