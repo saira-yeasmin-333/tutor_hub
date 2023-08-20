@@ -1,23 +1,31 @@
 import FormControl from '@mui/base/FormControl';
+import { Rating } from "@mui/material";
+import Box from "@mui/material/Box";
 import Button from '@mui/material/Button';
+import Grid from "@mui/material/Grid";
+import InputLabel from "@mui/material/InputLabel";
 import MenuItem from '@mui/material/MenuItem';
+import Paper from "@mui/material/Paper";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import axios from 'axios';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { Rating } from "@mui/material";
+
+const subjects = [
+    "Physics",
+    "Chemistry",
+    "Math",
+    "Biology",
+    "ICT",
+    "English",
+    "Bangla"
+];
+
 
 const ReviewPage = () => {
     const [teachers, setTeachers] = useState([]);
-    const [subjects, setSubjects] = useState([]);
 
     const [subject, setSubject] = React.useState("");
     const [teacher, setTeacher] = React.useState("");
@@ -44,7 +52,6 @@ const ReviewPage = () => {
             });
         console.log(teachers)
     }, []); // Add "id" as a dependency
-
 
 
     return (
