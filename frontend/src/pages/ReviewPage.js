@@ -1,12 +1,9 @@
-import FormControl from '@mui/base/FormControl';
 import { Rating } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from '@mui/material/Button';
 import Grid from "@mui/material/Grid";
 import InputLabel from "@mui/material/InputLabel";
-import MenuItem from '@mui/material/MenuItem';
 import Container from "@mui/material/Container";
-import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import axios from 'axios';
