@@ -17,7 +17,19 @@ class ReviewController extends Controller{
     }
 
     getReviews=async (req,res)=>{
-        var result=await reviewService.getReviews()
+        const teacherId = parseInt(req.body.teacher_id);
+        console.log("testing review for teacher id:");
+        console.log(teacherId)
+        var result=await reviewService.getReviews(teacherId)
+        return res.status(200).json({
+            success:true,
+            data:result
+        })
+    }
+
+    getRating=async (req,res)=>{
+        const teacherId = parseInt(req.body.teacher_id);
+        var result=await reviewService.getRating(teacherId)
         return res.status(200).json({
             success:true,
             data:result

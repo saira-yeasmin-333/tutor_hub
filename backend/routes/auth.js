@@ -32,6 +32,7 @@ router.route("/profile").post(authenticateUser,authController.updateProfileImage
 router.route("/location").post(authenticateUser,locationController.create);
 router.route("/location").get(locationController.getLocations);
 
+router.route("/get-rating").get(authenticateUser,reviewController.getRating);
 
 router.route("/get-profile").get(authenticateUser,authController.findById);
 router.route("/get-efficiency/:teacher_id").get(efficiencyController.getEfficiency);
@@ -43,8 +44,8 @@ router.route("/fetch-tutor/:id").get(teacherController.fetchTutor);
 router.route("/teachers").get(teacherController.getTeachers);
 router.route("/insert-teacher").post(teacherController.create);
 
-router.route("/review").post(reviewController.create);
-router.route("/review").get(reviewController.getReviews);
+router.route("/review").post(authenticateUser,reviewController.create);
+router.route("/review").get(authenticateUser,reviewController.getReviews);
 
 router.route("/get-efficiency-by-account/:account_id").get(subjectController.getEfficiencyByAccount)
 
