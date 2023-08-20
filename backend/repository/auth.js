@@ -1,5 +1,5 @@
 
-const {Account,Teacher} = require('../models/models');
+const {Account,Teacher, Subject} = require('../models/models');
 const Repository = require('./database').Repository
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -19,12 +19,47 @@ class AccountRepository extends Repository {
     create=async user=>{
         try{
             const account = await Account.create(user)
-            return account
+            var teacher=null
+            try {
+                if(account.role==='teacher'){
+                        teacher = await Teacher.create({
+                        onlineMedia: user.onlineMedia,
+                        physicalMedia: user.physicalMedia,
+                        budget: user.budget,
+                        account_id: account.account_id
+                    })
+
+                    const selectedSubjects = await Subject.findAll({
+                        where: {
+                          id: user.subjectIdsToAssociate,
+                        },
+                    });
+                    await teacher.addSubjects(selectedSubjects);
+
+                }
+                
+            } catch (e) {
+                console.log('here2')
+                console.log(e)
+            }
+            console.log('here teacher ',teacher)
+            console.log('here account ',account)
+            return {...teacher.get({ plain: true }),...account.get({ plain: true })}
         }catch(e){
             console.log('error creating account: ',e)
         }
 
         
+    }
+
+    
+
+    updateProfileImage=async(data)=>{
+        const res=Account.update(
+            { image: data.url},
+            { where: { account_id: data.account_id } }
+        )
+        return res
     }
 
     findUser=async email=>{
@@ -49,7 +84,6 @@ class AccountRepository extends Repository {
     }
 
     findById=async data=>{
-        console.log('in repo ',typeof data)
         var result=await Account.findByPk(data)
         return result
     }

@@ -12,15 +12,25 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
+
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
+import { Link } from 'react-router-dom';
 
 const cookies = new Cookies();
-const pages = ['Products', 'Pricing', 'Blog'];
+const teacher_pages = ['Home', 'Message', 'Grade'];
+const student_pages = ['Home', 'Message', 'Review'];
+
+const pageLinks = {
+  home: '/home', // Replace with actual route paths
+  message: '/message',
+  grade: '/grade',
+  review: '/review', // Add more as needed
+  // ...
+};
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -77,7 +87,26 @@ export default function PrimarySearchAppBar(data) {
   const isNotificationMenuOpen = Boolean(anchornotificationEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const [imageUrls, setImageUrls] = useState(null);
+  const [user, setUser] = useState(null);
 
+  const fetchImage = async () => {
+    axios
+            .get(`http://localhost:5000/api/get-profile`,{headers:{authorization:'Bearer '+cookies.get('token')}})
+            .then((response) => {
+                setUser(response.data.data); // Set the fetched data to the state
+
+                console.log('we get response : ',response.data.data)
+                if(response.data.data.image){
+                    console.log('here entered')
+                    setImageUrls(response.data.data.image)
+                }
+                
+            })
+            .catch((error) => {
+                console.error('Error fetching user profile:', error);
+            });
+  };
 
   const fetchNotifications = async () => {
     if(!notificationRef.current){
@@ -94,9 +123,10 @@ export default function PrimarySearchAppBar(data) {
   useEffect(() => {
     // Fetch notifications initially
     fetchNotifications();
+    fetchImage();
 
     // Set up interval to fetch notifications periodically
-    const intervalId = setInterval(fetchNotifications, 500); // Fetch every 5 seconds
+    const intervalId = setInterval(fetchNotifications, 5000*2); // Fetch every 5 seconds
     notificationRef.current=false
     return () => {
       clearInterval(intervalId); // Clean up interval on unmount
@@ -131,6 +161,13 @@ export default function PrimarySearchAppBar(data) {
     setAnchorEl(null); // Close the menu
   };
 
+  const handleLogOut = () => {
+    //Logging Out
+  }
+
+  const handleGotoProfile = () => {
+    //handleGotoProfile
+  }
 
   const readAlldata=async ()=>{
    
@@ -177,8 +214,7 @@ export default function PrimarySearchAppBar(data) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
     </Menu>
   )
   const notificationId = 'primary-search-notification-menu';
@@ -220,18 +256,9 @@ export default function PrimarySearchAppBar(data) {
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
+      sx={{ textAlign: 'left' }} // Align menu items to the left
     >
-      <MenuItem>
-
-      </MenuItem>
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
+      
       <MenuItem onClick={handleNotificationClick}>
         <IconButton
           size="large"
@@ -245,16 +272,25 @@ export default function PrimarySearchAppBar(data) {
         <p >Notifications</p>
 
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
+      <MenuItem onClick={handleGotoProfile}>
+      {imageUrls && (
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="profile image"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleGotoProfile}
+                  color="inherit"
+                  sx={{ marginRight: 1 }}
+                >
+                  <img
+                    src={imageUrls}
+                    alt="Profile"
+                    style={{ width: '32px', height: '32px', borderRadius: '50%' }}
+                  />
+                </IconButton>
+              )}
         <p>Profile</p>
       </MenuItem>
     </Menu>
@@ -278,61 +314,122 @@ export default function PrimarySearchAppBar(data) {
     setAnchorElUser(null);
   };
 
+  const TutorHubText = styled(Typography)(({ theme }) => ({
+    color: 'black',
+    fontWeight: 'bold',
+    fontFamily: 'cursive',
+    // Add any additional styles you want
+  }));
+  
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ backgroundColor: '#1976D2' }}>
         <Toolbar>
 
+          <img
+            src="cap.png"
+            alt="Logo"
+            style={{ width: '60px', height: '60px', objectFit: 'cover', marginRight: '10px' }}
+          />
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block', padding: '10px' } }}
+            sx={{ display: { xs: 'none', sm: 'block', padding: '10px' },  marginRight: 4 }}
           >
-            MUI
+            <TutorHubText variant="h6">TutorHub</TutorHubText>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
+            {user !== null && (
+              user.role === 'teacher'
+                ? teacher_pages.map((page) => (
+                    <Link
+                      key={page}
+                      to={pageLinks[page.toLowerCase()]}
+                      style={{ textDecoration: 'none' }}
+                    >
+                      <Button
+                        onClick={handleCloseNavMenu}
+                        sx={{
+                          my: 2,
+                          color: 'white',
+                          display: 'block',
+                          color: 'black', // Change color to gray
+                          '&:hover': {
+                            backgroundColor: '#CC9999', // Darker shade of #EEB4B4
+                          },
+                        }}
+                      >
+                        {page}
+                      </Button>
+                    </Link>
+                  ))
+                : student_pages.map((page) => (
+                    <Link
+                      key={page}
+                      to={pageLinks[page.toLowerCase()]}
+                      style={{ textDecoration: 'none' }}
+                    >
+                      <Button
+                        onClick={handleCloseNavMenu}
+                        sx={{
+                          my: 2,
+                          color: 'white',
+                          display: 'block',
+                          color: 'black', // Change color to gray
+                          '&:hover': {
+                            backgroundColor: '#CC9999', // Darker shade of #EEB4B4
+                          },
+                        }}
+                      >
+                        {page}
+                      </Button>
+                    </Link>
+                  ))
+            )}
           </Box>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge>
-            </IconButton>
+            
             <IconButton
               onClick={handleNotificationClick}
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
+              sx = {{'&:hover': {
+                backgroundColor: '#CC9999', // Darker shade of #EEB4B4
+              },}}
             >
               <Badge badgeContent={notifications.length} color="error">
-                <NotificationsIcon />
+                <NotificationsIcon style={{ color: 'black' }} />
               </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+              </IconButton>
+              {imageUrls && (
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="profile image"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleGotoProfile}
+                  color="inherit"
+                  sx={{ marginRight: 1, '&:hover': {
+                    backgroundColor: '#CC9999', // Darker shade of #EEB4B4
+                  }, }}
+                >
+                  <img
+                    src={imageUrls}
+                    alt="Profile"
+                    style={{ width: '32px', height: '32px', borderRadius: '50%' }}
+                  />
+                </IconButton>
+              )}
           </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none', borderRight: '20p' } }}>
+          <Box sx={{ display: { xs: 'flex', md: 'none', borderRight: '20p', '&:hover': {
+                            backgroundColor: '#CC9999', // Darker shade of #EEB4B4
+                          }, } }}>
             <IconButton
               size="large"
               aria-label="show more"
@@ -341,7 +438,7 @@ export default function PrimarySearchAppBar(data) {
               onClick={handleMobileMenuOpen}
               color="inherit"
             >
-              <MoreIcon />
+              <MoreIcon style={{ color: 'black' }} />
             </IconButton>
           </Box>
 
@@ -350,9 +447,12 @@ export default function PrimarySearchAppBar(data) {
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            sx={{ mr: 2 }}
+            sx={{ mr: 2,
+              '&:hover': {
+                backgroundColor: '#CC9999', // Darker shade of #EEB4B4
+              }, }}
           >
-            <MenuIcon />
+            <MenuIcon onClick={handleProfileMenuOpen} style={{ color: 'black' }} />
           </IconButton>
 
         </Toolbar>

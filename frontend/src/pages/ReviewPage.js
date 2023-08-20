@@ -44,7 +44,7 @@ const ReviewPage = () => {
         axios
             .get(`http://localhost:5000/api/teachers`)
             .then((response) => {
-                console.log('review response; ',response)
+                console.log('review response; ', response)
                 setTeachers(response.data.data); // Set the fetched data to the state
             })
             .catch((error) => {

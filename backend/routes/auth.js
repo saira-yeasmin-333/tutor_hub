@@ -25,14 +25,15 @@ const notificationController=new NotificationController()
 
 router.route("/signup").post(authController.signup);
 router.route("/signin").post(authController.signin);
-router.route("/post").post(postController.create);
+router.route("/post").post(authenticateUser,postController.create);
 router.route("/post").get(postController.getPosts);
+router.route("/profile").post(authenticateUser,authController.updateProfileImage);
 
-router.route("/location").post(locationController.create);
+router.route("/location").post(authenticateUser,locationController.create);
 router.route("/location").get(locationController.getLocations);
-router.route("/account/:id").get(authController.findById);
 
-router.route("/get-profile").get(authenticateUser,profileController.getProfile);
+
+router.route("/get-profile").get(authenticateUser,authController.findById);
 router.route("/get-efficiency/:teacher_id").get(efficiencyController.getEfficiency);
 
 router.route("/insert-efficiency").post(efficiencyController.insertEfficiency);
@@ -50,7 +51,7 @@ router.route("/get-efficiency-by-account/:account_id").get(subjectController.get
 router.route("/sms").get(smsController.sendSMS)
 
 router.route("/notification").get(authenticateUser,notificationController.getNotifications)
-router.route("/notification").post(notificationController.send)
+router.route("/notification").post(authenticateUser,notificationController.send)
 router.route("/notification/read").post(authenticateUser,notificationController.readAllData)
 
 module.exports=router

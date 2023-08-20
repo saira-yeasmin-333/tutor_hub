@@ -1,4 +1,4 @@
-const { Teacher } = require('../models/models');
+const { Teacher,Subject, PreferredLocation,Account } = require('../models/models');
 const Repository = require('./database').Repository
 
 
@@ -8,7 +8,18 @@ class TeacherRepository extends Repository {
     }
 
     getAll = async () => {
-        var teachers = await Teacher.findAll();
+        var teachers = await Teacher.findAll({
+            include:[{
+                model:Subject
+            },
+            {
+                model:PreferredLocation
+            },
+            {
+                model:Account
+            }
+        ]
+        });
         return teachers
     }
 
@@ -33,6 +44,13 @@ class TeacherRepository extends Repository {
             const res=await Teacher.findOne({
                 where: { account_id:
                 data},
+                include:[{
+                    model:Subject
+                },
+                {
+                    model:PreferredLocation
+                }
+                ]
               });
             return res
         }catch(e){

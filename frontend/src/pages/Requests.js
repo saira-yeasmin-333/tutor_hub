@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Drawer, CssBaseline , styled, Button, Grid} from '@mui/material';
-import CheckboxMenu from '../common/checkbox'
-import { setLoading, showError } from '../../App';
+import { Drawer, CssBaseline , styled, Button, Grid, Tabs, Tab} from '@mui/material';
+import CheckboxMenu from '../components/common/checkbox'
+import { setLoading, showError } from '../App';
 import axios from 'axios';
-import CardComponent from '../common/card/CardComponent';
-import { getAllPosts } from '../../actions/post'
-import { calculateDistance } from '../common/distance';
+import CardComponent from '../components/common/card/CardComponent';
+import { calculateDistance } from '../components/common/distance'
 
 
 
@@ -19,14 +18,11 @@ const Content = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-const StyledImageButton = styled(Button)({
-  width: '100px', // Set the desired button width
-  height: '100px', // Set the desired button height
-  padding: 0, // Remove default button padding
-  background: 'url("https://media.wired.com/photos/59269cd37034dc5f91bec0f1/master/w_2560%2Cc_limit/GoogleMapTA.jpg") center/cover', // Set image as background
-});
 
-const MyComponent = () => {
+const Requests = () => {
+
+    const [value, setValue] = useState(0);
+
     const options = ['Location', 'budget'];
     const options2 = ['Physical', 'Online'];
     
@@ -61,13 +57,14 @@ const MyComponent = () => {
     }
   
   const fetchPosts=async()=>{
-    setLoading(true)
-    var res=await getAllPosts()
-    if(res.success){
-      console.log('here appeared')
-      setPosts(res.data)
-      setAllPsts(res.data)
-    }
+    // setLoading(true)
+    // var res=await getAllPosts()
+    // if(res.success){
+    //   console.log('here appeared')
+    //   setPosts(res.data)
+    //   setAllPsts(res.data)
+    // }
+    console.log('here')
   }
 
   useEffect( () =>{
@@ -112,12 +109,18 @@ const MyComponent = () => {
 
 
   const applyFilter = () => {
+    //setPosts(all_posts)
+
     var temp=[]
+    // console.log('len: ',selectedItems2.length)
+    // console.log(selectedItems2)
+    // return
     selectedItems2.forEach(item=>{
       if(item==='Online'){
         console.log('here appeared')
         all_posts.forEach(p=>{
           if(p.platform==='online'){
+            //console.log('sz: ',temp.length)
             temp.push(p)
           }
         })
@@ -129,15 +132,21 @@ const MyComponent = () => {
           if(p.platform==='physical'){
             
             temp.push(p)
+           // console.log('sz: ',temp.length)
           }
         })
       }
     })
 
+
+
     if(selectedItems2.length===0){
       console.log('hi')
       temp=all_posts
     }
+
+
+
     selectedItems.forEach(item=>{
       if(item==='budget'){
         temp=temp.slice().sort((a, b) => b.budget- a.budget);
@@ -157,6 +166,10 @@ const MyComponent = () => {
     setPosts(all_posts)
   };
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   
   return (
 
@@ -169,9 +182,32 @@ const MyComponent = () => {
       <CssBaseline />
       <MyDrawer variant="permanent" anchor="left">
         <div style={{ marginTop: 64 }} /> {/* Adjust margin based on your content */}
-        <StyledImageButton variant="contained" color="primary" onClick={handleClick} >
-          {/* No content inside the button */}
-        </StyledImageButton>
+        <Tabs
+            value={value}
+            onChange={handleChange}
+            orientation="horizontal"
+            variant="scrollable"
+            scrollButtons="auto"
+            aria-label="vertical tabs example"
+            className="bg-white rounded-lg shadow"
+        >
+            <Tab label="Requests" />
+            <Tab label="Chats" />
+        </Tabs>
+
+        {value === 0 && (
+            <div>
+              hi this is tab 1
+            </div>
+        )}
+
+        {value === 1 && (
+            <div>
+              hi this is tab 2
+            </div>
+        )}
+
+        
         <p>Filter</p>
         <CheckboxMenu options={options} selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
         <p>Platform</p>
@@ -190,7 +226,7 @@ const MyComponent = () => {
         <Grid container spacing={1}>
           {posts.map((post) => (
             <Grid item xs={4}>
-                <CardComponent key={post.id} data={post} filtered={selectedRef.current} isTutor={false}/>
+                <CardComponent key={post.id} post={post} filtered={selectedRef.current}/>
             </Grid>
             ))}
         </Grid>
@@ -205,4 +241,4 @@ const MyComponent = () => {
   );
 }
 
-export default MyComponent;
+export default Requests;

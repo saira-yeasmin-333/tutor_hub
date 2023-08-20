@@ -8,13 +8,12 @@ import Filter from "./components/Location/filter";
 import { useState } from 'react';
 import { Rings } from 'react-loader-spinner';
 import { Route, BrowserRouter , Routes } from 'react-router-dom';
-import CreatePost from './pages/CreatePost';
-
-import ProfilePage from "./pages/ProfilePage";
+import CreatePost from './pages/post/CreatePost';
+import ProfilePage from "../pages/ProfilePage";
 import ReviewPage from "./pages/ReviewPage";
 import Notification from "./pages/notification";
-
-
+import Requests from "./pages/StudentFilter";
+import StudentFilter from "./pages/StudentFilter";
 
 var showToast
 var showError
@@ -56,7 +55,7 @@ function App() {
       <BrowserRouter>
         <Routes>
            
-           <Route path='/create-post/:id' Component={CreatePost} >
+           <Route path='/create-post' Component={CreatePost} >
             </Route>
             <Route path='/get-profile/' Component={ProfilePage} >
             </Route>
@@ -89,6 +88,11 @@ function App() {
             element={<Notification />}
           />
 
+          <Route
+            path="/student/filter"
+            exact
+            element={<StudentFilter />}
+          />
         </Routes>
       </BrowserRouter>
     </div>
