@@ -37,7 +37,7 @@ const ReviewPage = () => {
     const changeTeacher = (event) => {
         setTeacher(event.target.value);
     };
-    
+
 
     useEffect(() => {
         // Make the HTTP GET request to the backend API
