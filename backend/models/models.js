@@ -197,6 +197,7 @@ PreferredLocation.belongsTo(Teacher,{foreignKey:"tutor_id"})
 Teacher.hasMany(PreferredLocation,{foreignKey:"tutor_id"})
 
 Review.belongsTo(Teacher, { foreignKey: "teacher_id" })
+Review.belongsTo(Account, { foreignKey: "student_id" })
 
 
 Teacher.belongsTo(Account, { foreignKey: "account_id" })
