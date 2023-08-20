@@ -28,7 +28,6 @@ class AuthController extends Controller{
         var result=await authService.updateProfileImage(req.body);
         return res.json(result)
     }
-
     
 }
 
