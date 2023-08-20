@@ -1,8 +1,29 @@
 import { Avatar } from '@mui/material';
 import '../card/Card.css'; // Create this CSS file for styling
-import { useState } from 'react';
+import { sendRequest } from '../../../actions/request';
+import { showSuccess } from '../../../App';
 
 const CardComponent = ({ data , filtered,isTutor}) => {
+
+  const handleApply=async()=>{
+    var to=0
+    if(isTutor)to=data.account_id
+    else to=data.student_id
+    try{
+      const sendObject={
+        to:to,
+        status:"pending"
+      }
+      console.log('data :',data)
+      var sendResult=await sendRequest(sendObject)
+      console.log('send result :',sendResult)
+      if(sendRequest.success){
+        showSuccess('Request sent successfully')
+      }
+    }catch(e){
+      console.log('error: ',e)
+    }
+  }
 
   console.log('appeared data: ',data)
   const convertTimestampToDateTime = () => {
@@ -19,16 +40,29 @@ const CardComponent = ({ data , filtered,isTutor}) => {
     }
   };
 
+
+
   return (
     <div className="card" >
       <div style={{display:'flex',justifyContent:'space-between'}}>
-        <Avatar
-          alt="Homer Sharp"
-          src={data.account.image}
-          sx={{ width: 80, height: 80 }}
-          style={{margin:"5%"}}
-        />
-        <button className="card-button">Apply</button>
+        {
+          data.account.image?(
+            <Avatar
+              alt="Homer Sharp"
+              src={data.account.image}
+              sx={{ width: 80, height: 80 }}
+              style={{margin:"5%"}}
+            />
+          ):(
+            <Avatar
+              alt="Homer Sharp"
+              src={'/PICT0018'}
+              sx={{ width: 80, height: 80 }}
+              style={{margin:"5%"}}
+            />
+          )
+        }
+        <button className="card-button" onClick={handleApply}>Apply</button>
       </div>
       <div>
         <center style={{color:'#000000',marginBottom:'15%',marginTop:'-1%'}}>

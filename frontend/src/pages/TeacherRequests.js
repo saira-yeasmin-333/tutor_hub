@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Drawer, CssBaseline , styled, Button, Grid, Tabs, Tab} from '@mui/material';
 import CheckboxMenu from '../components/common/checkbox'
 import { setLoading, showError } from '../App';
+import axios from 'axios';
+import CardComponent from '../components/common/card/CardComponent';
+import { calculateDistance } from '../components/common/distance'
+import { getAllPosts } from '../actions/post';
 import { getAllRequest } from '../actions/request';
 import RequestCardComponent from '../components/common/request/RequestCardComponent';
 
@@ -21,7 +25,7 @@ const Content = styled('div')(({ theme }) => ({
 }));
 
 
-const Requests = () => {
+const TeacherRequests = () => {
 
   const [requests,setRequests]=useState(null)
   const [all_requests,setAllRequests]=useState(null)
@@ -143,4 +147,4 @@ const Requests = () => {
   );
 }
 
-export default Requests;
+export default TeacherRequests;

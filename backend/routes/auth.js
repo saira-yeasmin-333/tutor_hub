@@ -10,6 +10,7 @@ const EfficiencyController = require('../controllers/efficiency').EfficiencyCont
 const SubjectController = require('../controllers/subject').SubjectController
 const TeacherController = require('../controllers/teacher').TeacherController
 const SMSController = require('../controllers/sms').SMSController
+const RequestController = require('../controllers/request').RequestController
 const { authenticateUser } = require("../services/authMiddleware");
 
 const authController=new AuthController()
@@ -21,6 +22,7 @@ const teacherController = new TeacherController()
 const reviewController = new ReviewController()
 const locationController=new LocationController()
 const smsController=new SMSController()
+const requestController=new RequestController()
 const notificationController=new NotificationController()
 
 router.route("/signup").post(authController.signup);
@@ -53,5 +55,9 @@ router.route("/sms").get(smsController.sendSMS)
 router.route("/notification").get(authenticateUser,notificationController.getNotifications)
 router.route("/notification").post(authenticateUser,notificationController.send)
 router.route("/notification/read").post(authenticateUser,notificationController.readAllData)
+
+router.route("/request").get(authenticateUser,requestController.getRequests)
+router.route("/request").post(authenticateUser,requestController.sendRequest)
+router.route("/request/approve").post(authenticateUser,requestController.approveRequest)
 
 module.exports=router
