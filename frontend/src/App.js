@@ -13,6 +13,7 @@ import CreatePost from './pages/post/CreatePost';
 import ProfilePage from "./pages/profilePage";
 
 import ReviewPage from "./pages/ReviewPage";
+import GradeSubmit from "./pages/GradeSubmit";
 import Notification from "./pages/notification";
 import Requests from "./pages/StudentFilter";
 import StudentFilter from "./pages/StudentFilter";
@@ -62,6 +63,8 @@ function App() {
             <Route path='/get-profile/' Component={ProfilePage} >
             </Route>
             <Route path='/create-review' Component={ReviewPage}>
+            </Route>
+            <Route path='/grade-submit' Component={GradeSubmit}>
             </Route>
           <Route
             path="/signin"
