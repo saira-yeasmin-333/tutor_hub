@@ -22,13 +22,16 @@ import { Link } from 'react-router-dom';
 
 const cookies = new Cookies();
 const teacher_pages = ['Home', 'Message', 'Grade'];
-const student_pages = ['Home', 'Message', 'Review'];
+const student_pages = ['Home', 'Message', 'Review' , 'Post'];
 
 const pageLinks = {
-  home: '/home', // Replace with actual route paths
+  home: '/filter', // Replace with actual route paths
+  homestudent: '/student/filter',
   message: '/message',
+  messagestudent: '/message',
   grade: '/grade',
-  review: '/review', // Add more as needed
+  reviewstudent: '/create-review', // Add more as needed
+  poststudent: '/create-post'
   // ...
 };
 
@@ -163,10 +166,13 @@ export default function PrimarySearchAppBar(data) {
 
   const handleLogOut = () => {
     //Logging Out
+    cookies.remove('token');
+    window.location.href = '/signin';
   }
 
   const handleGotoProfile = () => {
     //handleGotoProfile
+    window.location.href = '/get-profile';
   }
 
   const readAlldata=async ()=>{
@@ -369,7 +375,7 @@ export default function PrimarySearchAppBar(data) {
                 : student_pages.map((page) => (
                     <Link
                       key={page}
-                      to={pageLinks[page.toLowerCase()]}
+                      to={pageLinks[page.toLowerCase()+"student"]}
                       style={{ textDecoration: 'none' }}
                     >
                       <Button
