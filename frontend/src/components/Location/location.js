@@ -3,16 +3,39 @@ import {TextField,Button} from '@mui/material';
 import {setLoading, showError, showSuccess, showToast} from "../../App";
 import MapComponent from "./MapComponent";
 import { saveTutorLocation } from "../../actions/location";
+import Cookies from 'universal-cookie';
+import React, { useEffect } from 'react';
+import axios from 'axios';
+import PrimarySearchAppBar from "../Appbar/appbar";
 
+const cookies = new Cookies();
 
 function Location() {
 
   const [rad, setR] = useState(null);
+  const [user, setUser] = useState(null);
   const mapComponentRef=useRef()
 
   const handleRadiusCHange = (event) => {
     setR(event.target.value);
   };
+
+  useEffect(() => {
+    // Make the HTTP GET request to the backend API
+    axios
+        .get(`http://localhost:5000/api/get-profile`,{headers:{authorization:'Bearer '+cookies.get('token')}})
+        .then((response) => {
+            setUser(response.data.data); // Set the fetched data to the state
+
+            console.log('we get response : ',response.data.data)
+            if(response.data.data.image){
+                console.log('here entered')
+            }
+        })
+        .catch((error) => {
+            console.error('Error fetching user profile:', error);
+        });
+}, []); // Add "id" as a dependency
 
  const setRadius=async ()=>{
     if(mapComponentRef.current.isSelected()){
@@ -37,8 +60,14 @@ function Location() {
       showError("Please select a location")
     }
  }
+
+ if (!user) {
+  return <div>Loading...</div>; // Display a loading message while fetching data
+ }
+
   return (
-    <div>
+    <div style={{ backgroundColor: '#BDCDF5', minHeight: '100vh' }}>
+        <PrimarySearchAppBar type={user.type} />
         <div style={{width:"100%",display:'flex',justifyContent:'space-between'}}>
           <h2 style={{marginLeft:'5vw'}}>
               Select your preferred location
