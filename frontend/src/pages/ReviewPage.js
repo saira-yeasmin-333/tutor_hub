@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Grid from "@mui/material/Grid";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from '@mui/material/MenuItem';
-import Paper from "@mui/material/Paper";
+import Container from "@mui/material/Container";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -56,37 +56,37 @@ const ReviewPage = () => {
 
     return (
         <div>
-            <Paper elevation={3} sx={{ marginRight: "15%", marginLeft: "15%" }}>
+            <Container component="main" maxWidth="xl" sx={{ width: "100%", backgroundColor: "#c6d9ec", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Container component="main" maxWidth="md" sx={{ width: "100%", backgroundColor: "#c6d9ec", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <Box sx={{ padding: 5 }}>
-                    <Typography variant="h6" gutterBottom sx={{ color: "#0067AB", paddingBottom: 5 }}>
+                    <Typography variant="h6" gutterBottom sx={{ color: "#0067AB" }}>
                         Create a Review
                     </Typography>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
-                            <InputLabel
-                                sx={{
-                                    display: "flex",
-                                    fontWeight: 700
-                                }}
-                            >
-                                Choose Teacher
-                            </InputLabel>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth size="small">
-                                <InputLabel id="demo-simple-select-label">Teacher Name</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={teacher}
-                                    label="Teacher"
-                                    onChange={changeTeacher}
-                                >
-                                    {teachers.map((item) => (
-                                        <MenuItem value={item}>{item}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            size="small"
+                            name="teacher"
+                            select
+                            SelectProps={{
+                                native: true,
+                            }}
+                            value={teacher}
+                            onChange={changeTeacher}
+                            sx={{
+                                backgroundColor: '#eeb4b4', // Replace with your desired background color
+                            }}
+                        >
+                                <option value="">Choose  A Teacher</option>
+                            {teachers.map((item) => (
+                                <option key={item} value={item}>
+                                    {item}
+                                </option>
+                            ))}
+                        </TextField>
                         </Grid>
 
 
@@ -94,31 +94,43 @@ const ReviewPage = () => {
                             <InputLabel
                                 sx={{
                                     display: "flex",
-                                    fontWeight: 700
+                                    fontWeight: 700,
+                                    color: "#000080"
                                 }}
                             >
                                 Grade Submit
                             </InputLabel>
                         </Grid>
+
                         <Grid item xs={12} sm={4}>
-                            <FormControl fullWidth size="small">
-                                <InputLabel id="demo-simple-select-label">Choose Subject</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={subject}
-                                    label="Subject"
-                                    onChange={changeSubject}
-                                >
-                                    {subjects.map((item) => (
-                                        <MenuItem value={item}>{item}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                size="small"
+                                name="subject"
+                                select
+                                SelectProps={{
+                                    native: true,
+                                }}
+                                value={subject}
+                                onChange={changeSubject}
+                                sx={{
+                                    backgroundColor: '#eeb4b4', // Replace with your desired background color
+                                }}
+                            >
+                                <option value="">Choose Subject</option>
+                                {subjects.map((item) => (
+                                    <option key={item} value={item}>
+                                        {item}
+                                    </option>
+                                ))}
+                            </TextField>
                         </Grid>
 
                         <Grid item xs={12} sm={4}>
                             <TextField
+                                margin="normal"
                                 required
                                 id="grade_expected"
                                 name="grade_expected"
@@ -127,10 +139,15 @@ const ReviewPage = () => {
                                 size="small"
                                 autoComplete="off"
                                 variant="outlined"
-                            />
+                                sx={{
+                                    backgroundColor: '#eeb4b4', // Replace with your desired background color
+                                }}>
+                            </TextField>
                         </Grid>
+
                         <Grid item xs={12} sm={4}>
                             <TextField
+                                margin="normal"
                                 required
                                 id="grade_received"
                                 name="grade_received"
@@ -139,20 +156,28 @@ const ReviewPage = () => {
                                 size="small"
                                 autoComplete="off"
                                 variant="outlined"
-                            />
+                                sx={{
+                                    backgroundColor: '#eeb4b4',
+                                }}>
+                            </TextField>
                         </Grid>
+
                         <Grid item xs={12} sm={12}>
                             <InputLabel
                                 sx={{
                                     display: "flex",
-                                    fontWeight: 700
+                                    fontWeight: 700,
+                                    color: "#000080"
                                 }}
                             >
                                 Comment here...
                             </InputLabel>
                         </Grid>
+
                         <Grid item xs={12} sm={12}>
-                            <TextField
+                            <TextField sx={{
+                                backgroundColor: '#eeb4b4',
+                            }}
                                 id="outlined-multiline-static"
                                 label="Comment"
                                 multiline
@@ -160,25 +185,24 @@ const ReviewPage = () => {
                                 rows={3}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={5} />
                         <Grid item xs={12} sm={12}>
                             <div style={{ width: "50%" }}>
-                                <Typography>Give A Rating</Typography>
+                                <Typography sx={{color: "#000080" }}>Give A Rating</Typography>
                                 <Rating name="half" defaultValue={2}
                                     precision={0.25} size="large" />
                             </div>
                         </Grid>
-                        <Grid item xs={12} sm={5} />
-                        <Grid item xs={12} sm={5} />
+
                         <Grid item xs={12} sm={12}>
                             <Button variant="contained" sx={{ justifyContent: "center" }}>
                                 Submit
                             </Button>
                         </Grid>
-                        <Grid item xs={12} sm={5} />
                     </Grid>
                 </Box>
-            </Paper>
+                </Container>
+            </Container>
+                
         </div>
     );
 };

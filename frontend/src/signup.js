@@ -89,7 +89,7 @@ function Signup (){
 
     return (
       <Container component="main" maxWidth="xl" sx={{ width: "100%", backgroundColor: "#c6d9ec", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Container component="main" maxWidth="md" sx={{ width: "100%", backgroundColor: "#c6d9ec", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Container component="main" maxWidth="sm" sx={{ width: "100%", backgroundColor: "#c6d9ec", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <Box
             sx={{
               display: "flex",
