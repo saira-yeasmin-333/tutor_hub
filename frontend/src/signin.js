@@ -15,6 +15,7 @@ import {
   CardContent,
   FormControlLabel,
   Checkbox,
+
 } from "@mui/material";
 import { setLoading, showError, showToast } from "./App";
 
@@ -22,6 +23,7 @@ const cookies = new Cookies();
 const COOKIE_AGE = 31536000;
 
 const checkAuth = () => {
+
   return !(cookies.get("token") === undefined || cookies.get("token") === null);
 };
 
@@ -170,3 +172,4 @@ function SignIn() {
 
 export default SignIn;
 export { checkAuth, logout };
+

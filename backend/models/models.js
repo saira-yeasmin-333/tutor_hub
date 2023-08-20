@@ -1,4 +1,3 @@
-
 const { sq } = require("../repository/database");
 const { DataTypes } = require("sequelize");
 
@@ -139,6 +138,29 @@ const Review = sq.define("review", {
   },
 })
 
+const Grade = sq.define("grade", {
+  grade_id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  student_id: {
+    type: DataTypes.INTEGER,
+  },
+  teacher_id: {
+    type: DataTypes.INTEGER,
+  },
+  mark_received: {
+    type: DataTypes.DOUBLE,
+  },
+  total_marks: {
+    type: DataTypes.DOUBLE,
+  },
+  timestamp: {
+    type: DataTypes.INTEGER,
+  },
+})
+
 const Subject = sq.define("subject", {
   id: {
     type: DataTypes.INTEGER,
@@ -199,6 +221,8 @@ Teacher.hasMany(PreferredLocation,{foreignKey:"tutor_id"})
 Review.belongsTo(Teacher, { foreignKey: "teacher_id" })
 Review.belongsTo(Account, { foreignKey: "student_id" })
 
+Grade.belongsTo(Student, { foreignKey: "student_id" })
+Grade.belongsTo(Account, { foreignKey: "teacher_id" })
 
 Teacher.belongsTo(Account, { foreignKey: "account_id" })
 Student.belongsTo(Account, { foreignKey: "account_id" })
@@ -224,6 +248,8 @@ const syncAllTables = async () => {
     console.log("Efficiency table creation successful")
     await Review.sync()
     console.log("Review table creation successful")
+    await Grade.sync()
+    console.log("Grade table creation successful")
     await PreferredLocation.sync()
     console.log("location table creation successful")
     await Notification.sync()
@@ -236,4 +262,4 @@ const syncAllTables = async () => {
 
 syncAllTables()
 
-module.exports = { Post, Account, Teacher, Student, Subject, Efficiency ,Review,PreferredLocation,Notification}
+module.exports = { Post, Account, Teacher, Student, Subject, Efficiency ,Review, Grade, PreferredLocation,Notification}
