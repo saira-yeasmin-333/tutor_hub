@@ -1,11 +1,11 @@
 import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Avatar, Button } from '@mui/material';
-import PrimarySearchAppBar from '../components/Appbar/appbar'
+import { Avatar, Button, Card, CardContent, CardHeader, Tab, Tabs, Rating } from '@mui/material';
+import PrimarySearchAppBar from '../components/Appbar/appbar';
 import Efficiencies from './Efficiencies';
 import Cookies from 'universal-cookie';
-import { ref, getDownloadURL,uploadBytes} from "firebase/storage";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase/firebase";
 import { v4 } from "uuid";
 import { setLoading, showToast } from '../App';
@@ -15,27 +15,32 @@ const cookies = new Cookies();
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
     const { id } = useParams();
-
+    const [currentTab, setCurrentTab] = useState(0);
     const [imageUpload, setImageUpload] = useState(null);
     const [imageUrls, setImageUrls] = useState(null);
     const imageRef = ref(storage, `images/${v4()}${imageUpload?.name}`);
 
-    const uploadFile = () => {
-        console.log(imageUpload)
-        if (imageUpload == null) return;
-        uploadBytes(imageRef, imageUpload).then((snapshot) => {
-        getDownloadURL(snapshot.ref).then((url) => {
-            console.log(url)
-            setImageUrls(url);
-            updateProfile(url)
-        }).catch(e=>{
-            console.log(e)
-        })
-    }).catch(e=>{
-        console.log(e)
-    });
-
+    const handleTabChange = (event, newValue) => {
+        setCurrentTab(newValue);
     };
+    
+
+    // const uploadFile = () => {
+    //     console.log(imageUpload)
+    //     if (imageUpload == null) return;
+    //     uploadBytes(imageRef, imageUpload).then((snapshot) => {
+    //     getDownloadURL(snapshot.ref).then((url) => {
+    //         console.log(url)
+    //         setImageUrls(url);
+    //         updateProfile(url)
+    //     }).catch(e=>{
+    //         console.log(e)
+    //     })
+    // }).catch(e=>{
+    //     console.log(e)
+    // });
+
+    // };
 
    const updateProfile=async(url)=>{
     console.log('url ;',url)
@@ -75,57 +80,84 @@ const ProfilePage = () => {
         return <div>Loading...</div>; // Display a loading message while fetching data
     }
 
+  
     return (
-        <div>
-            <PrimarySearchAppBar type={user.type} />
-            <h1>User Profile</h1>
+        <div style={{ backgroundColor: '#BDCDF5', minHeight: '100vh' }}>
+          <PrimarySearchAppBar type={user.type} />
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+            <Card sx={{ width: 600, marginTop: '20px', display: 'flex', flexDirection: 'row' }}>
+              <div style={{ flex: 1, padding: '20px' }}>
+                {user.image ? (
+                  <img alt="User" src={user.image} style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }} />
+                ) : (
+                  <img alt="Default" src="/PICT0018.jpg" style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }} />
+                )}
+              </div>
+              <div style={{ flex: 2, padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '10px 0' }}>{user.name}</h1>
+                <p style={{ fontSize: '14px', margin: '0', color: '#007bff' }}>{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</p>
+                <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+                  <Rating name="half-rating" defaultValue={2.5} precision={0.5} readOnly />
+                  <p style={{ marginLeft: '10px', fontWeight: 'bold', fontSize: '18px', color: 'black' }}>2.5</p>
+                </div>
+    
+                <Tabs value={currentTab} onChange={handleTabChange} style={{ marginTop: '20px' }}>
+                  <Tab label="About"  />
+                  <Tab label="Reviews" />
+                  <Tab label="Overview" />
+                </Tabs>
+    
+                {currentTab === 0 && (
+                     <CardContent>
+                        <p style={{ margin: '5px 0', fontSize: '16px', fontWeight: 'bold' }}>
+                        Phone: {'\t'} {/* Tabbed space */}
+                        <span style={{ fontSize: '14px', fontWeight: 'normal', color: '#007bff' }}>{user.phone}</span>
+                        </p>
+                        <p style={{ margin: '5px 0', fontSize: '16px', fontWeight: 'bold' }}>
+                        Email: {'\t'} {/* Tabbed space */}
+                        <span style={{ fontSize: '14px', fontWeight: 'normal', color: '#007bff' }}>{user.email}</span>
+                        </p>
+                        <p style={{ margin: '5px 0', fontSize: '16px', fontWeight: 'bold' }}>
+                        Efficiency: {'\t'} {/* Tabbed space */}
+                        <span style={{ fontSize: '14px', fontWeight: 'normal' }}>
+                            {user.subjects.map((sub, i) => (
+                            <span key={i}>{
+                                <span
+                                    key={i}
+                                    style={{
+                                    display: 'inline-block',
+                                    margin: '2px',
+                                    padding: '5px 10px',
+                                    borderRadius: '20px',
+                                    backgroundColor: '#007bff',
+                                    color: 'white',
+                                    }}
+                                >
+                                    {sub.sub_name}
+                                </span>
+                                }{i < user.subjects.length - 1 ? ', ' : ''}</span>
+                            ))}
+                        </span>
+                        </p>
+                   </CardContent>
+                )}
 
+                {currentTab === 1 && (
+                     <CardContent>
+                        <p style={{ margin: '5px 0', fontSize: '16px', fontWeight: 'bold' }}>
+                        Phone: {'\t'} {/* Tabbed space */}
+                        <span style={{ fontSize: '14px', fontWeight: 'normal', color: '#007bff' }}>{user.phone}</span>
+                        </p>
+                   </CardContent>
+                )}
 
-            {
-                user.image?(
-                    <Avatar
-                        alt="Homer Sharp"
-                        src={user.image}
-                        sx={{ width: 156, height: 156 }}
-                    />
-                ):(
-                    <Avatar
-                        alt="Homer Sharp"
-                        src="/PICT0018.jpg"
-                        sx={{ width: 156, height: 156 }}
-                    />
-                )
-            }
-            <input
-                type="file"
-                onChange={(event) => {
-                setImageUpload(event.target.files[0]);
-                }}
-            />
-
-            <Button variant="raised" component="span"  style={{
-                backgroundColor: '#007bff', // Blue color
-                color: '#fff', // White color
-                padding: '10px 20px', // Padding for the button (top/bottom left/right)
-                borderRadius: '8px', // Rounded corners
-                padding: '8px 16px', // Padding for the button
-                fontSize: '14px', // Font size
-                fontWeight: 'bold', // Bold text
-                margin: '10px' // Margin around the button
-            }} onClick={uploadFile}>
-                Upload
-            </Button>
-
-            <p>Name: {user.name}</p>
-            <p>Email: {user.email}</p>
-            <p>Phone: {user.phone}</p>
-            <p>Account Type: {user.role}</p>
-            <p>Efficiency: </p>
-            {user.subjects.map((sub,i)=>{
-                return <span>{sub.sub_name}{i<user.subjects.length-1?',':''}</span>
-            })}
+    
+                {/* Add content for other tabs here */}
+              </div>
+            </Card>
+          </div>
         </div>
-    );
+      );
 };
 
 export default ProfilePage;
