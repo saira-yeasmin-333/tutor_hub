@@ -64,10 +64,8 @@ const GradeSubmit = () => {
         <div >
             <PrimarySearchAppBar type={user.role} />
             
-            <div style={{ backgroundColor: '#BDCDF5', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Card variant="outlined" sx={{ width: '80%', maxWidth: 900, minHeight: 400, marginTop: '64px'}}>
-                    <CardContent>
-                        <Typography variant="h6" gutterBottom sx={{ color: "#0067AB", marginBottom: 2 }}>
+            <div style={{ backgroundColor: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center', padding:"5%" }}>
+            <Typography variant="h6" gutterBottom sx={{ color: "#0067AB", marginBottom: 2 }}>
                             Submit Grade
                         </Typography>
                         <Grid container spacing={2}>
@@ -165,9 +163,6 @@ const GradeSubmit = () => {
                                 </Button>
                             </Grid>
                         </Grid>
-                    </CardContent>
-                </Card>
-
             </div>
             
         </div>
