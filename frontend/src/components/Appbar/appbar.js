@@ -12,7 +12,7 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-
+import logo from '../../assets/cap.png'
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Button from '@mui/material/Button';
@@ -21,8 +21,8 @@ import Cookies from 'universal-cookie';
 import { Link } from 'react-router-dom';
 
 const cookies = new Cookies();
-const teacher_pages = ['Home', 'Message', 'Grade'];
-const student_pages = ['Home', 'Message', 'Review' , 'Post'];
+const teacher_pages = ['Home', 'Message', 'Grade', 'Chats'];
+const student_pages = ['Home', 'Message', 'Review' , 'Post', 'Chats'];
 
 const pageLinks = {
   home: '/filter', // Replace with actual route paths
@@ -31,7 +31,9 @@ const pageLinks = {
   messagestudent: '/message',
   grade: '/submit-grade',
   reviewstudent: '/create-review', // Add more as needed
-  poststudent: '/create-post'
+  poststudent: '/create-post',
+  chats: '/teacher/request',
+  chatsstudent: '/student/request'
   // ...
 };
 
@@ -334,7 +336,7 @@ export default function PrimarySearchAppBar(data) {
         <Toolbar>
 
           <img
-            src="cap.png"
+            src={logo}
             alt="Logo"
             style={{ width: '60px', height: '60px', objectFit: 'cover', marginRight: '10px' }}
           />

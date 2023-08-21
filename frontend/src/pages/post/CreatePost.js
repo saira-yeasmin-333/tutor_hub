@@ -7,7 +7,7 @@ import {calculateDistance} from '../../components/common/distance'
 import { showError, showSuccess, showToast } from '../../App';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import MapComponent from '../../components/Location/MapComponent';
-import { sendNotificationCall } from '../../actions/notification';
+import { sendNotification } from '../../actions/notification';
 import { getAllPreferredLocations } from '../../actions/location';
 import { createPost } from "../../actions/post";
 
@@ -20,25 +20,6 @@ const CreatePost = () => {
   const mapComponentRef=useRef()
   const [mapDialog,setMapDialog]=useState(false)
   const [mapData,setMapData]=useState(null)
-
-
-  const sendNotification=async(t)=>{
-    const body={
-      to:t,
-      message:`new tuition post in location lat: ${mapData.placeName}`,
-      is_read:false
-    }
-    // console.log('bpdy : ',body)
-    try{
-      var res=await sendNotificationCall(body)
-      // console.log(res)
-      return res
-      
-    }catch(Err){
-      showError('An error occured')
-    }
-  }
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,7 +71,8 @@ const CreatePost = () => {
             tutors.add(l.tutor_id)
             console.log('tutor id: ',l.tutor_id)
             // console.log()
-            notificationPromises.push(sendNotification(l.tutor_id))
+            var message=`new tuition post in location lat: ${mapData.placeName}`
+            notificationPromises.push(sendNotification(l.tutor_id,message))
           }
         }
       })

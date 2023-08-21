@@ -1,11 +1,17 @@
-import { Avatar } from '@mui/material';
+import { Avatar, Button,Typography } from '@mui/material';
 import '../card/Card.css'; // Create this CSS file for styling
+import ApprovalIcon from '@mui/icons-material/Approval';
 import { sendRequest } from '../../../actions/request';
 import { showSuccess } from '../../../App';
+import { getRole } from '../../../actions/auth';
+import { sendNotification } from '../../../actions/notification';
+import defaultImage from '../../../assets/PICT0018.JPG'
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 
 const CardComponent = ({ data , filtered,isTutor}) => {
-
-  console.log('istutor:  ',isTutor)
 
   const handleApply=async()=>{
     var to=0
@@ -16,18 +22,18 @@ const CardComponent = ({ data , filtered,isTutor}) => {
         to:to,
         status:"pending"
       }
-      console.log('data :',data)
       var sendResult=await sendRequest(sendObject)
       console.log('send result :',sendResult)
-      if(sendRequest.success){
+      if(sendResult.success){
+        var name=await getRole()
+        var messgae=`${name.name} sent friend request to ${data.account.name}`
+        sendNotification(to,messgae)
         showSuccess('Request sent successfully')
       }
     }catch(e){
       console.log('error: ',e)
     }
   }
-
-  console.log('appeared data: ',data)
   const convertTimestampToDateTime = () => {
     if (data.timestamp) {
       // Convert timestamp to Date object
@@ -41,6 +47,74 @@ const CardComponent = ({ data , filtered,isTutor}) => {
       return 'Loading...';
     }
   };
+
+  return(
+    <Card sx={{ maxWidth: 345 }}>
+      <CardMedia
+        component="img"
+        alt="Image"
+        height="140"
+        image={data.account.image?data.account.image:defaultImage}
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {data.account.name}
+        </Typography>
+        {
+          isTutor?(
+            <>
+              <Typography variant="body2" color="text.secondary">
+                  <b>Preferref Locations:</b>
+                    {data.preferred_locations.map((l,i)=>{
+                        return <span>{l.address}{i<data.preferred_locations.length-1?',':''}</span>
+                    })}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                  <b>Sub:</b>
+                    {data.subjects.map((sub,i)=>{
+                        return <span>{sub.sub_name}{i<data.subjects.length-1?',':''}</span>
+                    })}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                  <b>Platform:</b> {data.platform}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <b>Budget:</b> {data.budget}K
+              </Typography>
+            </>
+            
+          ):(
+            <>
+              <Typography variant="body2" color="text.secondary">
+                  <b>Class:</b> {data.class}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                  <b>Address:</b> {data.address}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                  <b>Sub :</b>
+                  {data.subjects.map((sub,i)=>{
+                      return <span>{sub.sub_name}{i<data.subjects.length-1?',':''}</span>
+                  })}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                  <b>Platform:</b> {data.platform}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                  <b>Date:</b> {convertTimestampToDateTime()}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                  <b>Budget:</b> {data.budget}
+              </Typography>
+            </>
+          )
+        }
+      </CardContent>
+      <CardActions>
+        <Button variant='contained' startIcon={<ApprovalIcon/>} size="small" onClick={handleApply}>Apply</Button>
+      </CardActions>
+    </Card>
+  )
 
 
 
