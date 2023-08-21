@@ -10,7 +10,7 @@ import PrimarySearchAppBar from '../Appbar/appbar';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-
+//<PrimarySearchAppBar type={user.type} />
 const MyDrawer = styled(Drawer)({
   width: 240,
   flexShrink: 0,
@@ -109,7 +109,7 @@ const MyComponent = () => {
     const filteredPosts2 = [];
     var dist=[]
     Fav_location.forEach(favLocation => {
-      posts.forEach(post => {
+      all_posts.forEach(post => {
         var distance = calculateDistance(
           favLocation.latitude,
           favLocation.longitude,
@@ -199,7 +199,7 @@ const MyComponent = () => {
         ) : (
         <Container>
           <CssBaseline />
-            <MyDrawer variant="permanent" anchor="left">
+            <MyDrawer style={{transform:'translateY(0px)'}} variant="permanent" anchor="left">
             <StyledImageButton variant="contained" color="primary" onClick={handleClick} >
               {/* No content inside the button */}
             </StyledImageButton>
