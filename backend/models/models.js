@@ -1,4 +1,3 @@
-
 const { sq } = require("../repository/database");
 const { DataTypes } = require("sequelize");
 

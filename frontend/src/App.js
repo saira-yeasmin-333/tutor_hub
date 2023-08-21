@@ -11,6 +11,7 @@ import { Route, BrowserRouter , Routes } from 'react-router-dom';
 import CreatePost from './pages/post/CreatePost';
 import ProfilePage from "./pages/profilePage";
 import ReviewPage from "./pages/ReviewPage";
+import GradeSubmit from "./pages/GradeSubmit";
 import Notification from "./pages/notification";
 import Requests from "./pages/Requests";
 import StudentFilter from "./pages/StudentFilter";

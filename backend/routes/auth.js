@@ -2,6 +2,7 @@ const router = require("express-promise-router")();
 
 const { NotificationController } = require("../controllers/notification");
 const { ReviewController } = require("../controllers/review");
+const { GradeController } = require("../controllers/grade");
 const AuthController=require('../controllers/auth').AuthController
 const PostController=require('../controllers/post').PostController
 const LocationController=require('../controllers/location').LocationController
@@ -21,6 +22,7 @@ const efficiencyController=new EfficiencyController()
 const subjectController = new SubjectController()
 const teacherController = new TeacherController()
 const reviewController = new ReviewController()
+const gradeController = new GradeController()
 const locationController=new LocationController()
 const smsController=new SMSController()
 const requestController=new RequestController()
@@ -36,6 +38,7 @@ router.route("/profile").post(authenticateUser,authController.updateProfileImage
 router.route("/location").post(authenticateUser,locationController.create);
 router.route("/location").get(locationController.getLocations);
 
+router.route("/get-rating").get(authenticateUser,reviewController.getRating);
 
 router.route("/get-profile").get(authenticateUser,authController.findById);
 router.route("/get-efficiency/:teacher_id").get(efficiencyController.getEfficiency);

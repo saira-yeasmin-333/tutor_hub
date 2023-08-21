@@ -13,8 +13,13 @@ class ReviewService extends Service {
         return result
     }
 
-    getReviews=async () =>{
-        var result=await reviewRepository.getAll()
+    getReviews=async (teacherId) =>{
+        var result=await reviewRepository.getReviews(teacherId)
+        return result
+    }
+
+    getRating=async (teacherId) =>{
+        var result=await reviewRepository.getRating(teacherId)
         return result
     }
 }
