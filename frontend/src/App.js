@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { Rings } from 'react-loader-spinner';
 import { Route, BrowserRouter , Routes } from 'react-router-dom';
 import CreatePost from './pages/post/CreatePost';
-import ProfilePage from "./pages/profilePage";
+import ProfilePage from "./pages/ProPage";
 import ReviewPage from "./pages/ReviewPage";
 import GradeSubmit from "./pages/GradeSubmit";
 import Notification from "./pages/notification";
