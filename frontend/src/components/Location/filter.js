@@ -6,18 +6,34 @@ import axios from 'axios';
 import CardComponent from '../common/card/CardComponent';
 import { getAllPosts } from '../../actions/post'
 import { calculateDistance } from '../common/distance';
+import PrimarySearchAppBar from '../Appbar/appbar';
+import Cookies from 'universal-cookie';
 
-
+const cookies = new Cookies();
 
 const MyDrawer = styled(Drawer)({
   width: 240,
   flexShrink: 0,
+  top: '64px',
+  
 });
 
-const Content = styled('div')(({ theme }) => ({
+// const Content = styled('div')(({ theme }) => ({
+//   // flexGrow: 1,
+//   // padding: theme.spacing(2),
+//   // marginTop: '64px',
+//   display: 'flex',
+// }));
+
+const Container = styled('div')({
+  display: 'flex',
+});
+
+const Content = styled('div')({
   flexGrow: 1,
-  padding: theme.spacing(2),
-}));
+  padding: '16px', // Adjust padding as needed
+  
+});
 
 const StyledImageButton = styled(Button)({
   width: '100px', // Set the desired button width
@@ -39,6 +55,7 @@ const MyComponent = () => {
     const selectedRef=useRef(false)
     const [all_posts,setAllPsts]=useState([])
     
+    const [user, setUser] = useState(null);
 
     const [open, setOpen] = useState(true);
 
@@ -71,6 +88,16 @@ const MyComponent = () => {
   }
 
   useEffect( () =>{
+    axios
+        .get(`http://localhost:5000/api/get-profile`,{headers:{authorization:'Bearer '+cookies.get('token')}})
+        .then((response) => {
+            setUser(response.data.data); // Set the fetched data to the state
+
+            console.log('filter response : ',response.data.data)
+        })
+        .catch((error) => {
+            console.error('Error fetching user profile:', error);
+        });
     fetchPosts()
     console.log('posts: ',posts)
     
@@ -157,36 +184,36 @@ const MyComponent = () => {
     setPosts(all_posts)
   };
 
+
+  if (!user) {
+    return <div>Loading...</div>; // Display a loading message while fetching data
+   }
   
   return (
 
-    <div>
-    {!posts? (
-      <div>Loading...</div>
+    <div style={{ backgroundColor: '#BDCDF5', minHeight: '100vh' }}>
+      <PrimarySearchAppBar type={user.type} />
+      {!posts? (
+      <p>Loading...</p>
      
-    ) : (
-      <div style={{ display: 'flex' }}>
-      <CssBaseline />
-      <MyDrawer variant="permanent" anchor="left">
-        <div style={{ marginTop: 64 }} /> {/* Adjust margin based on your content */}
-        <StyledImageButton variant="contained" color="primary" onClick={handleClick} >
-          {/* No content inside the button */}
-        </StyledImageButton>
-        <p>Filter</p>
-        <CheckboxMenu options={options} selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
-        <p>Platform</p>
-        <CheckboxMenu options={options2} selectedItems={selectedItems2} setSelectedItems={setSelectedItems2} />
-        <div style={{ display: 'flex', gap: '10px' }}>
-        <Button onClick={applyFilter}>Apply</Button>
-        <Button onClick={resetFilter}>Reset</Button>
-        </div>
-      </MyDrawer>
-      <Content>
-      
-       
-      <div style={{ marginTop: 64 }}> {/* Adjust margin based on your content */}
-            
+        ) : (
+        <Container>
+          <CssBaseline />
+            <MyDrawer variant="permanent" anchor="left">
+            <StyledImageButton variant="contained" color="primary" onClick={handleClick} >
+              {/* No content inside the button */}
+            </StyledImageButton>
+            <p>Filter</p>
+            <CheckboxMenu options={options} selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
+            <p>Platform</p>
+            <CheckboxMenu options={options2} selectedItems={selectedItems2} setSelectedItems={setSelectedItems2} />
+            <div style={{ display: 'flex', gap: '10px' }}>
+            <Button onClick={applyFilter}>Apply</Button>
+            <Button onClick={resetFilter}>Reset</Button>
+            </div>
+          </MyDrawer> 
 
+      <Content> 
         <Grid container spacing={1}>
           {posts.map((post) => (
             <Grid item xs={4}>
@@ -195,10 +222,8 @@ const MyComponent = () => {
             ))}
         </Grid>
 
-    </div>
-
       </Content>
-    </div>
+    </Container>
     )}
      </div>
     

@@ -15,6 +15,7 @@ import Notification from "./pages/notification";
 import Requests from "./pages/Requests";
 import StudentFilter from "./pages/StudentFilter";
 import TeacherRequests from "./pages/TeacherRequests";
+import GradeSubmit from "./pages/GradeSubmit";
 
 var showToast
 var showError
@@ -61,6 +62,8 @@ function App() {
             <Route path='/get-profile/' Component={ProfilePage} >
             </Route>
             <Route path='/create-review' Component={ReviewPage}>
+            </Route>
+            <Route path='/submit-grade' Component={GradeSubmit}>
             </Route>
           <Route
             path="/signin"
