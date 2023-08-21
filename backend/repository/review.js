@@ -15,7 +15,8 @@ class ReviewRepository extends Repository {
                     teacher_id:teacherId
                 },include:{
                     model:Account
-                }
+                },
+                order: [['timestamp', 'DESC']]
             });
             console.log("testing review")
             console.log(reviews)

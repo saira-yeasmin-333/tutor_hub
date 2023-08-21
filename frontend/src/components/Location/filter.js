@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Drawer, CssBaseline , styled, Button, Grid} from '@mui/material';
+import { Drawer, CssBaseline , styled, Typography, Divider, Button, Grid} from '@mui/material';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+
 import CheckboxMenu from '../common/checkbox'
 import { setLoading, showError } from '../../App';
 import axios from 'axios';
@@ -200,16 +202,37 @@ const MyComponent = () => {
         <Container>
           <CssBaseline />
             <MyDrawer style={{transform:'translateY(0px)'}} variant="permanent" anchor="left">
-            <StyledImageButton variant="contained" color="primary" onClick={handleClick} >
-              {/* No content inside the button */}
-            </StyledImageButton>
-            <p>Filter</p>
-            <CheckboxMenu options={options} selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
-            <p>Platform</p>
-            <CheckboxMenu options={options2} selectedItems={selectedItems2} setSelectedItems={setSelectedItems2} />
-            <div style={{ display: 'flex', gap: '10px' }}>
-            <Button onClick={applyFilter}>Apply</Button>
-            <Button onClick={resetFilter}>Reset</Button>
+            <div style={{ padding: '10px' }}>
+              <center style={{ marginTop: '10px' }}>
+              <StyledImageButton variant="contained" color="primary" onClick={handleClick} >
+                {/* No content inside the button */}
+              </StyledImageButton>
+              </center>
+              <Divider style={{ marginTop: '20px', marginBottom: '10px' }} />
+              <Typography variant='body2' color='body2'>Filter:</Typography>
+              <CheckboxMenu options={options} selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
+              <Divider style={{ marginTop: '10px', marginBottom: '10px' }} />
+              <Typography variant='body2' color='body2'>Platform:</Typography>
+              <CheckboxMenu options={options2} selectedItems={selectedItems2} setSelectedItems={setSelectedItems2} />
+              <Divider style={{ marginTop: '10px', marginBottom: '10px' }} />
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <Button
+                        fullWidth
+                        variant='contained'
+                        startIcon={<DoneAllIcon/>}
+                        onClick={applyFilter}>Apply</Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Button
+                        
+                        color='error'
+                        fullWidth
+                        onClick={resetFilter}>Reset</Button>
+
+                    </Grid>
+                  </Grid>
+         
             </div>
           </MyDrawer> 
 

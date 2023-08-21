@@ -28,22 +28,6 @@ const CreatePost = () => {
 
   const [user, setUser] = useState(null);
 
-  const sendNotification=async(t)=>{
-    const body={
-      to:t,
-      message:`new tuition post in location lat: ${mapData.placeName}`,
-      is_read:false
-    }
-    // console.log('bpdy : ',body)
-    try{
-      var res=await sendNotificationCall(body)
-      // console.log(res)
-      return res
-      
-    }catch(Err){
-      showError('An error occured')
-    }
-  }
 
   const SettingRoleinGrade = async () => {
     axios
