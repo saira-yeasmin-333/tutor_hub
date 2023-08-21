@@ -169,7 +169,7 @@ const ProfilePage = () => {
 
 
   return (
-    <div style={{ backgroundColor: '#BDCDF5', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: 'white', minHeight: '100vh' }}>
       <PrimarySearchAppBar type={user.type} />
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
         <Card sx={{ width: 1200, marginTop: '20px', display: 'flex', flexDirection: 'row' }}>

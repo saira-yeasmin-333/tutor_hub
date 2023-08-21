@@ -1,7 +1,8 @@
-import {  useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Button from "@mui/material/Button";
+import axios from 'axios';
 import '../post/Post.css';
 import {calculateDistance} from '../../components/common/distance'
 import { showError, showSuccess, showToast } from '../../App';
@@ -10,6 +11,10 @@ import MapComponent from '../../components/Location/MapComponent';
 import { sendNotificationCall } from '../../actions/notification';
 import { getAllPreferredLocations } from '../../actions/location';
 import { createPost } from "../../actions/post";
+import Cookies from 'universal-cookie';
+import PrimarySearchAppBar from "../../components/Appbar/appbar";
+
+const cookies = new Cookies();
 
 const CreatePost = () => {
   const [platform, setPlatform] = useState('');
@@ -20,7 +25,7 @@ const CreatePost = () => {
   const mapComponentRef=useRef()
   const [mapDialog,setMapDialog]=useState(false)
   const [mapData,setMapData]=useState(null)
-
+  const [user, setUser] = useState(null);
 
   const sendNotification=async(t)=>{
     const body={
@@ -39,6 +44,21 @@ const CreatePost = () => {
     }
   }
 
+  const SettingRoleinGrade = async () => {
+    axios
+        .get(`http://localhost:5000/api/get-profile`, { headers: { authorization: 'Bearer ' + cookies.get('token') } })
+        .then((response) => {
+            setUser(response.data.data);
+            console.log('we get response : ', response.data.data);
+        })
+        .catch((error) => {
+            console.error('Error fetching user profile:', error);
+        });
+  };
+
+  useEffect(() => {
+    SettingRoleinGrade();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -127,10 +147,16 @@ const CreatePost = () => {
       setSelectedSubjects(selectedSubjects.filter((id) => id !== subjectId));
     }
   };
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
   
 
   return (
     <div>
+      <PrimarySearchAppBar type={user.role} />
+      <div>
       <Dialog
         open={mapDialog}
         >
@@ -283,6 +309,7 @@ const CreatePost = () => {
       </button>
       </form>
 
+    </div>
     </div>
   );
 };
