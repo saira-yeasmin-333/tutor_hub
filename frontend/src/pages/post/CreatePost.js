@@ -8,7 +8,7 @@ import {calculateDistance} from '../../components/common/distance'
 import { showError, showSuccess, showToast } from '../../App';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import MapComponent from '../../components/Location/MapComponent';
-import { sendNotificationCall } from '../../actions/notification';
+import { sendNotification } from '../../actions/notification';
 import { getAllPreferredLocations } from '../../actions/location';
 import { createPost } from "../../actions/post";
 import Cookies from 'universal-cookie';
@@ -25,6 +25,7 @@ const CreatePost = () => {
   const mapComponentRef=useRef()
   const [mapDialog,setMapDialog]=useState(false)
   const [mapData,setMapData]=useState(null)
+
   const [user, setUser] = useState(null);
 
   const sendNotification=async(t)=>{
@@ -59,6 +60,7 @@ const CreatePost = () => {
   useEffect(() => {
     SettingRoleinGrade();
   }, []);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -110,7 +112,8 @@ const CreatePost = () => {
             tutors.add(l.tutor_id)
             console.log('tutor id: ',l.tutor_id)
             // console.log()
-            notificationPromises.push(sendNotification(l.tutor_id))
+            var message=`new tuition post in location lat: ${mapData.placeName}`
+            notificationPromises.push(sendNotification(l.tutor_id,message))
           }
         }
       })

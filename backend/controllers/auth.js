@@ -21,7 +21,8 @@ class AuthController extends Controller{
 
     getRole=async (req,res)=>{
         const role={
-            'role':req.body.role
+            'role':req.body.role,
+            'name':req.body.name
         }
         return res.status(200).json(role)
     }
