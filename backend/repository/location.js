@@ -28,6 +28,19 @@ class LocationRepository extends Repository {
 
     }
 
+    delete=async (locationId)=>{
+        try {
+            const deleteResult = await PreferredLocation.destroy({
+                where: {
+                    id: locationId
+                }
+            });
+            return deleteResult === 1; // Returns true if a record was deleted, false otherwise
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
 
 }
 

@@ -1,15 +1,12 @@
-import { Rating } from "@mui/material";
-import Box from "@mui/material/Box";
-import Button from '@mui/material/Button';
-import Grid from "@mui/material/Grid";
-import InputLabel from "@mui/material/InputLabel";
-import Container from "@mui/material/Container";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
+import { Card, CardContent, Grid, TextField, Button, Container, Typography } from "@mui/material";
 import axios from 'axios';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import PrimarySearchAppBar from "../components/Appbar/appbar";
+import { getRole } from "../actions/auth";
+import Cookies from 'universal-cookie';
 
+const cookies = new Cookies();
 const subjects = [
     "Physics",
     "Chemistry",
@@ -22,9 +19,9 @@ const subjects = [
 
 const GradeSubmit = () => {
     const [students, setStudents] = useState([]);
-
     const [subject, setSubject] = React.useState("");
     const [student, setStudent] = React.useState("");
+    const [user, setUser] = useState(null);
 
     const changeSubject = (event) => {
         setSubject(event.target.value);
@@ -34,28 +31,43 @@ const GradeSubmit = () => {
         setStudent(event.target.value);
     };
 
-
-    useEffect(() => {
-        // Make the HTTP GET request to the backend API
+    const SettingRoleinGrade = async () => {
         axios
-            .get(`http://localhost:5000/api/students`)
+            .get(`http://localhost:5000/api/get-profile`, { headers: { authorization: 'Bearer ' + cookies.get('token') } })
             .then((response) => {
-                console.log('review response; ', response)
-                setStudents(response.data.data); // Set the fetched data to the state
+                setUser(response.data.data);
+                console.log('we get response : ', response.data.data);
             })
             .catch((error) => {
                 console.error('Error fetching user profile:', error);
             });
-        console.log(students)
-    }, []); // Add "id" as a dependency
+    };
 
+    useEffect(() => {
+        SettingRoleinGrade();
+
+        axios
+            .get(`http://localhost:5000/api/students`)
+            .then((response) => {
+                setStudents(response.data.data);
+            })
+            .catch((error) => {
+                console.error('Error fetching students:', error);
+            });
+    }, []);
+
+    if (!user) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <div>
-            <Container component="main" maxWidth="xl" sx={{ width: "100%", backgroundColor: "#c6d9ec", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Container component="main" maxWidth="md" sx={{ width: "100%", backgroundColor: "#c6d9ec", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Box sx={{ padding: 5 }}>
-                        <Typography variant="h6" gutterBottom sx={{ color: "#0067AB" }}>
+        <div >
+            <PrimarySearchAppBar type={user.role} />
+            
+            <div style={{ backgroundColor: '#BDCDF5', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Card variant="outlined" sx={{ width: '80%', maxWidth: 900, minHeight: 400, marginTop: '64px'}}>
+                    <CardContent>
+                        <Typography variant="h6" gutterBottom sx={{ color: "#0067AB", marginBottom: 2 }}>
                             Submit Grade
                         </Typography>
                         <Grid container spacing={2}>
@@ -73,7 +85,7 @@ const GradeSubmit = () => {
                                     value={student}
                                     onChange={changeStudent}
                                     sx={{
-                                        backgroundColor: '#eeb4b4', // Replace with your desired background color
+                                        backgroundColor: 'white',
                                     }}
                                 >
                                     <option value="">Name of the Student</option>
@@ -84,6 +96,8 @@ const GradeSubmit = () => {
                                     ))}
                                 </TextField>
                             </Grid>
+
+                            {/* Rest of the form fields */}
 
 
                             <Grid item xs={12} sm={8}>
@@ -100,7 +114,7 @@ const GradeSubmit = () => {
                                     value={subject}
                                     onChange={changeSubject}
                                     sx={{
-                                        backgroundColor: '#eeb4b4', // Replace with your desired background color
+                                        backgroundColor: 'white', // Replace with your desired background color
                                     }}
                                 >
                                     <option value="">Choose Subject</option>
@@ -124,7 +138,7 @@ const GradeSubmit = () => {
                                     autoComplete="off"
                                     variant="outlined"
                                     sx={{
-                                        backgroundColor: '#eeb4b4', // Replace with your desired background color
+                                        backgroundColor: 'white', // Replace with your desired background color
                                     }}>
                                 </TextField>
                             </Grid>
@@ -140,26 +154,24 @@ const GradeSubmit = () => {
                                     size="small"
                                     autoComplete="off"
                                     variant="outlined"
-                                    sx={{
-                                        backgroundColor: '#eeb4b4',
-                                    }}>
+                                    >
                                 </TextField>
                             </Grid>
 
                             
-                            <Grid item xs={12} sm={12}>
-                                <Button variant="contained" sx={{ justifyContent: "center" }}>
+                            <Grid item xs={12} sm={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+                                <Button variant="contained" sx={{ width: 150 }}>
                                     Submit
                                 </Button>
                             </Grid>
                         </Grid>
-                    </Box>
-                </Container>
-            </Container>
+                    </CardContent>
+                </Card>
 
+            </div>
+            
         </div>
     );
+}
 
-};
-
-export default GradeSubmit
+export default GradeSubmit;

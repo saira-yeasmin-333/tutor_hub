@@ -35,6 +35,7 @@ router.route("/profile").post(authenticateUser,authController.updateProfileImage
 
 router.route("/location").post(authenticateUser,locationController.create);
 router.route("/location").get(locationController.getLocations);
+router.route("/delete-location").delete(locationController.delete);
 
 router.route("/get-rating").get(authenticateUser,reviewController.getRating);
 

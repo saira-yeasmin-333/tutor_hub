@@ -18,6 +18,16 @@ class LocationService extends Service {
         var result=await locationRepository.getAll()
         return result
     }
+
+    delete = async (locationId) =>{
+        try {
+            const deleteResult = await locationRepository.delete(locationId);
+            return deleteResult; // You can return a success/failure boolean or any relevant information
+        } catch (error) {
+            console.error('Error deleting location:', error);
+            throw error; // Rethrow the error to be handled at the higher level
+        }
+    }
 }
 
 module.exports = {LocationService}

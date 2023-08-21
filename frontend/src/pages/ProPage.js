@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Avatar, Button, Card, CardContent, CardHeader, Tab, Tabs, Rating, IconButton } from '@mui/material';
+import { Avatar, Button, Card, CardContent, CardHeader, Tab, Tabs, Rating, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import PrimarySearchAppBar from '../components/Appbar/appbar';
 import Efficiencies from './Efficiencies';
 import Cookies from 'universal-cookie';
@@ -11,10 +11,12 @@ import { v4 } from "uuid";
 import { setLoading, showToast } from '../App';
 import EditIcon from '@mui/icons-material/Edit';
 import TextEditor from '../components/common/TextEditor';
+import { useNavigate } from "react-router-dom";
 
 const cookies = new Cookies();
 
 const ProfilePage = () => {
+  const history = useNavigate();
   const [user, setUser] = useState(null);
   const { id } = useParams();
   const [currentTab, setCurrentTab] = useState(0);
@@ -23,12 +25,53 @@ const ProfilePage = () => {
   const imageRef = ref(storage, `images / ${ v4() }${ imageUpload?.name }`);
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
+  const [media, setMedia] = useState([]);
+  const [isDeleteLocationDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedLocationIndex, setSelectedLocationIndex] = useState(null);
 
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
   };
 
+  const handleOpenDeleteLocationDialog = (index) => {
+    console.log("trying to delete ",index)
+    setSelectedLocationIndex(index);
+    setDeleteDialogOpen(true);
+  };
 
+  const handleCloseDeleteLocationDialog = () => {
+    setSelectedLocationIndex(null);
+    setDeleteDialogOpen(false);
+  };
+
+  const handleDeleteLocation = () => {
+    if (selectedLocationIndex !== null) {
+      // Delete the preferred location at the selected index
+      const locationToDelete = user.preferred_locations[selectedLocationIndex];
+      DeleteLocation(locationToDelete.id);
+      const updatedLocations = user.preferred_locations.filter((_, index) => index !== selectedLocationIndex);
+      // Update the state
+      setUser({ ...user, preferred_locations: updatedLocations });
+      // Close the dialog
+      handleCloseDeleteLocationDialog();
+    }
+  };
+
+  const DeleteLocation = (locationIdToDelete) => {
+    axios.delete('http://localhost:5000/api/delete-location', {
+      data: {
+          location_id: locationIdToDelete
+      }
+    })
+    .then(response => {
+        // Handle success
+        console.log('Location deleted successfully:', response.data);
+    })
+    .catch(error => {
+        // Handle error
+        console.error('Error deleting location:', error);
+    });
+  };
 
   // const uploadFile = () => {
   //     console.log(imageUpload)
@@ -103,6 +146,16 @@ const ProfilePage = () => {
         if (response.data.data.role === 'teacher') {
           fetchUserRating();
           fetchReviews();
+          if (response.data.data.physicalMedia === true){
+            const updatedMedia = [...media, "Physical"];
+            // Update the state with the new array
+            setMedia(updatedMedia);
+          }
+          if (response.data.data.onlineMedia === true){
+            const updatedMedia = [...media, "Online"];
+            // Update the state with the new array
+            setMedia(updatedMedia);
+          }
         }
       })
       .catch((error) => {
@@ -148,6 +201,7 @@ const ProfilePage = () => {
 
             <div >
               {currentTab === 0 && (
+                
                 <CardContent style={{ overflowY: 'auto', height: '200px' }}>
                   <p style={{ margin: '5px 0', fontSize: '16px', fontWeight: 'bold' }}>
                     Phone: {'\t'} {/* Tabbed space */}
@@ -157,8 +211,31 @@ const ProfilePage = () => {
                     Email: {'\t'} {/* Tabbed space */}
                     <span style={{ fontSize: '14px', fontWeight: 'normal', color: '#007bff' }}>{user.email}</span>
                   </p>
-                  {user.role === "teacher" &&
-                    <p style={{ margin: '5px 0', fontSize: '16px', fontWeight: 'bold' }}>
+                  {user.role === "teacher" && (
+                    <div>
+                      <p style={{ margin: '5px 0', fontSize: '16px', fontWeight: 'bold' }}>
+                      Media: {'\t'} {/* Tabbed space */}
+                      <span style={{ fontSize: '14px', fontWeight: 'normal' }}>
+                      {media.map((med, i) => (
+                          <span key={i}>{
+                            <span
+                              key={i}
+                              style={{
+                                display: 'inline-block',
+                                margin: '2px',
+                                padding: '5px 10px',
+                                borderRadius: '20px',
+                                backgroundColor: '#007bff',
+                                color: 'white',
+                              }}
+                            >
+                              {med}
+                            </span>
+                          }{i < media.length - 1 ? ', ' : ''}</span>
+                        ))}
+                      </span>
+                      </p>
+                      <p style={{ margin: '5px 0', fontSize: '16px', fontWeight: 'bold' }}>
                       Efficiency: {'\t'} {/* Tabbed space */}
                       <span style={{ fontSize: '14px', fontWeight: 'normal' }}>
                         {user.subjects.map((sub, i) => (
@@ -180,6 +257,65 @@ const ProfilePage = () => {
                         ))}
                       </span>
                     </p>
+                    <p style={{ margin: '5px 0', fontSize: '16px', fontWeight: 'bold' }}>
+                    Locations: {'\t'} {/* Tabbed space */}
+                    <span style={{ fontSize: '14px', fontWeight: 'normal' }}>
+                      {user.preferred_locations.map((loca,i) => (
+                        <span key={i}>{
+                          <span
+                            key={i}
+                            style={{
+                              display: 'inline-block',
+                              margin: '2px',
+                              padding: '5px 10px',
+                              borderRadius: '20px',
+                              backgroundColor: '#007bff',
+                              color: 'white',
+                              cursor: 'pointer'
+                            }}
+                            onClick={() => handleOpenDeleteLocationDialog(i)}
+                          >
+                            {loca.address}
+                          </span>
+                          
+                        }{i < user.preferred_locations.length - 1 ? ', ' : ''}</span>
+                      ))}
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          margin: '2px',
+                          padding: '5px 10px',
+                          borderRadius: '20px',
+                          backgroundColor: '#007bff',
+                          color: 'white',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => history('/location')}
+                      >
+                        +
+                      </span>
+                      <Dialog open={isDeleteLocationDialogOpen} onClose={handleCloseDeleteLocationDialog}>
+                        <DialogTitle>Delete Preferred Location</DialogTitle>
+                        <DialogContent>
+                          Are you sure you want to delete the preferred location:
+                          <strong>{selectedLocationIndex !== null && user.preferred_locations[selectedLocationIndex]?.address}</strong>?
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleCloseDeleteLocationDialog} color="primary">
+                            Cancel
+                          </Button>
+                          <Button onClick={handleDeleteLocation} color="secondary">
+                            Delete
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </span>
+                  </p>
+
+                    </div>
+                    
+                    )
+                    
                   }
                 </CardContent>
               )}

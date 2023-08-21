@@ -41,23 +41,29 @@ function Location() {
     if(mapComponentRef.current.isSelected()){
       const selectedLocation=mapComponentRef.current.getData()
       console.log(selectedLocation)
-      if(rad){
+      console.log('now clicked rad : ',rad)
+      if(rad!==null){
         const data = {
           latitude:selectedLocation.location.lat,
           longitude:selectedLocation.location.lng,
           address:selectedLocation.placeName,
           radius:rad
         }
-        console.log('data: ',data)
         setLoading(true)
+        console.log('before sending location dta: ',data)
         var res=await saveTutorLocation(data)
         setLoading(false)
-        if(res)
+        if(res){
+          console.log('fetch resukt: ',res)        
           showSuccess("Location saved successfully")
+        }
         else showError("An error occurred")
       }
+      else{
+        showError('please select your radius')
+      }
     }else{
-      showError("Please select a location")
+      showError("Please select your location")
     }
  }
 
