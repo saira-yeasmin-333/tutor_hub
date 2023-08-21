@@ -76,7 +76,11 @@ const CardComponent = ({ data , filtered,isTutor}) => {
                     })}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                  <b>Platform:</b> {data.platform}
+                 {data.onlineMedia && 
+                  (<p>platform :online</p>)}
+                   {data.physicalMedia && (
+                    <p>platform:physical</p>
+                  )}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 <b>Budget:</b> {data.budget}K
@@ -109,6 +113,18 @@ const CardComponent = ({ data , filtered,isTutor}) => {
             </>
           )
         }
+
+        {filtered && !isTutor &&(
+          <div style={{padding:'2%',margin:'10%'}}>
+            <p>Distance between {data.my_address} and {data.post_address} is {data.distance.toFixed(3)} km</p>
+          </div>
+        )}
+
+        {filtered && isTutor &&(
+          <center >
+            <p>Min distance  is {data.distance.toFixed(3)} km</p>
+          </center>
+        )}
       </CardContent>
       <CardActions>
         <Button variant='contained' startIcon={<ApprovalIcon/>} size="small" onClick={handleApply}>Apply</Button>
@@ -184,17 +200,7 @@ const CardComponent = ({ data , filtered,isTutor}) => {
         
       </div>
        
-        {filtered && !isTutor &&(
-          <div style={{padding:'2%',margin:'10%'}}>
-            <p>Distance between {data.my_address} and {data.post_address} is {data.distance.toFixed(3)} km</p>
-          </div>
-        )}
-
-        {filtered && isTutor &&(
-          <center >
-            <p>Min distance  is {data.distance.toFixed(3)} km</p>
-          </center>
-        )}
+        
        
     </div>
   );

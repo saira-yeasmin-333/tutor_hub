@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Drawer, CssBaseline, styled, Button, Grid, TextField, LinearProgress } from '@mui/material';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import { Drawer, CssBaseline, styled, Button, Grid, TextField, LinearProgress, Typography, Divider } from '@mui/material';
 import CheckboxMenu from '../components/common/checkbox'
 import axios from 'axios';
 import CardComponent from '../components/common/card/CardComponent';
@@ -267,20 +268,41 @@ const StudentFilter = () => {
               </Dialog>
 
               <MyDrawer style={{ transform: 'translateY(0px)' }} variant="permanent" anchor="left">
-                <div style={{ marginTop: 64 }} /> {/* Adjust margin based on your content */}
-                <StyledImageButton variant="contained" color="primary" onClick={() => {
-                  setMapDialog(true)
-                }} >
-                  {/* No content inside the button */}
-                </StyledImageButton>
-                <p>Filter</p>
-                <CheckboxMenu options={options} selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
-                <p>Platform</p>
-                <CheckboxMenu options={options2} selectedItems={selectedItems2} setSelectedItems={setSelectedItems2} />
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <Button onClick={applyFilter}>Apply</Button>
-                  <Button onClick={resetFilter}>Reset</Button>
+                <div style={{ padding: '10px' }}>
+                  <center style={{ marginTop: '10px' }}>
+                    <StyledImageButton variant="contained" color="primary" onClick={() => {
+                      setMapDialog(true)
+                    }} >
+                      {/* No content inside the button */}
+                    </StyledImageButton>
+                  </center>
+                  <Divider style={{ marginTop: '20px', marginBottom: '10px' }} />
+                  <Typography variant='body2' color='body2'>Filter:</Typography>
+                  <CheckboxMenu options={options} selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
+                  <Divider style={{ marginTop: '10px', marginBottom: '10px' }} />
+                  <Typography variant='body2' color='body2'>Platform:</Typography>
+                  <CheckboxMenu options={options2} selectedItems={selectedItems2} setSelectedItems={setSelectedItems2} />
+                  <Divider style={{ marginTop: '10px', marginBottom: '10px' }} />
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <Button
+                        fullWidth
+                        variant='contained'
+                        startIcon={<DoneAllIcon/>}
+                        onClick={applyFilter}>Apply</Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Button
+                        
+                        color='error'
+                        fullWidth
+                        onClick={resetFilter}>Reset</Button>
+
+                    </Grid>
+                  </Grid>
+
                 </div>
+
               </MyDrawer>
               <Content>
 
@@ -288,14 +310,14 @@ const StudentFilter = () => {
                 <div> {/* Adjust margin based on your content */}
 
 
-                  <div style={{width:'calc(100vw - 240px)', transform:'translateX(-50px)'}}>
-                  <Grid container spacing={1} >
-                    {tutors.map((tutor) => (
-                      <Grid item xs={4}>
-                        <CardComponent key={tutor.teacher_id} data={tutor} filtered={selectedRef.current} isTutor={true} />
-                      </Grid>
-                    ))}
-                  </Grid>
+                  <div style={{ width: 'calc(100vw - 240px)', transform: 'translateX(-50px)' }}>
+                    <Grid container spacing={1} >
+                      {tutors.map((tutor) => (
+                        <Grid item xs={4}>
+                          <CardComponent key={tutor.teacher_id} data={tutor} filtered={selectedRef.current} isTutor={true} />
+                        </Grid>
+                      ))}
+                    </Grid>
                   </div>
 
                 </div>

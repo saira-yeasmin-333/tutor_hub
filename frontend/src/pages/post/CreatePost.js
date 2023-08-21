@@ -28,7 +28,6 @@ const CreatePost = () => {
 
   const [user, setUser] = useState(null);
 
-  
 
   const SettingRoleinGrade = async () => {
     axios
