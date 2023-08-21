@@ -73,22 +73,22 @@ const ProfilePage = () => {
     });
   };
 
-  // const uploadFile = () => {
-  //     console.log(imageUpload)
-  //     if (imageUpload == null) return;
-  //     uploadBytes(imageRef, imageUpload).then((snapshot) => {
-  //     getDownloadURL(snapshot.ref).then((url) => {
-  //         console.log(url)
-  //         setImageUrls(url);
-  //         updateProfile(url)
-  //     }).catch(e=>{
-  //         console.log(e)
-  //     })
-  // }).catch(e=>{
-  //     console.log(e)
-  // });
+  const uploadFile = () => {
+      console.log(imageUpload)
+      if (imageUpload == null) return;
+      uploadBytes(imageRef, imageUpload).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+          console.log(url)
+          setImageUrls(url);
+          updateProfile(url)
+      }).catch(e=>{
+          console.log(e)
+      })
+  }).catch(e=>{
+      console.log(e)
+  });
 
-  // };
+  };
 
   const updateProfile = async (url) => {
     console.log('url ;', url)
@@ -179,6 +179,24 @@ const ProfilePage = () => {
             ) : (
               <img alt="Default" src="/PICT0018.jpg" style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }} />
             )}
+            <input
+                                type="file"
+                                onChange={(event) => {
+                                setImageUpload(event.target.files[0]);
+                                }}
+                            />
+            <Button variant="raised" component="span"  style={{
+                                backgroundColor: '#007bff', // Blue color
+                                color: '#fff', // White color
+                                padding: '10px 20px', // Padding for the button (top/bottom left/right)
+                                borderRadius: '8px', // Rounded corners
+                                padding: '8px 16px', // Padding for the button
+                                fontSize: '14px', // Font size
+                                fontWeight: 'bold', // Bold text
+                                margin: '10px' // Margin around the button
+                            }} onClick={uploadFile}>
+                                Upload
+                            </Button>
           </div>
           <div style={{ flex: 2, padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
