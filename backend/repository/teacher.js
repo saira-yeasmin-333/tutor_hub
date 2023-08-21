@@ -23,6 +23,23 @@ class TeacherRepository extends Repository {
         return teachers
     }
 
+    getAllTeachers = async () => {
+        try {
+          const teachers = await Teacher.findAll({
+            include: 
+                {
+                  model: Account,
+                  attributes: ['name', 'image','account_id'], // Specify image attributes you want
+                },
+          });
+      
+          return teachers;
+        } catch (error) {
+          console.error('Error fetching teachers:', error);
+          throw error;
+        }
+     };
+
     create = async (data) => {
         try {
             const teacher = await Teacher.create({

@@ -14,6 +14,8 @@ class AuthService extends Service {
         super();
     }
 
+
+
     signup=async user=>{
         var lookup=await accountRepository.findUser(user.email)
         console.log('lookup in service ,',lookup)
