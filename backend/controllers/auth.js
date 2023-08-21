@@ -19,6 +19,13 @@ class AuthController extends Controller{
         return res.status(200).json(result)
     }
 
+    getRole=async (req,res)=>{
+        const role={
+            'role':req.body.role
+        }
+        return res.status(200).json(role)
+    }
+
     findById=async (req,res)=>{
         var result=await authService.findById(req.body.account_id)
         return res.status(200).json(result)
