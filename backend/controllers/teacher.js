@@ -25,6 +25,16 @@ class TeacherController extends Controller {
         })
     }
 
+    getTeachersWithName = async (req, res) => {
+        var result = await teacherService.getTeachersWithName()
+        return res.status(200).json({
+            success: true,
+            data: result
+        })
+    }
+
+
+
     fetchTutor=async (req,res)=>{
         var result=await teacherService.fetchTutor(req.params.id)
         return res.status(200).json({

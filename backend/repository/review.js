@@ -16,7 +16,7 @@ class ReviewRepository extends Repository {
                 },include:{
                     model:Account
                 },
-                order: [['timestamp', 'DESC']]
+                order:[['timestamp','DESC']]
             });
             console.log("testing review")
             console.log(reviews)

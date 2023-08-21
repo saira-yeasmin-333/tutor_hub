@@ -47,6 +47,7 @@ router.route("/subject").post(subjectController.create);
 router.route("/subject").get(subjectController.getSubjects);
 router.route("/fetch-tutor/:id").get(teacherController.fetchTutor);
 router.route("/teachers").get(teacherController.getTeachers);
+router.route("/teachers/name").get(teacherController.getTeachersWithName);
 router.route("/insert-teacher").post(teacherController.create);
 
 router.route("/review").post(authenticateUser,reviewController.create);
