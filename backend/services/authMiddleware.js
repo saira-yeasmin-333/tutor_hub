@@ -9,6 +9,7 @@ var authenticateUser=(req, res, next)=>{
         var decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
         req.body['account_id']=decoded.account_id,
         req.body['name']=decoded.name
+        req.body['role']=decoded.role
         if(decoded.role==='teacher'){
             req.body['teacher_id']=decoded.teacher_id
         }

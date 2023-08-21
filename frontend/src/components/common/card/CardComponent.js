@@ -5,6 +5,8 @@ import { showSuccess } from '../../../App';
 
 const CardComponent = ({ data , filtered,isTutor}) => {
 
+  console.log('istutor:  ',isTutor)
+
   const handleApply=async()=>{
     var to=0
     if(isTutor)to=data.account_id

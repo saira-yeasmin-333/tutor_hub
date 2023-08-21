@@ -18,6 +18,7 @@ import {
 
 } from "@mui/material";
 import { setLoading, showError, showToast } from "./App";
+import { getRole } from "./actions/auth";
 
 const cookies = new Cookies();
 const COOKIE_AGE = 31536000;
@@ -52,7 +53,17 @@ function SignIn() {
         setLoading(false)
         if(res.data.success){
             cookies.set('token',res.data.token,{ path: '/', maxAge: COOKIE_AGE }) //setting token
-            history('/location')
+
+            var role=await getRole()
+            if(role!==null){
+              console.log("trying to identify ",role)
+              if(role.role==="student"){
+                history('/student/filter')
+              }else{
+                history('/filter')
+              }
+            } 
+            
         }else{
             showError(res.data.error)
         }
