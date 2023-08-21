@@ -64,7 +64,7 @@ function App() {
             </Route>
             <Route path='/create-review' Component={ReviewPage}>
             </Route>
-            <Route path='/grade-submit' Component={GradeSubmit}>
+            <Route path='/submit-grade' Component={GradeSubmit}>
             </Route>
           <Route
             path="/signin"

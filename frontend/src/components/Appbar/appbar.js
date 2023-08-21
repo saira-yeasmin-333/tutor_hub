@@ -29,7 +29,7 @@ const pageLinks = {
   homestudent: '/student/filter',
   message: '/message',
   messagestudent: '/message',
-  grade: '/grade',
+  grade: '/submit-grade',
   reviewstudent: '/create-review', // Add more as needed
   poststudent: '/create-post'
   // ...
