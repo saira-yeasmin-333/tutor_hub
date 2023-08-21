@@ -9,14 +9,14 @@ import { useState } from 'react';
 import { Rings } from 'react-loader-spinner';
 import { Route, BrowserRouter , Routes } from 'react-router-dom';
 import CreatePost from './pages/post/CreatePost';
-
 import ProfilePage from "./pages/profilePage";
-
 import ReviewPage from "./pages/ReviewPage";
 import GradeSubmit from "./pages/GradeSubmit";
 import Notification from "./pages/notification";
-import Requests from "./pages/StudentFilter";
+import Requests from "./pages/Requests";
 import StudentFilter from "./pages/StudentFilter";
+import TeacherRequests from "./pages/TeacherRequests";
+import GradeSubmit from "./pages/GradeSubmit";
 
 var showToast
 var showError
@@ -98,6 +98,19 @@ function App() {
             exact
             element={<StudentFilter />}
           />
+
+          <Route
+            path="/teacher/request"
+            exact
+            element={<TeacherRequests />}
+          />
+
+          <Route
+            path="/student/request"
+            exact
+            element={<Requests />}
+          />
+
         </Routes>
       </BrowserRouter>
     </div>

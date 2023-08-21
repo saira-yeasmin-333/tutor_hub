@@ -22,6 +22,7 @@ class PostRepository extends Repository {
         return posts
     }
 
+
     create=async data=>{
         try{
             data['timestamp']=parseInt(Date.now()/1000)
