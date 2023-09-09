@@ -47,6 +47,8 @@ const StyledImageButton = styled(Button)({
 const MyComponent = () => {
     const options = ['Location', 'budget'];
     const options2 = ['Physical', 'Online'];
+
+    const [classLevel, setClassLevel] = useState('');
     
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectedItems2, setSelectedItems2] = useState([]);
@@ -163,7 +165,7 @@ const MyComponent = () => {
       }
     })
 
-    if(selectedItems2.length===0){
+    if(selectedItems2.length===0||selectedItems.length===0){
       console.log('hi')
       temp=all_posts
     }
@@ -173,7 +175,18 @@ const MyComponent = () => {
       }
     })
 
-    setPosts(temp)
+    var clssFilter=[]
+    temp.forEach(p=>{
+      console.log('p,cls: ',p.class,classLevel)
+      if(p.class.toString()===classLevel.toString()){
+        console.log('encounters')
+        clssFilter.push(p)
+      }
+    })
+
+
+    console.log('class filter----------',clssFilter)
+    setPosts(clssFilter)
 
   };
 
@@ -214,6 +227,26 @@ const MyComponent = () => {
               <Divider style={{ marginTop: '10px', marginBottom: '10px' }} />
               <Typography variant='body2' color='body2'>Platform:</Typography>
               <CheckboxMenu options={options2} selectedItems={selectedItems2} setSelectedItems={setSelectedItems2} />
+              <label className="form-label">
+              Choose a Class:
+              <select className="form-select"
+                value={classLevel}
+                onChange={(e) => setClassLevel(e.target.value)}
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                {/* ... Include options for classes 3 to 12 */}
+              </select>
+            </label>
+              
               <Divider style={{ marginTop: '10px', marginBottom: '10px' }} />
                   <Grid container spacing={1}>
                     <Grid item xs={6}>

@@ -15,9 +15,9 @@ class PostService extends Service {
         return result
     }
 
-    getPosts=async () =>{
+    getPosts=async (params) =>{
 
-        var result=await postRepository.getAll()
+        var result=await postRepository.getAll(params)
         return result
     }
 

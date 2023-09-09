@@ -13,8 +13,19 @@ class RequestService extends Service {
         return result
     }
 
+    cntReq=async data=>{
+        var result=await requestRepository.countRequest(data)
+        return result
+    }
+
     getRequests=async (data) =>{
         var result=await requestRepository.getRequests(data)
+        console.log('result in service: ',result)
+        return result
+    }
+
+    getApprovedRequests=async (data) =>{
+        var result=await requestRepository.getApprovedRequests(data)
         console.log('result in service: ',result)
         return result
     }

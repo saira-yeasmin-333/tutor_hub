@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { styled, alpha } from '@mui/material/styles';
+import defaultPic from '../../assets/profilePic.jpg'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -131,7 +132,7 @@ export default function PrimarySearchAppBar(data) {
     fetchImage();
 
     // Set up interval to fetch notifications periodically
-    const intervalId = setInterval(fetchNotifications, 50); // Fetch every 5 seconds
+    const intervalId = setInterval(fetchNotifications, 50000); // Fetch every 5 seconds
     notificationRef.current=false
     return () => {
       clearInterval(intervalId); // Clean up interval on unmount
@@ -414,7 +415,6 @@ export default function PrimarySearchAppBar(data) {
                 <NotificationsIcon style={{ color: 'black' }} />
               </Badge>
               </IconButton>
-              {imageUrls && (
                 <IconButton
                   size="large"
                   edge="end"
@@ -428,12 +428,12 @@ export default function PrimarySearchAppBar(data) {
                   }, }}
                 >
                   <img
-                    src={imageUrls}
+                    src={imageUrls?imageUrls:defaultPic}
                     alt="Profile"
                     style={{ width: '32px', height: '32px', borderRadius: '50%' }}
                   />
                 </IconButton>
-              )}
+              
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none', borderRight: '20p', '&:hover': {
                             backgroundColor: '#CC9999', // Darker shade of #EEB4B4

@@ -1,5 +1,6 @@
 import React,{forwardRef,useEffect, useRef,useImperativeHandle} from "react"
 import { showError } from "../../App";
+import { toast } from "react-hot-toast";
 
 const MapComponent=forwardRef(({height,width,initLocation,initZoom,mapId},ref)=>{
 
@@ -8,6 +9,15 @@ const MapComponent=forwardRef(({height,width,initLocation,initZoom,mapId},ref)=>
     const mapRef=useRef(null)
     const geoCoderRef=useRef(null)
     const infoWindowRef=useRef(null)
+
+    function showPosition(position) {
+        var marker = new window.google.maps.Marker({
+            position: {lat:position.coords.latitude,lng:position.coords.longitude},
+            title:"Hello World!"
+        });
+        marker.setMap(mapRef.current);
+        mapRef.current.panTo({lat:position.coords.latitude,lng:position.coords.longitude})
+    }
 
     useImperativeHandle(ref, () => ({
 
@@ -66,7 +76,12 @@ const MapComponent=forwardRef(({height,width,initLocation,initZoom,mapId},ref)=>
     }
 
     useEffect(()=>{
-        initializeMap()    
+        initializeMap()
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            toast.error("Geolocation is not supported by this browser.")
+        }    
     },[])
 
 
