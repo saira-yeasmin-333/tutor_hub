@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { Teacher,Subject, PreferredLocation,Account } = require('../models/models');
 const Repository = require('./database').Repository
 
@@ -7,8 +8,25 @@ class TeacherRepository extends Repository {
         super();
     }
 
-    getAll = async () => {
+    getAll = async (params) => {
+        console.log(params)
+
+
+        var whereObject={}
+        if(Object.keys(params).indexOf('budget')>=0){
+            if(params.budgetType==='more')
+                whereObject['budget']={
+                    [Op.gte]:parseInt(params.budget)
+                }
+            else
+                whereObject['budget']={
+                    [Op.lte]:parseInt(params.budget)
+                }
+        }
+
         var teachers = await Teacher.findAll({
+
+            where:whereObject,
             include:[{
                 model:Subject
             },
@@ -20,6 +38,16 @@ class TeacherRepository extends Repository {
             }
         ]
         });
+
+
+        // var returnList=[]
+        // teachers.map(t=>{
+        //     var teacherObj=t.get({plain:'true'})
+        //     if(teacherObj.budget<10000)
+        //         returnList.push(teacherObj)
+        // })
+
+
         return teachers
     }
 

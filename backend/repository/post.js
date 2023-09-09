@@ -7,8 +7,14 @@ class PostRepository extends Repository {
         super();
     }
 
-    getAll=async ()=>{
+    getAll=async (params)=>{
+      console.log(params)
+      var whereObject={}
+      if(Object.keys(params).indexOf('class')>=0){
+        whereObject['class']=params.class
+      }
         var posts = await Post.findAll({
+          where:whereObject,
             include: [{
                 model: Account,
                 attributes: ['name','image'], // Include the desired additional column

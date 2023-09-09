@@ -5,10 +5,51 @@ import { approveRequest } from '../../../actions/request';
 import { sendNotification } from '../../../actions/notification';
 import { showSuccess } from '../../../App';
 import { getRole } from '../../../actions/auth';
+import { getFirestore,collection,addDoc, FieldValue, updateDoc, doc } from "firebase/firestore";
+import { useEffect, useState } from 'react';
 
-const RequestCardComponent = ({data,filtered,isTutor}) => {
+
+const RequestCardComponent = ({data,filtered,isTutor,profile}) => {
+
+  const db=getFirestore()
+
+  const [myProfile,setMyProfile]=useState(profile)
+
+  useEffect(()=>{
+    setMyProfile(profile)
+  },[profile])
+
+  const addInboxes=async ()=>{
+    Promise.all([addDoc(collection(db, "inbox"), {
+      uid: myProfile.account_id,
+      name:data.name,
+      image:data.image,
+      unread:1,
+      link:[],
+      updatedAt:parseInt(Date.now()/1000),
+      lastMsg:'Say Hi to your new connection'
+    }),
+    addDoc(collection(db, "inbox"), {
+      uid: data.account_id,
+      name:myProfile.name,
+      image:myProfile.image,
+      unread:1,
+      link:[],
+      updatedAt:parseInt(Date.now()/1000),
+      lastMsg:'Say Hi to your new connection'
+    })]).then(r=>{
+      Promise.all(r.map(d=>{
+        var arr=[]
+        r.map(a=>{if(a.id!==d.id)arr.push(a.id)})
+        return updateDoc( doc(db, "inbox", d.id),{
+         link:arr
+        })
+      }))
+    });
+  }
 
   const approve=async()=>{
+    addInboxes()
     var approveResult=await approveRequest({"status":"approved"});
     if(approveResult.success){
       var name=await getRole()

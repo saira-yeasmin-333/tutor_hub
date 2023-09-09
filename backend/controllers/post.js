@@ -18,7 +18,8 @@ class PostController extends Controller{
     }
 
     getPosts=async (req,res)=>{
-        var result=await postService.getPosts()
+        
+        var result=await postService.getPosts(req.query)
         return res.status(200).json({
             success:true,
             data:result

@@ -36,6 +36,11 @@ class AuthController extends Controller{
         var result=await authService.updateProfileImage(req.body);
         return res.json(result)
     }
+
+    getAllUsers=async (req,res)=>{
+        var result=await authService.getAllUsers()
+        return res.json(result)
+    }
     
 }
 

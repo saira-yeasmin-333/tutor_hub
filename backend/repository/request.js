@@ -14,6 +14,23 @@ class RequestRepository extends Repository {
         return request
     }
 
+    countRequest=async(data)=>{
+        const froms=await Request.findAll({
+            where:{
+                from:data,
+            }, // Select only the 'to' attribute
+            raw: true, // Return plain data objects
+        })
+        console.log('size: ',froms.length)
+        return froms.length
+        // var returnList=[]
+        // teachers.map(t=>{
+        //     var teacherObj=t.get({plain:'true'})
+        //     if(teacherObj.budget<10000)
+        //         returnList.push(teacherObj)
+        // })
+    }
+
     getRequests=async(data)=>{
         const froms=await Request.findAll({
             where:{
@@ -34,6 +51,26 @@ class RequestRepository extends Repository {
         return res
     }
 
+
+    getApprovedRequests=async(data)=>{
+        const froms=await Request.findAll({
+            where:{
+                to:data,
+                status:"approved"
+            }, // Select only the 'to' attribute
+            raw: true, // Return plain data objects
+        })
+        console.log('froms: ',froms)
+        const fromIds = froms.map(request => request.from);
+        console.log('froms ID : ',fromIds)
+        const res=await  Account.findAll({
+            where: {
+              account_id: fromIds // Find accounts with matching account IDs
+            }
+        })
+        console.log('res: ',res)
+        return res
+    }
     
 
     approveRequest=async(data)=>{
