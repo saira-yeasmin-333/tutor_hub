@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Drawer, CssBaseline , styled, Typography, Divider, Button, Grid} from '@mui/material';
+import { Drawer, CssBaseline, styled, Typography, Divider, Button, Grid } from '@mui/material';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 
 import CheckboxMenu from '../common/checkbox'
@@ -17,7 +17,7 @@ const MyDrawer = styled(Drawer)({
   width: 240,
   flexShrink: 0,
   top: '64px',
-  
+
 });
 
 // const Content = styled('div')(({ theme }) => ({
@@ -34,7 +34,7 @@ const Container = styled('div')({
 const Content = styled('div')({
   flexGrow: 1,
   padding: '16px', // Adjust padding as needed
-  
+
 });
 
 const StyledImageButton = styled(Button)({
@@ -45,71 +45,72 @@ const StyledImageButton = styled(Button)({
 });
 
 const MyComponent = () => {
-    const options = ['Location', 'budget'];
-    const options2 = ['Physical', 'Online'];
-    
-    const [selectedItems, setSelectedItems] = useState([]);
-    const [selectedItems2, setSelectedItems2] = useState([]);
+  const options = ['Location', 'budget'];
+  const options2 = ['Physical', 'Online'];
+  const [classLevel, setClassLevel] = useState('');
 
-    const [Fav_location,setPreferredLocations]=useState([])
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems2, setSelectedItems2] = useState([]);
 
-    const[posts,setPosts]=useState([])
-    const selectedRef=useRef(false)
-    const [all_posts,setAllPsts]=useState([])
-    
-    const [user, setUser] = useState(null);
+  const [Fav_location, setPreferredLocations] = useState([])
 
-    const [open, setOpen] = useState(true);
+  const [posts, setPosts] = useState([])
+  const selectedRef = useRef(false)
+  const [all_posts, setAllPsts] = useState([])
 
-    const toggleDrawer = (isOpen) => () => {
-      setOpen(isOpen);
-    };
+  const [user, setUser] = useState(null);
 
-    const fetchLocations=async()=>{
-      setLoading(true)
-      var url=`http://localhost:5000/api/location`
-      var res= await axios.get(url)
-      if(res.data.success){
-        console.log('success data')
-          setPreferredLocations(res.data.data)
-          
-      }else{
-        showError('failed to fetch data')
-      }
-      setLoading(false)
-    }
-  
-  const fetchPosts=async()=>{
+  const [open, setOpen] = useState(true);
+
+  const toggleDrawer = (isOpen) => () => {
+    setOpen(isOpen);
+  };
+
+  const fetchLocations = async () => {
     setLoading(true)
-    var res=await getAllPosts()
-    if(res.success){
+    var url = `http://localhost:5000/api/location`
+    var res = await axios.get(url)
+    if (res.data.success) {
+      console.log('success data')
+      setPreferredLocations(res.data.data)
+
+    } else {
+      showError('failed to fetch data')
+    }
+    setLoading(false)
+  }
+
+  const fetchPosts = async () => {
+    setLoading(true)
+    var res = await getAllPosts()
+    if (res.success) {
       console.log('here appeared')
       setPosts(res.data)
       setAllPsts(res.data)
     }
   }
 
-  useEffect( () =>{
+  useEffect(() => {
     axios
-        .get(`http://localhost:5000/api/get-profile`,{headers:{authorization:'Bearer '+cookies.get('token')}})
-        .then((response) => {
-            setUser(response.data.data); // Set the fetched data to the state
+      .get(`http://localhost:5000/api/get-profile`, { headers: { authorization: 'Bearer ' + cookies.get('token') } })
+      .then((response) => {
+        setUser(response.data.data); // Set the fetched data to the state
 
-            console.log('filter response : ',response.data.data)
-        })
-        .catch((error) => {
-            console.error('Error fetching user profile:', error);
-        });
+        console.log('filter response : ', response.data.data)
+      })
+      .catch((error) => {
+        console.error('Error fetching user profile:', error);
+      });
     fetchPosts()
-    console.log('posts: ',posts)
-    
+    console.log('posts: ', posts)
+
     fetchLocations()
   }, [])
 
   const handleClick = () => {
-    selectedRef.current=true
+    selectedRef.current = true
     const filteredPosts2 = [];
-    var dist=[]
+    var dist = []
     Fav_location.forEach(favLocation => {
       all_posts.forEach(post => {
         var distance = calculateDistance(
@@ -122,58 +123,65 @@ const MyComponent = () => {
         // Replace 2 with your desired distance limit
         if (distance <= favLocation.radius) {
           filteredPosts2.push(post);
-          const dist_obj={
+          const dist_obj = {
             ...post,
-            "my_address":favLocation.address,
-            "post_address":post.address,
-            "distance":distance
+            "my_address": favLocation.address,
+            "post_address": post.address,
+            "distance": distance
           }
 
-          console.log('dist obj: ',dist_obj)
+          console.log('dist obj: ', dist_obj)
 
           dist.push(dist_obj)
         }
       });
     });
-    dist=dist.slice().sort((a, b) => a.distance - b.distance);
+    dist = dist.slice().sort((a, b) => a.distance - b.distance);
     setPosts(dist)
   };
 
 
   const applyFilter = () => {
-    var temp=[]
-    selectedItems2.forEach(item=>{
-      if(item==='Online'){
+    var temp = []
+    var temp2 = []
+    selectedItems2.forEach(item => {
+      if (item === 'Online') {
         console.log('here appeared')
-        all_posts.forEach(p=>{
-          if(p.platform==='online'){
+        all_posts.forEach(p => {
+          if (p.platform === 'online') {
             temp.push(p)
           }
         })
       }
 
-      if(item==='Physical'){
-        all_posts.forEach(p=>{
-          console.log('here : ',p.platform)
-          if(p.platform==='physical'){
-            
+      if (item === 'Physical') {
+        all_posts.forEach(p => {
+          console.log('here : ', p.platform)
+          if (p.platform === 'physical') {
+
             temp.push(p)
           }
         })
       }
     })
 
-    if(selectedItems2.length===0){
+    if (selectedItems2.length === 0) {
       console.log('hi')
-      temp=all_posts
+      temp = all_posts
     }
-    selectedItems.forEach(item=>{
-      if(item==='budget'){
-        temp=temp.slice().sort((a, b) => b.budget- a.budget);
+    selectedItems.forEach(item => {
+      if (item === 'budget') {
+        temp = temp.slice().sort((a, b) => b.budget - a.budget);
       }
     })
-
-    setPosts(temp)
+    if(classLevel && user.role==="teacher"){
+      console.log("before:")
+      console.log(typeof classLevel)
+      temp2 = temp.slice().filter(item => item.class === parseInt(classLevel))
+      console.log("trying:")
+      console.log(temp2)
+    }
+    setPosts(temp2)
 
   };
 
@@ -182,31 +190,32 @@ const MyComponent = () => {
   const resetFilter = () => {
     setSelectedItems([])
     setSelectedItems2([])
-    selectedRef.current=false
+    selectedRef.current = false
+    setClassLevel('')
     setPosts(all_posts)
   };
 
 
   if (!user) {
     return <div>Loading...</div>; // Display a loading message while fetching data
-   }
-  
+  }
+
   return (
 
     <div style={{ backgroundColor: '#BDCDF5', minHeight: '100vh' }}>
       <PrimarySearchAppBar type={user.type} />
-      {!posts? (
-      <p>Loading...</p>
-     
-        ) : (
+      {!posts ? (
+        <p>Loading...</p>
+
+      ) : (
         <Container>
           <CssBaseline />
-            <MyDrawer style={{transform:'translateY(0px)'}} variant="permanent" anchor="left">
+          <MyDrawer style={{ transform: 'translateY(0px)' }} variant="permanent" anchor="left">
             <div style={{ padding: '10px' }}>
               <center style={{ marginTop: '10px' }}>
-              <StyledImageButton variant="contained" color="primary" onClick={handleClick} >
-                {/* No content inside the button */}
-              </StyledImageButton>
+                <StyledImageButton variant="contained" color="primary" onClick={handleClick} >
+                  {/* No content inside the button */}
+                </StyledImageButton>
               </center>
               <Divider style={{ marginTop: '20px', marginBottom: '10px' }} />
               <Typography variant='body2' color='body2'>Filter:</Typography>
@@ -215,41 +224,67 @@ const MyComponent = () => {
               <Typography variant='body2' color='body2'>Platform:</Typography>
               <CheckboxMenu options={options2} selectedItems={selectedItems2} setSelectedItems={setSelectedItems2} />
               <Divider style={{ marginTop: '10px', marginBottom: '10px' }} />
-                  <Grid container spacing={1}>
-                    <Grid item xs={6}>
-                      <Button
-                        fullWidth
-                        variant='contained'
-                        startIcon={<DoneAllIcon/>}
-                        onClick={applyFilter}>Apply</Button>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Button
-                        
-                        color='error'
-                        fullWidth
-                        onClick={resetFilter}>Reset</Button>
+              {user.role === "teacher" ? <div>
+                <p>
+                  Choose a Class:
+                </p>
+                <label className="form-label">
+                  <select className="form-select"
+                    value={classLevel}
+                    onChange={(e) => setClassLevel(e.target.value)}
+                  >
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    
+                    {/* ... Include options for classes 3 to 12 */}
+                  </select>
+                </label>
+              </div> : <div>
+              </div>}
+              <Divider style={{ marginTop: '10px', marginBottom: '10px' }} />
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <Button
+                    fullWidth
+                    variant='contained'
+                    startIcon={<DoneAllIcon />}
+                    onClick={applyFilter}>Apply</Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button
 
-                    </Grid>
-                  </Grid>
-         
+                    color='error'
+                    fullWidth
+                    onClick={resetFilter}>Reset</Button>
+
+                </Grid>
+              </Grid>
+
             </div>
-          </MyDrawer> 
+          </MyDrawer>
 
-      <Content> 
-        <Grid container spacing={1}>
-          {posts.map((post) => (
-            <Grid item xs={4}>
-                <CardComponent key={post.id} data={post} filtered={selectedRef.current} isTutor={false}/>
+          <Content>
+            <Grid container spacing={1}>
+              {posts.map((post) => (
+                <Grid item xs={4}>
+                  <CardComponent key={post.id} data={post} filtered={selectedRef.current} isTutor={false} />
+                </Grid>
+              ))}
             </Grid>
-            ))}
-        </Grid>
 
-      </Content>
-    </Container>
-    )}
-     </div>
-    
+          </Content>
+        </Container>
+      )}
+    </div>
+
   );
 }
 

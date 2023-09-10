@@ -12,6 +12,7 @@ const SubjectController = require('../controllers/subject').SubjectController
 const TeacherController = require('../controllers/teacher').TeacherController
 const SMSController = require('../controllers/sms').SMSController
 const RequestController = require('../controllers/request').RequestController
+const TeacherHasAppliedController = require('../controllers/teacherhasapplied').TeacherHasAppliedController
 const { authenticateUser } = require("../services/authMiddleware");
 
 const authController=new AuthController()
@@ -26,6 +27,7 @@ const locationController=new LocationController()
 const smsController=new SMSController()
 const requestController=new RequestController()
 const notificationController=new NotificationController()
+const teacherhasappliedController = new TeacherHasAppliedController()
 
 router.route("/signup").post(authController.signup);
 router.route("/signin").post(authController.signin);
@@ -53,6 +55,9 @@ router.route("/insert-teacher").post(teacherController.create);
 router.route("/review").post(authenticateUser,reviewController.create);
 router.route("/review").get(authenticateUser,reviewController.getReviews);
 router.route("/get-rating").get(authenticateUser,reviewController.getRating);
+
+router.route("/teacherhasapplied").post(teacherhasappliedController.create);
+router.route("/teacherhasapplied").get(authenticateUser,teacherhasappliedController.getReviews);
 
 router.route("/get-efficiency-by-account/:account_id").get(subjectController.getEfficiencyByAccount)
 
