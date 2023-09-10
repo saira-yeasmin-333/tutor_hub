@@ -16,6 +16,14 @@ class RequestController extends Controller{
         })
     }
 
+    cntReq=async (req,res)=>{
+        var result=await requestService.cntReq(req.body.account_id)
+        return res.status(200).json({
+            success:true,
+            data:result
+        })
+    }
+
     getRequests=async (req,res)=>{
         var result=await requestService.getRequests(req.body.account_id)
         console.log('res, id: ',req.body.account_id,result)
@@ -24,6 +32,16 @@ class RequestController extends Controller{
             data:result
         })
     }
+
+    getApprovedRequests=async (req,res)=>{
+        var result=await requestService.getApprovedRequests(req.body.account_id)
+        console.log('res, id: ',req.body.account_id,result)
+        return res.status(200).json({
+            success:true,
+            data:result
+        })
+    }
+    
 
     approveRequest=async(req,res)=>{
         var result=await requestService.approveRequest(req.body)

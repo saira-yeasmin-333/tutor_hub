@@ -12,7 +12,6 @@ const SubjectController = require('../controllers/subject').SubjectController
 const TeacherController = require('../controllers/teacher').TeacherController
 const SMSController = require('../controllers/sms').SMSController
 const RequestController = require('../controllers/request').RequestController
-const TeacherHasAppliedController = require('../controllers/teacherhasapplied').TeacherHasAppliedController
 const { authenticateUser } = require("../services/authMiddleware");
 
 const authController=new AuthController()
@@ -27,9 +26,9 @@ const locationController=new LocationController()
 const smsController=new SMSController()
 const requestController=new RequestController()
 const notificationController=new NotificationController()
-const teacherhasappliedController = new TeacherHasAppliedController()
 
 router.route("/signup").post(authController.signup);
+router.route("/getAllUsers").get(authController.getAllUsers);
 router.route("/signin").post(authController.signin);
 router.route("/post").post(authenticateUser,postController.create);
 router.route("/post").get(postController.getPosts);
@@ -56,20 +55,19 @@ router.route("/review").post(authenticateUser,reviewController.create);
 router.route("/review").get(authenticateUser,reviewController.getReviews);
 router.route("/get-rating").get(authenticateUser,reviewController.getRating);
 
-router.route("/teacherhasapplied").post(teacherhasappliedController.create);
-router.route("/teacherhasapplied").get(authenticateUser,teacherhasappliedController.getReviews);
-
 router.route("/get-efficiency-by-account/:account_id").get(subjectController.getEfficiencyByAccount)
 
-router.route("/sms").get(smsController.sendSMS)
+router.route("/sms").post(smsController.sendSMS)
 
 router.route("/notification").get(authenticateUser,notificationController.getNotifications)
 router.route("/notification").post(authenticateUser,notificationController.send)
 router.route("/notification/read").post(authenticateUser,notificationController.readAllData)
 
 router.route("/request").get(authenticateUser,requestController.getRequests)
+router.route("/request/approvedList").get(authenticateUser,requestController.getApprovedRequests)
 router.route("/request").post(authenticateUser,requestController.sendRequest)
 router.route("/request/approve").post(authenticateUser,requestController.approveRequest)
+router.route("/request/count").get(authenticateUser,requestController.cntReq)
 
 router.route("/grade").post(authenticateUser, gradeController.create);
 router.route("/grade").get(authenticateUser, gradeController.getGrades);

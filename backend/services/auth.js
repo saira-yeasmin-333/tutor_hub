@@ -14,6 +14,11 @@ class AuthService extends Service {
         super();
     }
 
+    getAllUsers=async ()=>{
+        var accounts=await accountRepository.getAll()
+        return accounts
+    }
+
 
 
     signup=async user=>{

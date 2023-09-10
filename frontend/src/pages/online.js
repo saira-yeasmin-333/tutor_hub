@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-import { Drawer, CssBaseline, styled, Button, Grid, TextField, LinearProgress, Typography, Divider } from '@mui/material';
+import { Drawer, CssBaseline, styled, Button, Grid, TextField, LinearProgress, Typography, Divider, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import CheckboxMenu from '../components/common/checkbox'
 import axios from 'axios';
 import CardComponent from '../components/common/card/CardComponent';
@@ -8,7 +8,7 @@ import { calculateDistance } from '../components/common/distance'
 import { showError, showSuccess, showToast, setLoading } from '../App';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import MapComponent from '../components/Location/MapComponent';
-import { getAllTutors } from '../actions/auth';
+import { getAllTutors, getAllTutorsWithParams } from '../actions/auth';
 import PrimarySearchAppBar from '../components/Appbar/appbar';
 
 import Cookies from 'universal-cookie';
@@ -23,7 +23,7 @@ const StyledImageButton = styled(Button)({
 });
 
 const MyDrawer = styled(Drawer)({
-  width: 240
+  width: 300
 });
 
 const Content = styled('div')(({ theme }) => ({
@@ -62,7 +62,8 @@ const StudentFilter = () => {
     radRef.current = event.target.value
   };
 
-
+  const [budgetValue,setBudgetValue]=useState('10000')
+  const [budgetType,setBudgetType]=useState('less')
 
 
   const [open, setOpen] = useState(true);
@@ -128,13 +129,16 @@ const StudentFilter = () => {
 
   const fetchTutors = async () => {
     setLoading(true)
-    var res = await getAllTutors()
-    console.log('res: ',res);
+    var res = await getAllTutorsWithParams({
+      budget:budgetValue,
+      budgetType:budgetType
+    })
     if (res.success) {
       setLoading(false)
       console.log('here appeared')
       setTutors(res.data)
       setAllTutors(res.data)
+      return res.data
     }
     else {
       showError('Something is wrong')
@@ -163,11 +167,12 @@ const StudentFilter = () => {
   };
 
 
-  const applyFilter = () => {
+  const applyFilter = async () => {
+    var list= await fetchTutors()
     var temp = []
     selectedItems2.forEach(item => {
       if (item === 'Online') {
-        all_tutors.forEach(p => {
+        list.forEach(p => {
           if (p.onlineMedia) {
             temp.push(p)
           }
@@ -175,7 +180,7 @@ const StudentFilter = () => {
       }
 
       if (item === 'Physical') {
-        all_tutors.forEach(p => {
+        list.forEach(p => {
           if (p.physicalMedia) {
             temp.push(p)
           }
@@ -183,8 +188,11 @@ const StudentFilter = () => {
       }
     })
 
+
+    
+
     if (selectedItems2.length === 0) {
-      temp = all_tutors
+      temp = list
     }
     selectedItems.forEach(item => {
       if (item === 'budget') {
@@ -211,14 +219,14 @@ const StudentFilter = () => {
   else
     return (
 
-      <div>
+      <div >
         {!tutors ? (
           <div>Loading...</div>
 
         ) : (
-          <div>
+          <div >
             <PrimarySearchAppBar type={user.type} />
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex',overflowY:'hidden' }}>
 
               <Dialog
                 open={mapDialog}
@@ -284,7 +292,36 @@ const StudentFilter = () => {
                   <Typography variant='body2' color='body2'>Platform:</Typography>
                   <CheckboxMenu options={options2} selectedItems={selectedItems2} setSelectedItems={setSelectedItems2} />
                   <Divider style={{ marginTop: '10px', marginBottom: '10px' }} />
-                  <Grid container spacing={1}>
+                    <Grid container spacing={1}>
+                    <Grid item xs={12}>
+                    <TextField
+                      variant='outlined'
+                      value={budgetValue}
+                      type='number'
+                      onChange={e=>{
+                        setBudgetValue(e.target.value)
+                      }}
+                      label='Budget Threshold'
+                      />
+                  
+                    </Grid>
+                    <Grid item xs={12}>
+                    <FormControl style={{width:'225px',marginTop:'10px'}}>
+                      <InputLabel id="demo-simple-select-label">Budget Type</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        label="Budget Type"
+                        value={budgetType}
+                        onChange={e=>{
+                          setBudgetType(e.target.value)
+                        }}
+                        >
+                        <MenuItem value={'more'}>More</MenuItem>
+                        <MenuItem value={'less'}>Less</MenuItem>
+                      </Select>
+                    </FormControl>
+                      </Grid>
                     <Grid item xs={6}>
                       <Button
                         fullWidth
@@ -311,7 +348,7 @@ const StudentFilter = () => {
                 <div> {/* Adjust margin based on your content */}
 
 
-                  <div style={{ width: 'calc(100vw - 240px)', transform: 'translateX(-50px)' }}>
+                  <div style={{ width: 'calc(100vw - 240px)', transform: 'translateX(0px)' }}>
                     <Grid container spacing={1} >
                       {tutors.map((tutor) => (
                         <Grid item xs={4}>

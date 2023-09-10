@@ -7,7 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import Filter from "./components/Location/filter";
 import { useState } from 'react';
 import { Rings } from 'react-loader-spinner';
-import { Route, BrowserRouter, Routes } from 'react-router-dom';
+import { Route, BrowserRouter , Routes } from 'react-router-dom';
 import CreatePost from './pages/post/CreatePost';
 import ProfilePage from "./pages/ProPage";
 import ReviewPage from "./pages/ReviewPage";
@@ -16,7 +16,7 @@ import Notification from "./pages/notification";
 import Requests from "./pages/Requests";
 import StudentFilter from "./pages/StudentFilter";
 import TeacherRequests from "./pages/TeacherRequests";
-import TrialChat from "./pages/TrialChat";
+import Message from "./pages/Message";
 
 
 var showToast
@@ -25,22 +25,22 @@ var showSuccess
 var setLoading
 
 function App() {
-
+  
   const [loading, setL] = useState(false)
   setLoading = setL
 
   const typeNo = 2;
 
 
-  showToast = message => {
+  showToast=message=>{
     toast(message)
   }
 
-  showError = message => {
+  showError=message=>{
     toast.error(message)
   }
 
-  showSuccess = message => {
+  showSuccess=message=>{
     toast.success(message)
   }
 
@@ -48,29 +48,35 @@ function App() {
     <div className="App">
       <Dialog open={loading}>
         <DialogContent>
-          <Rings color="#00BFFF" height={80} width={80} />
+          <Rings color="#00BFFF" height={80} width={80} />       
         </DialogContent>
       </Dialog>
 
       <Toaster
-        position="top-right"
-        reverseOrder={false}
+         position="top-right"
+         reverseOrder={false}
       />
       <BrowserRouter>
         <Routes>
-
-          <Route path='/create-post' Component={CreatePost} >
-          </Route>
-          <Route path='/get-profile/' Component={ProfilePage} >
-          </Route>
-          <Route path='/create-review' Component={ReviewPage}>
-          </Route>
-          <Route path='/submit-grade' Component={GradeSubmit}>
-          </Route>
+           
+           <Route path='/create-post' Component={CreatePost} >
+            </Route>
+            <Route path='/get-profile/' Component={ProfilePage} >
+            </Route>
+            <Route path='/create-review' Component={ReviewPage}>
+            </Route>
+            <Route path='/submit-grade' Component={GradeSubmit}>
+            </Route>
           <Route
             path="/signin"
             exact
             element={<SignIn />}
+          />
+
+        <Route
+            path="/message"
+            exact
+            element={<Message />}
           />
           <Route
             path="/location"
@@ -112,12 +118,6 @@ function App() {
             element={<Requests />}
           />
 
-          <Route
-            path="/student/chat"
-            exact
-            element={<TrialChat />}
-          />
-
         </Routes>
       </BrowserRouter>
     </div>
@@ -125,5 +125,4 @@ function App() {
 }
 
 export default App;
-export { showToast, setLoading, showSuccess, showError }
-
+export {showToast,setLoading,showSuccess,showError}

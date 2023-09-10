@@ -12,6 +12,8 @@ import { setLoading, showToast } from '../App';
 import EditIcon from '@mui/icons-material/Edit';
 import TextEditor from '../components/common/TextEditor';
 import { useNavigate } from "react-router-dom";
+import { getCountReq } from '../actions/request';
+
 
 const cookies = new Cookies();
 
@@ -28,6 +30,7 @@ const ProfilePage = () => {
   const [media, setMedia] = useState([]);
   const [isDeleteLocationDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedLocationIndex, setSelectedLocationIndex] = useState(null);
+  const [cnt,setcnt]=useState(0)
 
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
@@ -130,9 +133,20 @@ const ProfilePage = () => {
     }
   }
 
+  const getCouReq=async()=>{
+    try {
+      const response = await getCountReq();
+      console.log('res: ',response)
+      setcnt(response.data)
+    } catch (error) {
+      console.error('Error fetching user count:', error);
+    }
+  }
 
   useEffect(() => {
     // Make the HTTP GET request to the backend API
+
+    getCouReq()
     axios
       .get(`http://localhost:5000/api/get-profile`,{headers:{authorization:'Bearer '+cookies.get('token')}})
             .then((response) => {
@@ -221,6 +235,7 @@ const ProfilePage = () => {
               {currentTab === 0 && (
                 
                 <CardContent style={{ overflowY: 'auto', height: '200px' }}>
+                  <p>count : {cnt}</p>
                   <p style={{ margin: '5px 0', fontSize: '16px', fontWeight: 'bold' }}>
                     Phone: {'\t'} {/* Tabbed space */}
                     <span style={{ fontSize: '14px', fontWeight: 'normal', color: '#007bff' }}>{user.phone}</span>
