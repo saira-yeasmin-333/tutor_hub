@@ -84,9 +84,27 @@ class AuthService extends Service {
         if(result.get({plain:true})['role']==='teacher'){
             teacherResult=await teacherRepository.fetchTutor(id)
             combined={...teacherResult.get({ plain: true }),...result.get({ plain: true })}
-            graph={}
+            var res=await sq.query(`select count(r.review_id) as n, r.rating as rating from reviews r, teachers t where r.teacher_id=t.teacher_id and t.account_id=${id} group by rating`)
+            var arr=res[0]
+
+    
+            var labels = arr.map(a=>a.rating)
+            //var labels = []
+
+            const data = {
+            labels,
+            datasets: [
+                {
+                label: 'Review Count',
+                data: arr.map(a=>(a.n)),
+                backgroundColor: '#0090ff',
+                }
+            ],
+            };
+
+            graph=data
         }else{
-            var res=await sq.query(`select sum(g.mark_received) as obtained,sum(g.total_marks) as total, s.sub_name as subject from grades g, subjects s where g.subject_id=s.id group by subject`)
+            var res=await sq.query(`select sum(g.mark_received) as obtained,sum(g.total_marks) as total, s.sub_name as subject from grades g, subjects s where g.subject_id=s.id and g.student_id=${id} group by subject`)
             var arr=res[0]
 
     
