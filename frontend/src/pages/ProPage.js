@@ -548,22 +548,88 @@ const ProfilePage = () => {
                 </CardContent>
               )}
 
-              {currentTab === 1 && user.role==='student' && <div>
+              {currentTab === 2 && <div>
                   <Bar options={options} data={user.graph} />;   
                 </div>}
 
-              {currentTab === 2 && (
-                <CardContent style={{ overflowY: 'auto', height: '200px' }}>
-                  <p style={{ margin: '5px 0', fontSize: '16px', fontWeight: 'bold' }}>
-                    Phone: {'\t'} {/* Tabbed space */}
-                    <span style={{ fontSize: '14px', fontWeight: 'normal', color: '#007bff' }}>{user.phone}</span>
-                  </p>
-                </CardContent>
-              )}
 
+              
             </div>
 
             {/* Add content for other tabs here */}
+
+            {currentTab === 1 && (
+                <CardContent style={{ overflowY: 'auto', height: '200px' }}>
+                  {user.role === "teacher" ? (
+                    <div>
+                      {reviews.length > 0 ? (
+                        reviews.map((review, index) => (
+                          <Card key={index} style={{ marginBottom: '10px', padding: '10px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                              <Avatar alt="User" src={review.account.image} />
+                              <div style={{ marginLeft: '10px' }}>
+                                <h4 style={{ fontSize: '16px', fontWeight: 'bold', margin: '0' }}>{review.account.name}</h4>
+                                <p style={{ fontSize: '14px', margin: '0' }}>{new Date(review.timestamp).toLocaleString()}</p>
+                              </div>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+                              <Rating name={`review-rating-${index}`} value={review.rating} precision={0.5} readOnly />
+                              <h4 style={{ fontSize: '16px', fontWeight: 'bold', margin: '0', marginLeft: '10px' }}>{review.rating}</h4>
+                            </div>
+                            <div>
+                              <TextEditor review={review.review_text} readonly_val={true} />
+                            </div>
+                          </Card>
+                        ))
+                      ) : (
+                        <p>No reviews available.</p>
+                      )}
+                    </div>
+                  ) : (
+                    <div>
+
+                      <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Title</TableCell>
+                              <TableCell align="right">Subject</TableCell>
+                              <TableCell align="right">Marks Received</TableCell>
+                              <TableCell align="right">Total Marks</TableCell>
+                              <TableCell align="right">Date of Exam</TableCell>
+                              <TableCell align="right">Review Status</TableCell>
+                              <TableCell align="right">Actions</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {grades.map((row) => (
+                              <TableRow
+                                key={row.grade_id}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                              >
+                                <TableCell component="th" scope="row">
+                                  {row.title}
+                                </TableCell>
+                                <TableCell align="right">{row.subject.sub_name}</TableCell>
+                                <TableCell align="right">{row.mark_received}</TableCell>
+                                <TableCell align="right">{row.total_marks}</TableCell>
+                                <TableCell align="right"><TimestampToDate timestamp={row.timestamp_of_exam} /></TableCell>
+                                <TableCell align="right">{row.submit_for_review}</TableCell>
+                                <TableCell align="right">
+                                  <IconButton onClick={() => handleSubmitForReview(row)} aria-label="Edit Profile">
+                                    <EditIcon /> {/* Use the appropriate icon component */}
+                                  </IconButton>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      
+                    </div>
+                  )}
+                </CardContent>
+              )}
           </div>
         </Card>
         <ToastContainer/>
