@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import PrimarySearchAppBar from '../components/Appbar/appbar';
-import { Typography, FormControl, Select, MenuItem, InputLabel, Rating, Avatar, IconButton } from '@mui/material';
+import { Typography, FormControl, Select, MenuItem, InputLabel, Rating, Avatar, IconButton, DialogContent, DialogActions, Dialog, DialogTitle } from '@mui/material';
 import TimestampToDate from '../components/common/timestamptodate';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -30,6 +30,8 @@ const cookies = new Cookies();
 const GradeSubmit = () => {
 
     const [user, setUser] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [row_data, setRowdata] = useState(null);
 
     const SettingRoleinGrade = async () => {
         axios
@@ -124,11 +126,15 @@ const GradeSubmit = () => {
 
     }, []); // Add "id" as a dependency
 
+    
+
 
     const handleEditGradeClick = (row) => {
         // This function will be called when the Edit button is clicked
         // `row` contains the data of the clicked row, such as grade details
         // Implement your logic for editing the grade here
+        setRowdata(row)
+        setOpen(true)
     };
 
     const handleDeleteGradeClick = (row) => {
@@ -185,14 +191,14 @@ const GradeSubmit = () => {
         return date.getTime();
     };
 
-    const handleAddNewGrade = () => {
+    const handleAddNewGrade = async () => {
         if (newGrade.title === '' || newGrade.subject_id === 0 || newGrade.mark_received === 0 || newGrade.total_marks === 0 || newGrade.timestamp_of_exam === '') {
             toast.error('Invalid Input', {
                 position: toast.POSITION.TOP_CENTER,
             });
             return;
         }
-        if (parseDateToTimestamp(newGrade.timestamp_of_exam)===null){
+        if (parseDateToTimestamp(newGrade.timestamp_of_exam) === null) {
             console.log("entered here")
             toast.error('Invalid Date', {
                 position: toast.POSITION.TOP_CENTER,
@@ -202,11 +208,56 @@ const GradeSubmit = () => {
         var temp = {
             title: newGrade.title,
             student_id: gradeSheetStudent.account_id,
-            teacher_id:  user.account_id,
-            mark_received: newGrade.mark_received,
+            teacher_id: user.account_id,
+            mark_received: parseFloat(newGrade.mark_received),
+            total_marks: parseFloat(newGrade.total_marks),
+            subject_id: parseInt(newGrade.subject_id),
+            timestamp: Date.now() / 1000,
+            timestamp_of_exam: parseInt(parseDateToTimestamp(newGrade.timestamp_of_exam) / 1000),
+            submit_for_review: "none"
         }
-        console.log("newGrade",temp);
+        console.log("newGrade", temp);
+        try {
+            const response = await axios.post(`http://localhost:5000/api/grade`, temp)
+            console.log(response.data.data)
+        } catch (error) {
+            console.error('Error adding grade:', error);
+        }
+    };
 
+    const dialogSaveClick = async () => {
+        if (newGrade.title === '' || newGrade.subject_id === 0 || newGrade.mark_received === 0 || newGrade.total_marks === 0 || newGrade.timestamp_of_exam === '') {
+            toast.error('Invalid Input', {
+                position: toast.POSITION.TOP_CENTER,
+            });
+            return;
+        }
+        if (parseDateToTimestamp(newGrade.timestamp_of_exam) === null) {
+            console.log("entered here")
+            toast.error('Invalid Date', {
+                position: toast.POSITION.TOP_CENTER,
+            });
+            return;
+        }
+        var stat = ""
+        if(newGrade.submit_for_review==="pending") stat = "reviewed"
+        else stat=newGrade.submit_for_review
+        var temp = {
+            grade_id: row_data.grade_id,
+            title: newGrade.title,
+            mark_received: parseFloat(newGrade.mark_received),
+            total_marks: parseFloat(newGrade.total_marks),
+            subject: newGrade.subject,
+            timestamp: Date.now() / 1000,
+            timestamp_of_exam: parseInt(parseDateToTimestamp(newGrade.timestamp_of_exam) / 1000),
+            submit_for_review: stat
+        }
+        try {
+            const response = await axios.put(`http://localhost:5000/api/updategrade`, temp)
+            console.log(response.data.data)
+        } catch (error) {
+            console.error('Error adding grade:', error);
+        }
     };
 
 
@@ -218,6 +269,88 @@ const GradeSubmit = () => {
     //
     return (
         <div>
+            <Dialog
+                open={open}
+            >
+                <DialogTitle>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <h5 style={{}}>
+                            Edit grade
+                        </h5>
+
+                    </div>
+                </DialogTitle>
+
+                <DialogContent>
+
+                    <TextField
+                        label="Title"
+                        variant="outlined"
+                        value={newGrade.title}
+                        onChange={(e) => handleNewGradeChange('title', e.target.value)}
+                    />
+
+
+                    <TextField
+                        label="Marks Received"
+                        variant="outlined"
+                        value={newGrade.mark_received}
+                        onChange={(e) => handleNewGradeChange('mark_received', e.target.value)}
+                    />
+
+                    <FormControl variant="outlined" fullWidth>
+                        <InputLabel id="subject-label">Subject</InputLabel>
+                        <Select
+                            labelId="subject-label"
+                            id="subject"
+                            label="Subject"
+                            value={newGrade.subject}
+                            onChange={(e) => handleNewGradeChange('subject_id', e.target.value)}
+                        >
+                            {user.subjects.map((sub) => (
+                                <MenuItem key={sub.id} value={sub.id}>
+                                    {sub.sub_name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+
+                        <TextField
+                            label="Total Marks"
+                            variant="outlined"
+                            value={newGrade.total_marks}
+                            onChange={(e) => handleNewGradeChange('total_marks', e.target.value)}
+                        />
+                  
+                    
+                        <TextField
+                            label="Exam date (yy/mm/dd)"
+                            variant="outlined"
+                            value={newGrade.timestamp_of_exam}
+                            onChange={(e) => handleNewGradeChange('timestamp_of_exam', e.target.value)}
+                        />
+                    
+                    
+
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={() => {
+                            setOpen(null)
+                        }}
+                        color='error'
+                    >
+                        Close
+                    </Button>
+                    <Button
+                        onClick={dialogSaveClick}
+                        color='primary'
+                    >
+                        Save
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <PrimarySearchAppBar type={user.role} />
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
