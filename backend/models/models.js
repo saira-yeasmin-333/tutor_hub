@@ -68,6 +68,14 @@ const Account = sq.define("account", {
     }
   });
 
+  const TeacherHasApplied = sq.define("TeacherHasApplied", {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    }
+  });
+
   const PreferredLocation = sq.define("preferred_location", {
     latitude: {
         type: DataTypes.DOUBLE,
@@ -144,6 +152,9 @@ const Grade = sq.define("grade", {
     autoIncrement: true,
     primaryKey: true
   },
+  title: {
+    type: DataTypes.STRING,
+  },
   student_id: {
     type: DataTypes.INTEGER,
   },
@@ -156,8 +167,17 @@ const Grade = sq.define("grade", {
   total_marks: {
     type: DataTypes.DOUBLE,
   },
+  subject_id: {
+    type: DataTypes.INTEGER,
+  },
   timestamp: {
     type: DataTypes.INTEGER,
+  },
+  timestamp_of_exam: {
+    type: DataTypes.INTEGER,
+  },
+  submit_for_review: {
+    type: DataTypes.STRING,
   },
 })
 
@@ -239,6 +259,11 @@ Post.belongsTo(Account, { foreignKey: "student_id" })
 Post.belongsToMany(Subject, { through: 'PostSubject' });
 Subject.belongsToMany(Post, { through: 'PostSubject' });
 
+
+//online 1805041
+Post.belongsToMany(Teacher, { through: 'TeacherHasApplied' });
+Teacher.belongsToMany(Post, { through: 'TeacherHasApplied' });
+
 Teacher.belongsTo(Account, { foreignKey: 'account_id' });
 Account.hasOne(Teacher, { foreignKey: 'account_id' });
 
@@ -251,8 +276,9 @@ Teacher.hasMany(PreferredLocation,{foreignKey:"tutor_id"})
 Review.belongsTo(Teacher, { foreignKey: "teacher_id" })
 Review.belongsTo(Account, { foreignKey: "student_id" })
 
-Grade.belongsTo(Student, { foreignKey: "student_id" })
+Grade.belongsTo(Account, { foreignKey: "student_id" })
 Grade.belongsTo(Account, { foreignKey: "teacher_id" })
+Grade.belongsTo(Subject, { foreignKey: "subject_id" })
 
 Teacher.belongsTo(Account, { foreignKey: "account_id" })
 Student.belongsTo(Account, { foreignKey: "account_id" })
@@ -277,6 +303,8 @@ const syncAllTables = async () => {
     console.log("Subject table creation successful")
     await PostSubject.sync()
     console.log("post subject table creation successful")
+    await TeacherHasApplied.sync()
+    console.log("teacher has applied table creation successful")
     await Efficiency.sync()
     console.log("Efficiency table creation successful")
     await Review.sync()
@@ -299,5 +327,7 @@ const syncAllTables = async () => {
 
 syncAllTables()
 
-module.exports = { Post, Account, Teacher, Student, Subject, 
-  Efficiency ,Review,PreferredLocation,Notification,Request,Planner}
+
+module.exports = { Post, Account, Teacher, Student, Subject, Grade,
+  Efficiency ,Review,PreferredLocation,Notification,Request,TeacherHasApplied,Planner}
+
