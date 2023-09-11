@@ -9,7 +9,7 @@ import { getFirestore,collection,addDoc, FieldValue, updateDoc, doc } from "fire
 import { useEffect, useState } from 'react';
 
 
-const RequestCardComponent = ({data,filtered,isTutor,profile}) => {
+const RequestCardComponent = ({data,filtered,isTutor,profile,deleteMe}) => {
 
   const db=getFirestore()
 
@@ -56,12 +56,14 @@ const RequestCardComponent = ({data,filtered,isTutor,profile}) => {
       var messgae=`${name.name} approved your friend request`
       sendNotification(data.account_id,messgae)
       showSuccess('Request approved successfully')
+      deleteMe(data.id)
     }
     console.log('approved: ',approveResult)
   }
 
   const reject=async()=>{
     var approveResult=await approveRequest({"status":"rejected"});
+    deleteMe(data.id)
     console.log('approved: ',approveResult)
   }
 

@@ -12,6 +12,7 @@ const SubjectController = require('../controllers/subject').SubjectController
 const TeacherController = require('../controllers/teacher').TeacherController
 const SMSController = require('../controllers/sms').SMSController
 const RequestController = require('../controllers/request').RequestController
+const PlannerController = require('../controllers/planner').PlannerController
 const { authenticateUser } = require("../services/authMiddleware");
 
 const authController=new AuthController()
@@ -26,6 +27,7 @@ const locationController=new LocationController()
 const smsController=new SMSController()
 const requestController=new RequestController()
 const notificationController=new NotificationController()
+const plannerController=new PlannerController()
 
 router.route("/signup").post(authController.signup);
 router.route("/getAllUsers").get(authController.getAllUsers);
@@ -72,5 +74,10 @@ router.route("/request/count").get(authenticateUser,requestController.cntReq)
 router.route("/grade").post(authenticateUser, gradeController.create);
 router.route("/grade").get(authenticateUser, gradeController.getGrades);
 router.route("/role").get(authenticateUser, authController.getRole);
+
+router.route("/plan").post(authenticateUser, plannerController.createPlan);
+router.route("/plan").get(authenticateUser, plannerController.getPlan);
+
+
 
 module.exports=router

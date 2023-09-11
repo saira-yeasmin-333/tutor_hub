@@ -205,6 +205,14 @@ const Requests = () => {
     // setGroupLoading(true)
   }
 
+  const deleteAnItem=async id=>{
+    var arr=[]
+    requests.map(r=>{
+      if(r.id!==id)arr.push(r)
+    })
+    setRequests(arr)
+  }
+
   return (
 
     <div>
@@ -355,7 +363,7 @@ const Requests = () => {
               <Grid container spacing={1}>
                   {requests.map((r) => (
                     <Grid item xs={10}>
-                        <RequestCardComponent key={r.id} data={r} filtered={selectedRef.current} isTutor={false}/>
+                        <RequestCardComponent deleteMe={deleteAnItem} key={r.id} data={r} filtered={selectedRef.current} isTutor={false}/>
                     </Grid>
                    ))}
                </Grid>

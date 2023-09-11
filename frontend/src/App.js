@@ -17,6 +17,7 @@ import Requests from "./pages/Requests";
 import StudentFilter from "./pages/StudentFilter";
 import TeacherRequests from "./pages/TeacherRequests";
 import Message from "./pages/Message";
+import Planner from "./pages/Planner";
 
 
 var showToast
@@ -116,6 +117,11 @@ function App() {
             path="/student/request"
             exact
             element={<Requests />}
+          />
+          <Route
+            path="/planner"
+            exact
+            element={<Planner/>}
           />
 
         </Routes>

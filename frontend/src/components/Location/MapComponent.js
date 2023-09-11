@@ -77,6 +77,7 @@ const MapComponent=forwardRef(({height,width,initLocation,initZoom,mapId},ref)=>
 
     useEffect(()=>{
         initializeMap()
+        console.log(navigator.geolocation)
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
         } else {

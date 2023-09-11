@@ -22,7 +22,7 @@ import Cookies from 'universal-cookie';
 import { Link } from 'react-router-dom';
 
 const cookies = new Cookies();
-const teacher_pages = ['Home', 'Message', 'Grade', 'Chats'];
+const teacher_pages = ['Home', 'Message', 'Grade', 'Chats','Planner'];
 const student_pages = ['Home', 'Message', 'Review' , 'Post', 'Chats'];
 
 const pageLinks = {
@@ -34,7 +34,8 @@ const pageLinks = {
   reviewstudent: '/create-review', // Add more as needed
   poststudent: '/create-post',
   chats: '/teacher/request',
-  chatsstudent: '/student/request'
+  chatsstudent: '/student/request',
+  planner:'/planner'
   // ...
 };
 

@@ -224,6 +224,16 @@ const Request=sq.define('request',{
   }
 })
 
+const Planner=sq.define('planner',{
+  teacher_id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+  },
+  plan:{
+    type:DataTypes.JSON
+  }
+})
+
 //   Account.hasMany(Post, { as: "posts" });
 Post.belongsTo(Account, { foreignKey: "student_id" })
 Post.belongsToMany(Subject, { through: 'PostSubject' });
@@ -279,6 +289,8 @@ const syncAllTables = async () => {
     console.log("notification table creation successful")
     await Request.sync()
     console.log("request table creation successful")
+    await Planner.sync()
+    console.log("planner table creation successful")
   } catch (err) {
     console.log('Error creating Tables')
     console.log(err)
@@ -288,4 +300,4 @@ const syncAllTables = async () => {
 syncAllTables()
 
 module.exports = { Post, Account, Teacher, Student, Subject, 
-  Efficiency ,Review,PreferredLocation,Notification,Request}
+  Efficiency ,Review,PreferredLocation,Notification,Request,Planner}
