@@ -34,6 +34,11 @@ class RequestService extends Service {
         var res=await requestRepository.approveRequest(data)
         return res
     }
+
+    getMyStudents=async (data)=>{
+        var res=await requestRepository.getMyStudents(data)
+        return res
+    }
 }
 
 module.exports = {RequestService}

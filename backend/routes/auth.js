@@ -68,9 +68,13 @@ router.route("/request/approvedList").get(authenticateUser,requestController.get
 router.route("/request").post(authenticateUser,requestController.sendRequest)
 router.route("/request/approve").post(authenticateUser,requestController.approveRequest)
 router.route("/request/count").get(authenticateUser,requestController.cntReq)
+router.route("/request/getmystudents").get(authenticateUser,requestController.getMyStudents)
 
-router.route("/grade").post(authenticateUser, gradeController.create);
-router.route("/grade").get(authenticateUser, gradeController.getGrades);
+router.route("/grade").post(gradeController.create);
+router.route("/getgrade").post(gradeController.getGradesFromCreateReview);
+router.route("/gradebyId").get(authenticateUser,gradeController.getGradesById);
+router.route("/get-student-rating").get(authenticateUser,gradeController.getRating);
+router.route("/updategrade").put(gradeController.updateGrade);
 router.route("/role").get(authenticateUser, authController.getRole);
 
 module.exports=router

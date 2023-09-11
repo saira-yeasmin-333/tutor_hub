@@ -80,5 +80,36 @@ class RequestRepository extends Repository {
         )
         return res
     }
+
+    getMyStudents=async(data)=>{
+        const froms=await Request.findAll({
+            where:{
+                to:data,
+                status:"approved"
+            }, // Select only the 'to' attribute
+            raw: true, // Return plain data objects
+        })
+        console.log('froms: ',froms)
+        const fromIds = froms.map(request => request.from);
+        const tos=await Request.findAll({
+            where:{
+                from:data,
+                status:"approved"
+            }, // Select only the 'to' attribute
+            raw: true, // Return plain data objects
+        })
+        const toIds = tos.map(request => request.to);
+        const combinedIds = fromIds.concat(toIds);
+        //const combinedIds = [...fromIds, ...toIds];
+        console.log('froms ID : ',fromIds)
+        const res=await  Account.findAll({
+            where: {
+              account_id: combinedIds, // Find accounts with matching account IDs
+              role: "student"
+            }
+        })
+        console.log('res: ',res)
+        return res
+    }
 }
 module.exports = {RequestRepository}
