@@ -199,6 +199,13 @@ const GradeSubmit = () => {
             });
             return;
         }
+        var temp = {
+            title: newGrade.title,
+            student_id: gradeSheetStudent.account_id,
+            teacher_id:  user.account_id,
+            mark_received: newGrade.mark_received,
+        }
+        console.log("newGrade",temp);
 
     };
 
