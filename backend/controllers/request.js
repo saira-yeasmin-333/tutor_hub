@@ -50,6 +50,14 @@ class RequestController extends Controller{
             result:result
         })
     }
+
+    getMyStudents=async(req,res)=>{
+        var result = await requestService.getMyStudents(req.body.account_id)
+        return res.status(200).json({
+            success:true,
+            data:result
+        })
+    }
 }
 
 module.exports = {RequestController}
