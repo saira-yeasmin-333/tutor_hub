@@ -1,6 +1,8 @@
 const Service = require('./base').Service;
 const bcrypt=require('bcryptjs')
 const JWT = require('jsonwebtoken');
+const { Sequelize } = require('sequelize');
+const { sq } = require('../repository/database');
 const AccountRepository=require('../repository/auth').AccountRepository
 const TeacherRepository=require('../repository/teacher').TeacherRepository
 const LocationRepository=require('../repository/location').LocationRepository
@@ -76,18 +78,45 @@ class AuthService extends Service {
         const result=await accountRepository.findById(id)
         var  teacherResult=null
         var combined=result
+
+        var graph
+
         if(result.get({plain:true})['role']==='teacher'){
             teacherResult=await teacherRepository.fetchTutor(id)
             combined={...teacherResult.get({ plain: true }),...result.get({ plain: true })}
+            graph={}
+        }else{
+            var res=await sq.query(`select sum(g.mark_received) as obtained,sum(g.total_marks) as total, s.sub_name as subject from grades g, subjects s where g.subject_id=s.id group by subject`)
+            var arr=res[0]
+
+    
+            var labels = arr.map(a=>a.subject)
+            //var labels = []
+
+            const data = {
+            labels,
+            datasets: [
+                {
+                label: 'Grades in %',
+                data: arr.map(a=>(a.obtained*100/a.total)),
+                backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                }
+            ],
+            };
+
+            graph=data
+
+            combined=combined.get({ plain: true })
+
         }
         
-        console.log('here teacher ',teacherResult)
-        console.log('here account ',result)
+        // console.log('here teacher ',teacherResult)
+        // console.log('here account ',result)
         
 
         return{
             success:true,
-            data: combined
+            data: {...combined,graph}
         }
     }
 }

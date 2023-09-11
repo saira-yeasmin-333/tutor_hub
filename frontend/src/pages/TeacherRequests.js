@@ -22,6 +22,7 @@ import RequestCardComponent from '../components/common/request/RequestCardCompon
 import 'react-chat-elements/dist/main.css'
 import ChatComponent from './ChatComponent';
 import { toast } from 'react-hot-toast';
+import PrimarySearchAppBar from '../components/Appbar/appbar';
 
 const ParentContainer = styled('div')({
   display: 'flex',
@@ -79,6 +80,7 @@ const TeacherRequests = () => {
   const inboxRef = useRef(null)
 
   const [users, setUsers] = useState([])
+  const [user, setUser] = useState(null);
 
   const getAllUsers = async (uid) => {
     var res = await axios.get(`http://localhost:5000/api/getAllUsers`)
@@ -158,6 +160,16 @@ const TeacherRequests = () => {
   }
 
   useEffect(() => {
+    axios
+    .get(`http://localhost:5000/api/get-profile`, { headers: { authorization: 'Bearer ' + cookies.get('token') } })
+    .then((response) => {
+      setUser(response.data.data); // Set the fetched data to the state
+
+      // console.log('filter response : ',response.data.data)
+    })
+    .catch((error) => {
+      console.error('Error fetching user profile:', error);
+    });
     fetchAllRequests()
     fetchProfile()
     return () => { unsubscribeRef.current() };
@@ -209,10 +221,24 @@ const TeacherRequests = () => {
     // setGroupLoading(true)
   }
 
+  const deleteAnItem=async id=>{
+    var arr=[]
+    requests.map(r=>{
+      if(r.id!==id)arr.push(r)
+    })
+    setRequests(arr)
+  }
+
+  if (user === null) return <LinearProgress />
+
 
   return (
-
+    
     <div>
+      <div style={{marginLeft:'-20px',zIndex:'10'}}>
+      <PrimarySearchAppBar type={user.type}  />
+      </div>
+      
       <Dialog open={groupDialog}>
         <DialogTitle>
           Create a new group
@@ -360,7 +386,7 @@ const TeacherRequests = () => {
                     <Grid container spacing={1}>
                       {requests?.map((r) => (
                         <Grid item xs={10}>
-                          <RequestCardComponent profile={myProfile?.data} key={r.id} data={r} filtered={selectedRef.current} isTutor={false} />
+                          <RequestCardComponent deleteMe={deleteAnItem} profile={myProfile?.data} key={r.id} data={r} filtered={selectedRef.current} isTutor={false} />
                         </Grid>
                       ))}
                     </Grid>

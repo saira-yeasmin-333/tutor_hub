@@ -63,7 +63,7 @@ const CardComponent = ({ data , filtered,isTutor}) => {
         {
           isTutor?(
             <>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" style={{height:'40px'}}>
                   <b>Preferref Locations:</b>
                     {data.preferred_locations.map((l,i)=>{
                         return <span>{l.address}{i<data.preferred_locations.length-1?',':''}</span>
@@ -92,7 +92,7 @@ const CardComponent = ({ data , filtered,isTutor}) => {
               <Typography variant="body2" color="text.secondary">
                   <b>Class:</b> {data.class}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" style={{height:'40px'}}>
                   <b>Address:</b> {data.address}
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -115,7 +115,7 @@ const CardComponent = ({ data , filtered,isTutor}) => {
         }
 
         {filtered && !isTutor &&(
-          <div style={{padding:'2%',margin:'10%'}}>
+          <div style={{padding:'2%',margin:'10%',height:'150px'}}>
             <p>Distance between {data.my_address} and {data.post_address} is {data.distance.toFixed(3)} km</p>
           </div>
         )}

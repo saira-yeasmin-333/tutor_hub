@@ -8,6 +8,15 @@ import Cookies from 'universal-cookie';
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase/firebase";
 import { v4 } from "uuid";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 import { setLoading, showToast } from '../App';
 import EditIcon from '@mui/icons-material/Edit';
 import TextEditor from '../components/common/TextEditor';
@@ -24,6 +33,30 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+
+import { Bar } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Chart.js Bar Chart',
+    },
+  },
+}
 
 
 const cookies = new Cookies();
@@ -229,8 +262,10 @@ const ProfilePage = () => {
 
     getCouReq()
     axios
-      .get(`http://localhost:5000/api/get-profile`, { headers: { authorization: 'Bearer ' + cookies.get('token') } })
-      .then((response) => {
+      .get(`http://localhost:5000/api/get-profile`,{headers:{authorization:'Bearer '+cookies.get('token')}})
+            .then((response) => {
+            console.log(response.data.data)
+
         setUser(response.data.data); // Set the fetched data to the state
 
         console.log('we get response : ', response.data.data)
@@ -261,6 +296,8 @@ const ProfilePage = () => {
         console.error('Error fetching user profile:', error);
       });
   }, [id]); // Add "id" as a dependency
+
+  
 
   if (!user) {
     return <div>Loading...</div>; // Display a loading message while fetching data
@@ -438,7 +475,7 @@ const ProfilePage = () => {
                 </CardContent>
               )}
 
-              {currentTab === 1 && (
+              {currentTab === 1 && user.role==='teacher' && (
                 <CardContent style={{ overflowY: 'auto', height: '200px' }}>
                   {user.role === "teacher" ? (
                     <div>
@@ -510,6 +547,10 @@ const ProfilePage = () => {
                   )}
                 </CardContent>
               )}
+
+              {currentTab === 1 && user.role==='student' && <div>
+                  <Bar options={options} data={user.graph} />;   
+                </div>}
 
               {currentTab === 2 && (
                 <CardContent style={{ overflowY: 'auto', height: '200px' }}>
