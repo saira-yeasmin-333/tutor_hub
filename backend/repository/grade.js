@@ -72,35 +72,53 @@ class GradeRepository extends Repository {
         }
     }
 
-    updateGrade = async (grade) =>{
+    updateGrade = async (grade) => {
+        console.log('id: in geade in repo: ', grade)
         try {
-            // Assuming you are using Sequelize as your ORM
-            const updatedGrade = await Grade.findOne({
-                where: { grade_id: grade.grade_id },
-            });
+        //     // Assuming you are using Sequelize as your ORM
+        //     const updatedGrade = await Grade.findOne({
+        //         where: { grade_id: grade.grade_id },
+        //     });
 
-            if (!updatedGrade) {
-                throw new Error('Grade not found');
+        //     if (!updatedGrade) {
+        //         throw new Error('Grade not found');
+        //     }
+
+        //     // Update the properties you want to change
+        //     updatedGrade.title = grade.title;
+        //     updatedGrade.subject_id = grade.subject.id;
+        //     updatedGrade.mark_received = grade.mark_received;
+        //     updatedGrade.total_marks = grade.total_marks;
+        //     updatedGrade.submit_for_review = grade.submit_for_review;
+        //     updatedGrade.timestamp = grade.timestamp;
+        //     updatedGrade.timestamp_of_exam = grade.timestamp_of_exam;
+
+        //     // Save the updated grade to the database
+        //     await updatedGrade.save();
+
+        //     return updatedGrade;
+        const updatedRows = await Grade.update(
+            {
+                title : grade.title,
+                subject_id : grade.subject.id,
+                mark_received : grade.mark_received,
+                total_marks : grade.total_marks,
+                submit_for_review : grade.submit_for_review,
+                timestamp : grade.timestamp,
+                timestamp_of_exam : grade.timestamp_of_exam
+            },
+            {
+                where: {
+                    grade_id: grade.grade_id
+                }
             }
-
-            // Update the properties you want to change
-            updatedGrade.title = grade.title;
-            updatedGrade.subject_id = grade.subject.id;
-            updatedGrade.mark_received = grade.mark_received;
-            updatedGrade.total_marks = grade.total_marks;
-            updatedGrade.submit_for_review = grade.submit_for_review;
-            updatedGrade.timestamp = grade.timestamp;
-            updatedGrade.timestamp_of_exam = grade.timestamp_of_exam;
-
-            // Save the updated grade to the database
-            await updatedGrade.save();
-
-            return updatedGrade;
-        } catch (error) {
-            throw error; // Handle or log the error appropriately
-        }
-    
+        )
+        return updatedRows
+    } catch(error) {
+        throw error; // Handle or log the error appropriately
     }
+
+}
 
 
 }

@@ -126,7 +126,7 @@ const GradeSubmit = () => {
 
     }, []); // Add "id" as a dependency
 
-    
+
 
 
     const handleEditGradeClick = (row) => {
@@ -225,6 +225,7 @@ const GradeSubmit = () => {
         }
     };
 
+    const [subs, setSubs] = useState('')
     const dialogSaveClick = async () => {
         if (newGrade.title === '' || newGrade.subject_id === 0 || newGrade.mark_received === 0 || newGrade.total_marks === 0 || newGrade.timestamp_of_exam === '') {
             toast.error('Invalid Input', {
@@ -240,18 +241,24 @@ const GradeSubmit = () => {
             return;
         }
         var stat = ""
-        if(newGrade.submit_for_review==="pending") stat = "reviewed"
-        else stat=newGrade.submit_for_review
+        if (row_data.submit_for_review === "pending") stat = "reviewed"
+        else stat = row_data.submit_for_review
+        user.subjects.forEach((sub) => {
+            if (newGrade.subject_id === sub.id) {
+                setSubs(sub);
+            }
+        });
         var temp = {
-            grade_id: row_data.grade_id,
+            grade_id: parseInt(row_data.grade_id),
             title: newGrade.title,
             mark_received: parseFloat(newGrade.mark_received),
             total_marks: parseFloat(newGrade.total_marks),
-            subject: newGrade.subject,
+            subject: subs,
             timestamp: Date.now() / 1000,
             timestamp_of_exam: parseInt(parseDateToTimestamp(newGrade.timestamp_of_exam) / 1000),
             submit_for_review: stat
         }
+        console.log("trying: ", temp)
         try {
             const response = await axios.put(`http://localhost:5000/api/updategrade`, temp)
             console.log(response.data.data)
@@ -316,22 +323,22 @@ const GradeSubmit = () => {
                     </FormControl>
 
 
-                        <TextField
-                            label="Total Marks"
-                            variant="outlined"
-                            value={newGrade.total_marks}
-                            onChange={(e) => handleNewGradeChange('total_marks', e.target.value)}
-                        />
-                  
-                    
-                        <TextField
-                            label="Exam date (yy/mm/dd)"
-                            variant="outlined"
-                            value={newGrade.timestamp_of_exam}
-                            onChange={(e) => handleNewGradeChange('timestamp_of_exam', e.target.value)}
-                        />
-                    
-                    
+                    <TextField
+                        label="Total Marks"
+                        variant="outlined"
+                        value={newGrade.total_marks}
+                        onChange={(e) => handleNewGradeChange('total_marks', e.target.value)}
+                    />
+
+
+                    <TextField
+                        label="Exam date (yy/mm/dd)"
+                        variant="outlined"
+                        value={newGrade.timestamp_of_exam}
+                        onChange={(e) => handleNewGradeChange('timestamp_of_exam', e.target.value)}
+                    />
+
+
 
                 </DialogContent>
                 <DialogActions>
